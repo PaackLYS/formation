@@ -296,7 +296,9 @@ flex:1;
             <!-- Hub -->
             <div style="position:absolute; top:12%; left:3%;">
                 <div style="background:#1a5c7a; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-                     onclick="toggleCard('card-hub')">
+                     onmouseenter="document.getElementById('card-hub').style.display='block'"
+onmouseleave="document.getElementById('card-hub').style.display='none'"
+>
                     🏢 Nom de tournée : LYS 013
                 </div>
                 <div id="card-hub" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #1a5c7a; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:200px; line-height:1.5;">
@@ -306,7 +308,9 @@ flex:1;
             <!-- Ordre livraison -->
             <div style="position:absolute; top:12%; right:3%;">
                 <div style="background:#2fb781; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-                     onclick="toggleCard('card-ordre')">
+                     onmouseenter="document.getElementById('card-ordre').style.display='block'"
+onmouseleave="document.getElementById('card-ordre').style.display='none'"
+>
                     📍 Ordre livraison : 9
                 </div>
                 <div id="card-ordre" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #2fb781; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
@@ -316,7 +320,9 @@ flex:1;
             <!-- Créneau -->
             <div style="position:absolute; top:44%; left:-16%;">
                 <div style="background:#2d7f9f; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-                     onclick="toggleCard('card-creneau')">
+                     onmouseenter="document.getElementById('card-creneau').style.display='block'"
+onmouseleave="document.getElementById('card-creneau').style.display='none'"
+>
                     🕐 Créneau : 09h-22h
                 </div>
                 <div id="card-creneau" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #2d7f9f; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:200px; line-height:1.5;">
@@ -326,7 +332,9 @@ flex:1;
             <!-- Date -->
             <div style="position:absolute; top:44%; right:-7%;">
                 <div style="background:#f4c440; color:#4f4421; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-                     onclick="toggleCard('card-date')">
+                    onmouseenter="document.getElementById('card-date').style.display='block'"
+onmouseleave="document.getElementById('card-date').style.display='none'"
+>
                     📅 Date : 25/01
                 </div>
                 <div id="card-date" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #f4c440; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
@@ -336,7 +344,9 @@ flex:1;
             <!-- Nb colis -->
             <div style="position:absolute; bottom:22%; right:10%;">
                 <div style="background:#d64545; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-                     onclick="toggleCard('card-colis')">
+                     onmouseenter="document.getElementById('card-colis').style.display='block'"
+onmouseleave="document.getElementById('card-colis').style.display='none'"
+>
                     📦 1P = 1 colis
                 </div>
                 <div id="card-colis" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #d64545; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
@@ -346,7 +356,9 @@ flex:1;
             <!-- Code barre -->
             <div style="position:absolute; bottom:20%; left:3%;">
                 <div style="background:#6c3483; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-                     onclick="toggleCard('card-barcode')">
+                     onmouseenter="document.getElementById('card-barcode').style.display='block'"
+onmouseleave="document.getElementById('card-barcode').style.display='none'"
+>
                     🔢 Code barre
                 </div>
                 <div id="card-barcode" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #6c3483; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:210px; line-height:1.5;">
