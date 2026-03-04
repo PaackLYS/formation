@@ -803,9 +803,17 @@ flex:1;
         results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct });
         localStorage.setItem('paack_results', JSON.stringify(results));
 fetch('https://script.google.com/macros/s/AKfycbyBtUf_ShOedHuYcFYQtK4GqzCUAbT52n1ac3JIm5oJzYVHcp81DsA5b7afa26YAS0Kzw/exec', {
-  method: 'POST',
-  body: 'nom=TEST&date=TEST'
-}).then(() => console.log('OK ✅')).catch(e => console.log('Erreur:', e));
+  method: 'POST', 
+  mode: 'no-cors',
+  body: JSON.stringify({
+    nom: currentNom,
+    date: dateStr, 
+    qcm: `QCM ${currentQCMNum}`,
+    score, 
+    total: currentQuestions.length,
+    pct
+  })
+}).catch(err => console.log('Erreur envoi:', err));
         let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
         document.getElementById('qcmContainer').innerHTML = '';
         document.getElementById('scoreResult').innerHTML = `
