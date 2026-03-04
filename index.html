@@ -602,23 +602,21 @@ flex:1;
                 <div id="dashboard-table"></div>
             </div>
         </div>
-        <div id="qcm-selector" style="display:none;">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-                <p style="margin:0; color:#324754;">Bonjour <strong id="display-nom"></strong> ! Choisissez un QCM :</p>
-                <button onclick="resetNom()" style="margin-top:0; padding:6px 14px; font-size:0.8em;">← Changer de nom</button>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-                <div class="card clickable" onclick="startQCM(1)">
-                    <h4>🎯 QCM 1</h4>
-                    <p>8 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
-                    <span class="card-arrow">→</span>
-                </div>
-                <div class="card clickable" onclick="startQCM(2)">
-                    <h4>🎯 QCM 2</h4>
-                    <p>8 questions différentes, également mixtes tous thèmes.</p>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
+<div id="qcm-selector" style="display:none;">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+        <p style="margin:0; color:#324754;">Bonjour <strong id="display-nom"></strong> ! Prêt à vous tester ?</p>
+        <button onclick="resetNom()" style="margin-top:0; padding:6px 14px; font-size:0.8em;">← Changer de nom</button>
+    </div>
+    <div class="card clickable" onclick="startQCM()" style="max-width:100%;">
+        <h4>🎯 QCM — Toutes questions</h4>
+        <p>10 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
+        <span class="card-arrow">→</span>
+    </div>
+    <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
+        Voir l'historique des résultats
+    </button>
+</div>
+
             <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
                 📊 Voir l'historique des résultats
             </button>
@@ -704,20 +702,20 @@ flex:1;
         afficherDashboardMini();
     }
 
-    function startQCM(num) {
-        currentQCMNum = num;
-        currentIndex = 0;
-        score = 0;
-        window._selectedAnswer = null;
-        const shuffled = [...questionsPool].sort(() => Math.random() - 0.5);
-        currentQuestions = num === 1 ? shuffled.slice(0, 8) : shuffled.slice(8, 16);
-        document.getElementById('qcm-selector').style.display = 'none';
-        document.getElementById('qcm-dashboard').style.display = 'none';
-        document.getElementById('qcm-active').style.display = 'block';
-        document.getElementById('qcm-titre').textContent = `🎯 QCM ${num} — Questions mixtes`;
-        document.getElementById('scoreResult').innerHTML = '';
-        renderQuestion();
-    }
+function startQCM() {
+    currentQCMNum = 1;
+    currentIndex = 0;
+    score = 0;
+    window.selectedAnswer = null;
+    currentQuestions = [...questionsPool].sort(() => Math.random() - 0.5).slice(0, 10);
+    document.getElementById('qcm-selector').style.display = 'none';
+    document.getElementById('qcm-dashboard').style.display = 'none';
+    document.getElementById('qcm-active').style.display = 'block';
+    document.getElementById('qcm-titre').textContent = 'QCM — Questions mixtes';
+    document.getElementById('scoreResult').innerHTML = '';
+    renderQuestion();
+}
+
 
     function renderQuestion() {
         window._selectedAnswer = null;
@@ -824,8 +822,8 @@ fetch('https://script.google.com/macros/s/AKfycbyBtUf_ShOedHuYcFYQtK4GqzCUAbT52n
                 <p style="margin-top:8px;">${msg}</p>
             </div>
             <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
-                <button onclick="startQCM(${currentQCMNum})" style="flex:1; padding:12px; margin-top:0;">🔄 Recommencer ce QCM</button>
-                <button onclick="resetQCM()" style="flex:1; padding:12px; margin-top:0;">← Choisir un autre QCM</button>
+<button onclick="startQCM()" style="flex:1; padding:12px; margin-top:0;">🔄 Recommencer</button>
+
             </div>
             <button onclick="afficherDashboard()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">📊 Voir l'historique</button>`;
     }
