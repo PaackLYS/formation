@@ -609,7 +609,7 @@ flex:1;
     </div>
     <div class="card clickable" onclick="startQCM()" style="max-width:100%;">
         <h4>🎯 QCM — Toutes questions</h4>
-        <p>10 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
+        <p>20 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
         <span class="card-arrow">→</span>
     </div>
     <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
@@ -707,7 +707,7 @@ function startQCM() {
     currentIndex = 0;
     score = 0;
     window.selectedAnswer = null;
-    currentQuestions = [...questionsPool].sort(() => Math.random() - 0.5).slice(0, 10);
+    currentQuestions = [...questionsPool].sort(() => Math.random() - 0.5).slice(0, 20);
     document.getElementById('qcm-selector').style.display = 'none';
     document.getElementById('qcm-dashboard').style.display = 'none';
     document.getElementById('qcm-active').style.display = 'block';
