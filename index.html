@@ -933,6 +933,20 @@ fetch('https://script.google.com/macros/s/AKfycbyBtUf_ShOedHuYcFYQtK4GqzCUAbT52n
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Tracking vue automatique au chargement
+window.addEventListener('load', function() {
+  fetch('TON_URL_SCRIPT', {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify({
+      type: 'vue',
+      date: new Date().toLocaleString('fr-FR'),
+      page: document.title,
+      appareil: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
+    })
+  });
+});
+
     function toggleCard(id) {
         const allCards = ['card-hub','card-ordre','card-creneau','card-date','card-colis','card-barcode'];
         allCards.forEach(c => { if (c !== id) document.getElementById(c).style.display = 'none'; });
