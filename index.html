@@ -1024,6 +1024,7 @@ localStorage.setItem('paack_results', JSON.stringify(results));
 // Envoi vers Google Sheets
 fetch('https://script.google.com/a/macros/paack.co/s/AKfycbzY5iFhzJGxMOzzBBjOpr2T2k0PYxdeJqFqMB4zEvy2-420phCJMOvvyXpF4ZXlqwwi/exec', {
   method: 'POST',
+  mode: 'no-cors',
   body: JSON.stringify({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct }),
   headers: { 'Content-Type': 'application/json' }
 }).catch(err => console.log('Erreur envoi:', err));
