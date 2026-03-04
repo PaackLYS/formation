@@ -449,21 +449,44 @@ function toggleCard(id) {
             <strong>⚠️ Important:</strong> Si un colis manque durant le chargement, vérifier une deuxième fois si le colis est bien manquant, si c'est le cas, signalez-le à votre responsable IMMÉDIATEMENT. Une fois partis de l'entrepôt, vous en êtes responsable!
         </div>
         <h3>Comment charger les colis?</h3>
-<div class="flow-steps">
-    <div class="flow-step">
-        <div class="step-icon">📋</div>
-        <div class="step-text">Par ordre de livraison</div>
+<div style="display:flex; align-items:stretch; justify-content:center; gap:0; margin:24px 0; flex-wrap:wrap;">
+
+    <!-- Carte 1 -->
+    <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#1a5c7a,#0b2436); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+        <div style="font-size:2.4em; margin-bottom:10px;">📋</div>
+        <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Par ordre<br>de livraison</div>
     </div>
-    <div class="flow-step">
-        <div class="step-icon">🔙</div>
-        <div class="step-text">Derniers colis au fond du camion</div>
+
+    <!-- Connecteur 1 -->
+    <div style="display:flex; align-items:center; justify-content:center; padding:0 6px; flex-shrink:0;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <div style="width:36px; height:3px; background:linear-gradient(90deg,#1a5c7a,#2fb781); border-radius:2px;"></div>
+            <div style="color:#2d7f9f; font-size:1.4em;">▶</div>
+        </div>
     </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-        <div class="step-icon">🚪</div>
-        <div class="step-text">Premiers colis à l'ouverture</div>
+
+    <!-- Carte 2 -->
+    <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#2d7f9f,#1a5c7a); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+        <div style="font-size:2.4em; margin-bottom:10px;">🔙</div>
+        <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Derniers colis<br>au fond</div>
     </div>
+
+    <!-- Connecteur 2 -->
+    <div style="display:flex; align-items:center; justify-content:center; padding:0 6px; flex-shrink:0;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <div style="width:36px; height:3px; background:linear-gradient(90deg,#2d7f9f,#2fb781); border-radius:2px;"></div>
+            <div style="color:#2d7f9f; font-size:1.4em;">▶</div>
+        </div>
+    </div>
+
+    <!-- Carte 3 -->
+    <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#2fb781,#1a7a4f); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+        <div style="font-size:2.4em; margin-bottom:10px;">🚪</div>
+        <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Premiers colis<br>à l'ouverture</div>
+    </div>
+
 </div>
+
 
         <h3>Attention aux colis fragiles!</h3>
         <div class="danger">
