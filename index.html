@@ -802,11 +802,18 @@ flex:1;
         const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
         results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct });
         localStorage.setItem('paack_results', JSON.stringify(results));
-        fetch('https://script.google.com/a/macros/paack.co/s/AKfycbzY5iFhzJGxMOzzBBjOpr2T2k0PYxdeJqFqMB4zEvy2-420phCJMOvvyXpF4ZXlqwwi/exec', {
-            method: 'POST', mode: 'no-cors',
-            body: JSON.stringify({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct }),
-            headers: { 'Content-Type': 'application/json' }
-        }).catch(err => console.log('Erreur envoi:', err));
+fetch('https://script.google.com/a/macros/paack.co/s/AKfycbzY5iFhzJGxMOzzBBjOpr2T2k0PYxdeJqFqMB4zEvy2-420phCJMOvvyXpF4ZXlqwwi/exec', {
+  method: 'POST',
+  mode: 'no-cors',
+  body: JSON.stringify({
+    nom: currentNom,
+    date: dateStr,
+    qcm: `QCM ${currentQCMNum}`,
+    score,
+    total: currentQuestions.length,
+    pct
+  })
+}).catch(err => console.log('Erreur envoi:', err));
         let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
         document.getElementById('qcmContainer').innerHTML = '';
         document.getElementById('scoreResult').innerHTML = `
