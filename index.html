@@ -1,6 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guide Livraison Paack - Formation Interactive</title>
@@ -21,35 +23,39 @@
             color: #12232e;
         }
         .container { max-width: 1000px; margin: 0 auto; }
-        .nav-btn {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.85);
-            padding: 10px 20px;
-            border-radius: 999px;
-            cursor: pointer;
-            font-size: 0.95em;
-            font-weight: 600;
-            transition: all 0.25s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            min-width: 90px;
-        }
-        .nav-btn span.icon { font-size: 1.25em; }
+.nav-btn {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.8);
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.82em;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+flex:1;
+    justify-content: center;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+.nav-btn span.icon { font-size: 0.95em; }
         .nav-btn:hover {
             background: rgba(255,255,255,0.15);
             transform: translateY(-2px);
             color: white;
         }
-        .nav-btn.active {
-            background: linear-gradient(135deg, #1a5c7a, #2d7f9f);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-            transform: translateY(-1px);
-        }
+.nav-btn.active {
+    background: linear-gradient(135deg, #1a5c7a, #2d7f9f);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    transform: translateY(-1px);
+    letter-spacing: 0.3px;
+}
         .content-section {
             display: none;
             background: #fdfefe;
@@ -73,7 +79,7 @@
             align-items: center;
             gap: 8px;
         }
-        h3 { color: var(--paack-light-blue); margin-top: 24px; margin-bottom: 14px; font-size: 1.6em;text-decoration: underline; }
+        h3 { color: var(--paack-light-blue); margin-top: 24px; margin-bottom: 14px; font-size: 1.6em; text-decoration: underline; }
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -201,11 +207,6 @@
             color: white; font-size: 0.8em; font-weight: bold;
         }
         .red-chip { background-color: #ffe0e0; padding: 2px 8px; border-radius: 5px; }
-        nav {
-            position: sticky;
-            top: 8px;
-            z-index: 50;
-        }
         @media (max-width: 768px) {
             body { padding: 14px; }
             .content-section { padding: 22px 16px 24px; }
@@ -218,7 +219,7 @@
 <body>
 <div class="container">
 
-    <header style="background:linear-gradient(135deg,#ffffff 0%,#f0f8fc 60%,#d8eff7 100%); border-radius:18px; padding:28px 30px 22px; margin-bottom:16px; box-shadow:0 14px 40px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
+    <header style="background:linear-gradient(135deg,#ffffff 0%,#f0f8fc 60%,#d8eff7 100%); border-radius:18px; padding:28px 30px 22px; margin-bottom:0px; box-shadow:0 14px 40px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
         <div style="position:absolute; right:-50px; top:-50px; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, rgba(47,183,129,0.15), transparent 65%); pointer-events:none;"></div>
         <div style="position:absolute; left:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(26,92,122,0.1), transparent 65%); pointer-events:none;"></div>
         <div style="display:flex; align-items:center; gap:18px; position:relative; z-index:1;">
@@ -226,21 +227,17 @@
                 <span style="font-size:2em; display:block;">📦</span>
             </div>
             <div>
-                <div style="font-size:0.72em; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:#2fb781; margin-bottom:4px;">Paack Lyon · Guide Officiel</div>
                 <h1 style="margin:0; font-size:2em; font-weight:900; color:#0b2436; letter-spacing:-0.5px; line-height:1.1;">
-                    Formation <span style="background:linear-gradient(90deg,#1a5c7a,#2d7f9f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Livraison</span>
+                    Formation <span style="background:linear-gradient(90deg,#1a5c7a,#2d7f9f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Paack</span>
                 </h1>
                 <p style="margin:6px 0 0; color:#4f6473; font-size:0.92em;">Formation interactive · Maîtrisez les processus en quelques minutes</p>
             </div>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; position:relative; z-index:1;">
-            <span style="background:rgba(26,92,122,0.1); color:#1a5c7a; font-size:0.75em; font-weight:700; padding:4px 12px; border-radius:999px; border:1px solid rgba(26,92,122,0.2);">🎓 3 modules</span>
-            <span style="background:rgba(26,92,122,0.1); color:#1a5c7a; font-size:0.75em; font-weight:700; padding:4px 12px; border-radius:999px; border:1px solid rgba(26,92,122,0.2);">📍 Lyon</span>
-            <span style="background:rgba(47,183,129,0.12); color:#1a7a4f; font-size:0.75em; font-weight:700; padding:4px 12px; border-radius:999px; border:1px solid rgba(47,183,129,0.25);">✅ QCM inclus</span>
         </div>
     </header>
 
-    <nav style="display:flex; gap:8px; margin-bottom:26px; flex-wrap:wrap; justify-content:center; background:linear-gradient(135deg,#0b2436,#173750); padding:14px 16px; border-radius:16px; box-shadow:0 12px 35px rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.06);">
+    <nav style="display:flex; gap:6px; margin-bottom:0px; flex-wrap:wrap; justify-content:stretch; background:linear-gradient(135deg,#0b2436,#173750); padding:5px 10px; border-radius:16px; box-shadow:0 12px 35px rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.06);">
         <button class="nav-btn active" onclick="showSection('accueil', this)">
             <span class="icon">🏠</span>Accueil
         </button>
@@ -292,115 +289,115 @@
     <!-- CHARGEMENT -->
     <div id="chargement" class="content-section">
         <h2>📦 Phase 1: Chargement</h2>
-<h3>Comment lire l'étiquette Paack</h3>
+        <h3>Comment lire l'étiquette Paack</h3>
 
-<div style="position:relative; display:block; width:100%; max-width:520px; margin:25px auto; overflow:visible;">
-    <img src="images/etiquette.jpg" alt="Étiquette Paack"
-         style="width:100%; border-radius:12px; box-shadow:0 6px 22px rgba(0,0,0,0.25); display:block;"
-         onerror="this.style.display='none'">
-
-    <!-- Hub -->
-    <div style="position:absolute; top:12%; left:3%;">
-        <div style="background:#1a5c7a; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-             onclick="toggleCard('card-hub')">
-            🏢 Nom de tournée : LYS 013
+        <div style="position:relative; display:block; width:100%; max-width:520px; margin:25px auto; overflow:visible;">
+            <img src="images/etiquette.jpg" alt="Étiquette Paack"
+                 style="width:100%; border-radius:12px; box-shadow:0 6px 22px rgba(0,0,0,0.25); display:block;"
+                 onerror="this.style.display='none'">
+            <!-- Hub -->
+            <div style="position:absolute; top:12%; left:3%;">
+                <div style="background:#1a5c7a; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
+                     onmouseenter="document.getElementById('card-hub').style.display='block'"
+onmouseleave="document.getElementById('card-hub').style.display='none'"
+>
+                    🏢 Nom de tournée : LYS 013
+                </div>
+                <div id="card-hub" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #1a5c7a; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:200px; line-height:1.5;">
+                    📋 <strong>Nom de la tournée</strong><br>Identifie la route assignée au livreur.
+                </div>
+            </div>
+            <!-- Ordre livraison -->
+            <div style="position:absolute; top:12%; right:3%;">
+                <div style="background:#2fb781; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
+                     onmouseenter="document.getElementById('card-ordre').style.display='block'"
+onmouseleave="document.getElementById('card-ordre').style.display='none'"
+>
+                    📍 Ordre livraison : 9
+                </div>
+                <div id="card-ordre" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #2fb781; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
+                    🗺️ <strong>Position dans la tournée</strong><br>Ce colis est le 9e arrêt de la journée.
+                </div>
+            </div>
+            <!-- Créneau -->
+            <div style="position:absolute; top:44%; left:-16%;">
+                <div style="background:#2d7f9f; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
+                     onmouseenter="document.getElementById('card-creneau').style.display='block'"
+onmouseleave="document.getElementById('card-creneau').style.display='none'"
+>
+                    🕐 Créneau : 09h-22h
+                </div>
+                <div id="card-creneau" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #2d7f9f; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:200px; line-height:1.5;">
+                    ⏰ <strong>Créneau de livraison</strong><br>Plage horaire attendue par le client.
+                </div>
+            </div>
+            <!-- Date -->
+            <div style="position:absolute; top:44%; right:-7%;">
+                <div style="background:#f4c440; color:#4f4421; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
+                    onmouseenter="document.getElementById('card-date').style.display='block'"
+onmouseleave="document.getElementById('card-date').style.display='none'"
+>
+                    📅 Date : 25/01
+                </div>
+                <div id="card-date" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #f4c440; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
+                    📆 <strong>Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
+                </div>
+            </div>
+            <!-- Nb colis -->
+            <div style="position:absolute; bottom:22%; right:10%;">
+                <div style="background:#d64545; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
+                     onmouseenter="document.getElementById('card-colis').style.display='block'"
+onmouseleave="document.getElementById('card-colis').style.display='none'"
+>
+                    📦 1P = 1 colis
+                </div>
+                <div id="card-colis" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #d64545; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
+                    📦 <strong>Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
+                </div>
+            </div>
+            <!-- Code barre -->
+            <div style="position:absolute; bottom:20%; left:3%;">
+                <div style="background:#6c3483; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
+                     onmouseenter="document.getElementById('card-barcode').style.display='block'"
+onmouseleave="document.getElementById('card-barcode').style.display='none'"
+>
+                    🔢 Code barre
+                </div>
+                <div id="card-barcode" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #6c3483; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:210px; line-height:1.5;">
+                    🔍 <strong>Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
+                </div>
+            </div>
         </div>
-        <div id="card-hub" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #1a5c7a; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:200px; line-height:1.5;">
-            📋 <strong>Nom de la tournée</strong><br>Identifie la route assignée au livreur.
-        </div>
-    </div>
-    <!-- Ordre livraison -->
-    <div style="position:absolute; top:12%; right:3%;">
-        <div style="background:#2fb781; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-             onclick="toggleCard('card-ordre')">
-            📍 Ordre livraison : 9
-        </div>
-        <div id="card-ordre" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #2fb781; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
-            🗺️ <strong>Position dans la tournée</strong><br>Ce colis est le 9e arrêt de la journée.
-        </div>
-    </div>
-
-    <!-- Créneau -->
-    <div style="position:absolute; top:44%; left:-16%;">
-        <div style="background:#2d7f9f; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-             onclick="toggleCard('card-creneau')">
-            🕐 Créneau : 09h-22h
-        </div>
-        <div id="card-creneau" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #2d7f9f; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:200px; line-height:1.5;">
-            ⏰ <strong>Créneau de livraison</strong><br>Plage horaire attendue par le client.
-        </div>
-    </div>
-
-    <!-- Date -->
-    <div style="position:absolute; top:44%; right:-7%;">
-        <div style="background:#f4c440; color:#4f4421; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-             onclick="toggleCard('card-date')">
-            📅 Date : 25/01
-        </div>
-        <div id="card-date" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #f4c440; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
-            📆 <strong>Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
-        </div>
-    </div>
-
-    <!-- Nb colis -->
-    <div style="position:absolute; bottom:22%; right:10%;">
-        <div style="background:#d64545; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-             onclick="toggleCard('card-colis')">
-            📦 1P = 1 colis
-        </div>
-        <div id="card-colis" style="display:none; position:absolute; top:110%; right:0; z-index:100; background:white; border-left:4px solid #d64545; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:180px; line-height:1.5;">
-            📦 <strong>Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
-        </div>
-    </div>
-    <!-- Code barre -->
-    <div style="position:absolute; bottom:20%; left:3%;">
-        <div style="background:#6c3483; color:white; font-size:0.75em; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:2px solid white; cursor:pointer;"
-             onclick="toggleCard('card-barcode')">
-            🔢 Code barre
-        </div>
-        <div id="card-barcode" style="display:none; position:absolute; top:110%; left:0; z-index:100; background:white; border-left:4px solid #6c3483; border-radius:8px; padding:8px 12px; margin-top:4px; font-size:0.8em; color:#1b3444; box-shadow:0 4px 14px rgba(0,0,0,0.3); width:210px; line-height:1.5;">
-            🔍 <strong>Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
-        </div>
-    </div>
-</div>
-<p style="text-align:center; font-size:0.85em; color:#4f6473; margin-top:8px;">👆 Clique sur chaque badge pour en savoir plus</p>
-
-<script>
-function toggleCard(id) {
-    const allCards = ['card-hub','card-ordre','card-creneau','card-date','card-colis'];
-    allCards.forEach(c => {
-        if (c !== id) document.getElementById(c).style.display = 'none';
-    });
-    const card = document.getElementById(id);
-    card.style.display = card.style.display === 'none' ? 'block' : 'none';
-}
-</script>
+        <p style="text-align:center; font-size:0.85em; color:#4f6473; margin-top:8px;">👆 Clique sur chaque badge pour en savoir plus</p>
 
         <h3>Conseils essentiels pour le tri</h3>
         <div class="highlight">
             <strong>⚠️ Important:</strong> Si un colis manque durant le chargement, vérifier une deuxième fois si le colis est bien manquant, si c'est le cas, signalez-le à votre responsable IMMÉDIATEMENT. Une fois partis de l'entrepôt, vous en êtes responsable!
         </div>
+        <div class="highlight">
+            <strong>⚠️ Important:</strong> Si vous avez un colis qui n'est pas sur votre application, rapportez le à votre responsable.
+            </div>
         <h3>Comment charger les colis?</h3>
-<div style="display:flex; align-items:stretch; justify-content:center; gap:0; margin:24px 0; flex-wrap:wrap;">
-    <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#0b2436,#1a5c7a); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-        <div style="font-size:2.4em; margin-bottom:10px;">📋</div>
-        <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Par ordre<br>de livraison</div>
-    </div>
-    <div style="display:flex; align-items:center; justify-content:center; padding:0 6px; flex-shrink:0;">
-        <div style="color:#2d7f9f; font-size:1.6em;">▶</div>
-    </div>
-    <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#1a5c7a,#2d7f9f); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-        <div style="font-size:2.4em; margin-bottom:10px;">🔙</div>
-        <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Derniers colis<br>au fond du camion</div>
-    </div>
-    <div style="display:flex; align-items:center; justify-content:center; padding:0 6px; flex-shrink:0;">
-        <div style="color:#2d7f9f; font-size:1.6em;">▶</div>
-    </div>
-    <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#2d7f9f,#5ba8c4); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-        <div style="font-size:2.4em; margin-bottom:10px;">🚪</div>
-        <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Premiers colis<br>à l'ouverture du camion</div>
-    </div>
-</div>
+        <div style="display:flex; align-items:stretch; justify-content:center; gap:0; margin:24px 0; flex-wrap:wrap;">
+            <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#0b2436,#1a5c7a); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+                <div style="font-size:2.4em; margin-bottom:10px;">📋</div>
+                <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Par ordre<br>de livraison</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center; padding:0 6px; flex-shrink:0;">
+                <div style="color:#2d7f9f; font-size:1.6em;">▶</div>
+            </div>
+            <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#1a5c7a,#2d7f9f); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+                <div style="font-size:2.4em; margin-bottom:10px;">🔙</div>
+                <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Derniers colis<br>au fond du camion</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center; padding:0 6px; flex-shrink:0;">
+                <div style="color:#2d7f9f; font-size:1.6em;">▶</div>
+            </div>
+            <div style="flex:1; min-width:150px; max-width:220px; background:linear-gradient(145deg,#2d7f9f,#5ba8c4); border-radius:16px; padding:24px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+                <div style="font-size:2.4em; margin-bottom:10px;">🚪</div>
+                <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Premiers colis<br>à l'ouverture du camion</div>
+            </div>
+        </div>
 
         <h3>Attention aux colis fragiles!</h3>
         <div class="danger">
@@ -419,7 +416,8 @@ function toggleCard(id) {
         </div>
         <h3>La remise en main propre</h3>
         <ul>
-            <li>Prendre une photo pour confirmer la livraison en cas de litige</li>
+            <li>Choisissez le motif de livraison "Client"</li>
+            <li>Prendre une photo respectant les critères pour confirmer la livraison en cas de litige</li>
         </ul>
         <div class="highlight">
             <strong>📸 Critères de la photo valide:</strong>
@@ -429,38 +427,32 @@ function toggleCard(id) {
                 <li>❌ Photo floue, sans client ou porte ouverte = NON VALIDE</li>
             </ul>
         </div>
-<div style="margin:16px 0 24px;">
-    <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos valides :</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-<img src="images/MP1.jpg" alt="Exemple 1"
-     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;"
-     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+        <div style="margin:16px 0 24px;">
+            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos valides :</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/MP1.jpg" alt="Exemple 1" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Client + Etiquette</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/MP2.jpg" alt="Exemple 2" style="width:100%; height:350px; object-fit:cover; object-position:top; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Client + Etiquette</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/MP3.jpg" alt="Exemple 3" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Client + Etiquette</p>
+                </div>
             </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Client + Etiquette</p>
         </div>
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/MP2.jpg" alt="Exemple 2"
-     style="width:100%; height:350px; object-fit:cover; object-position:top; border-radius:10px; border:3px solid #2fb781; display:block;"
-     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
-            </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Client + Etiquette</p>
-        </div>
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/MP3.jpg" alt="Exemple 3"
-     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;"
-     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
-            </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Client + Etiquette</p>
-        </div>
-    </div>
-</div>
 
         <h3>🟢 Boîte aux Lettres (BAL)</h3>
         <p><strong>Uniquement si les dimensions du colis le permettent :</strong></p>
@@ -469,7 +461,8 @@ function toggleCard(id) {
                 <li><span class="red-chip"><strong>SANS endommager</strong> l'emballage ou le contenu</span></li>
                 <li><span class="red-chip"><strong>SANS bloquer la porte</strong></span></li>
             </ul>
-            <li>Prendre une photo pour confirmer la livraison en cas de litige</li>
+            <li>Choisissez le motif de livraison "Lieu sûr" puis cliquez sur "Boîte aux lettres"</li>
+            <li>Prendre une photo respectant les critères pour confirmer la livraison en cas de litige</li>
         </ul>
         <div class="highlight" style="margin:15px 0;">
             <strong>📸 Critères de la photo valide:</strong>
@@ -479,76 +472,72 @@ function toggleCard(id) {
                 <li>✅ Nom du client visible sur la boîte aux lettres</li>
             </ul>
         </div>
-<div style="margin:16px 0 24px;">
-    <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos :</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/BAL1.jpg" alt="BAL Exemple 1"
-                     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+        <div style="margin:16px 0 24px;">
+            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos :</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/BAL1.jpg" alt="BAL Exemple 1" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Étiquette + Nom sur la BAL visible</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/BAL2.jpg" alt="BAL Exemple 2" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Étiquette + Nom sur la BAL visible</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/BAL3.jpg" alt="BAL Exemple 3" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #d64545; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#d64545; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">❌ INVALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#7c1f28; margin-top:6px; font-weight:600;">❌ Colis à l'intérieur de la BAL</p>
+                </div>
             </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Étiquette + Nom sur la BAL visible</p>
         </div>
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/BAL2.jpg" alt="BAL Exemple 2"
-                     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
-            </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Étiquette + Nom sur la BAL visible</p>
-        </div>
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/BAL3.jpg" alt="BAL Exemple 3"
-                     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #d64545; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#d64545; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">❌ INVALIDE</div>
-            </div>
-            <p style="font-size:0.78em; color:#7c1f28; margin-top:6px; font-weight:600;">❌ Colis à l'interieur de la BAL</p>
-        </div>
-    </div>
-</div>
 
         <h3>🔴 Autres Lieux (Dernier Recours) - Autorisation OBLIGATOIRE</h3>
-        <p style="margin-bottom:15px;color:#721c24;font-weight:600;">Voisin, jardin, palier, etc. <strong>UNIQUEMENT avec accord préalable du client</strong></p>
-        <div class="danger">
-            <strong>🚨 CONDITION STRICTE:</strong> UN MESSAGE D'AUTORISATION DU CLIENT EST OBLIGATOIRE avant toute dépose
-            <ul style="margin-top:10px;margin-bottom:0;">
-                <li>✅ Récupérer l'accord par SMS/Message</li>
-                <li>✅ Envoyer la capture d'écran sur le groupe WhatsApp</li>
-                <li><strong>✅ Prévenir le client du lieu EXACT</strong> où le colis est laissé</li>
-                <li>✅ Prendre une photo du lieu de dépose</li>
-            </ul>
-        </div>
+<div class="danger">
+  <strong>🚨 CONDITION STRICTE:</strong> UN MESSAGE D'AUTORISATION DU CLIENT EST OBLIGATOIRE avant toute dépose </div>
+    <ul><li>Obtenez l'accord SMS du client</li>
+    <li>Choisissez le bon motif de livraison :
+    <ul style="margin-top:10px;">
+      <li>📦 Vous remettez le colis à quelqu'un → choisissez <strong>"Tiers"</strong></li>
+      <li>🏠 Vous le déposez quelque part → choisissez <strong>"Lieu sûr"</strong></li>
+    </ul>
+  </li>
+  <li style="margin-top:10px;">Sélectionnez l'endroit exact (<strong>Jardin</strong>, <strong>Voisin</strong> ou <strong>Autre</strong>) et précisez dans <strong>"Autres informations"</strong></li>
+<li><strong>Prévenir le client du lieu EXACT</strong> où le colis est laissé</li>
+    <li>Envoyer l'accord SMS sur le groupe Whatsapp</li>
+
+</ul>
+ 
+
         <div class="danger">
             <strong>⚠️ Rappel :</strong> Beaucoup de réclamations viennent du client qui ignore où est livré son colis. TOUJOURS le prévenir précisément et lui envoyer une photo!
         </div>
-<div style="margin:16px 0 24px;">
-    <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples d'autorisations valides :</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/SMS1.jpg" alt="SMS Exemple 1"
-                     style="width:100%; height:350px; object-fit:contain; background:#f5f5f5; border-radius:10px; border:3px solid #2fb781; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+        <div style="margin:16px 0 24px;">
+            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples d'autorisations valides :</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/SMS1.jpg" alt="SMS Exemple 1" style="width:100%; height:350px; object-fit:contain; background:#f5f5f5; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Accord écrit du client + photo envoyée</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/SMS2.jpg" alt="SMS Exemple 2" style="width:100%; height:350px; object-fit:contain; background:#f5f5f5; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Accord écrit du client + photo envoyée</p>
+                </div>
             </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Accord écrit du client + photo envoyée</p>
         </div>
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/SMS2.jpg" alt="SMS Exemple 2"
-                     style="width:100%; height:350px; object-fit:contain; background:#f5f5f5;border-radius:10px; border:3px solid #2fb781; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
-            </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Accord écrit du client + photo envoyée</p>
-        </div>
-    </div>
-</div>
     </div>
 
     <!-- ECHECS -->
@@ -560,16 +549,18 @@ function toggleCard(id) {
             <li><strong>Étape 2:</strong> Prendre une photo du numéro de rue, du lieu de livraison ou de ce qui vous a empêché à y accéder</li>
             <li><strong>Étape 3:</strong> Retourner le colis à l'entrepôt en fin de tournée</li>
         </ul>
-<div class="danger" style="margin-top:20px;">
-    <strong>🚫 Motif "Refus du client" — Condition STRICTE :</strong>
-    <ul style="margin-top:10px; margin-bottom:0;">
-        <li>✅ Un <strong>SMS du client</strong> indiquant explicitement son refus est <strong>OBLIGATOIRE</strong></li>
-        <li>✅ Envoyer la capture d'écran de ce SMS sur le <strong>groupe WhatsApp</strong> immédiatement</li>
-        <li>❌ Sans preuve écrite du refus = motif non valide</li>
-    </ul>
-</div>
-
-        <h3>⚡ Erreur courante à ÉVITER</h3>
+        <div class="danger" style="margin-top:20px;">
+            <strong>🚫 Motif "Refus du client" — Condition STRICTE :</strong>
+            <ul style="margin-top:10px; margin-bottom:0;">
+                <li>✅ Un <strong>SMS du client</strong> indiquant explicitement son refus est <strong>OBLIGATOIRE</strong></li>
+                <li>✅ Envoyer la capture d'écran de ce SMS sur le <strong>groupe WhatsApp</strong> immédiatement</li>
+                <li>❌ Sans preuve écrite du refus = motif non valide</li>
+            </ul>
+        </div>
+ <h3> En cas de changement d'adresse du client</h3>
+          <div class="highlight"> Si l'adresse est trop éloignée, statuez le colis en "adresse incorrecte" et demandez au client la nouvelle adresse afin de la transmettre à votre responsable et/ou sur whatsapp.
+       </div>
+              <h3>⚡ Erreur courante à ÉVITER</h3>
         <div class="danger">
             <strong>🚫 ATTENTION:</strong> Si l'application vous demande une signature lors d'un échec de livraison = VOUS AVEZ CLIQUÉ AU MAUVAIS ENDROIT! Revenir en arrière et vérifier!
         </div>
@@ -583,110 +574,102 @@ function toggleCard(id) {
                 <li>Reliver le colis plus tard ou le jour suivant</li>
             </ul>
         </div>
-<div style="margin:24px 0 8px;">
-    <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos d'échec :</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/echec1.jpg" alt="Échec Exemple 1"
-                     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+        <div style="margin:24px 0 8px;">
+            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos d'échec :</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/echec1.jpg" alt="Échec Exemple 1" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Adresse de livraison + colis visibles</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/echec3.jpg" alt="Échec Exemple 3" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Obstacle à l'accès visible</p>
+                </div>
             </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Adresse de livraison + colis visibles</p>
-        </div>
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/echec3.jpg" alt="Échec Exemple 3"
-                     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #2fb781; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#2fb781; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">✅ VALIDE</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/echec4.jpg" alt="Échec Exemple 4" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #d64545; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#d64545; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">❌ INVALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#7c1f28; margin-top:6px; font-weight:600;">❌ Lieu de livraison non visible</p>
+                </div>
+                <div style="text-align:center;">
+                    <div style="position:relative; display:inline-block; width:100%;">
+                        <img src="images/echec5.jpg" alt="Échec Exemple 5" style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #d64545; display:block;" onerror="this.style.display='none'">
+                        <div style="position:absolute; top:8px; left:8px; background:#d64545; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">❌ INVALIDE</div>
+                    </div>
+                    <p style="font-size:0.78em; color:#7c1f28; margin-top:6px; font-weight:600;">❌ Lieu de livraison non visible</p>
+                </div>
             </div>
-            <p style="font-size:0.78em; color:#1e6b3a; margin-top:6px; font-weight:600;">✅ Obstacle à l'accès visible</p>
         </div>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/echec4.jpg" alt="Échec Exemple 4"
-                     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #d64545; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#d64545; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">❌ INVALIDE</div>
-            </div>
-            <p style="font-size:0.78em; color:#7c1f28; margin-top:6px; font-weight:600;">❌ Lieu de livraison non visible</p>
-        </div>
-        <div style="text-align:center;">
-            <div style="position:relative; display:inline-block; width:100%;">
-                <img src="images/echec5.jpg" alt="Échec Exemple 5"
-                     style="width:100%; height:350px; object-fit:cover; border-radius:10px; border:3px solid #d64545; display:block;"
-                     onerror="this.style.display='none'">
-                <div style="position:absolute; top:8px; left:8px; background:#d64545; color:white; font-size:0.72em; font-weight:700; padding:3px 8px; border-radius:20px;">❌ INVALIDE</div>
-            </div>
-            <p style="font-size:0.78em; color:#7c1f28; margin-top:6px; font-weight:600;">❌ Lieu de livraison non visible</p>
-        </div>
-    </div>
-</div>
     </div>
 
-<!-- QCM -->
-<div id="qcm" class="content-section">
-    <h2>❓ Testez Vos Connaissances</h2>
-    <div id="qcm-name-screen">
-        <p style="margin-bottom:8px; color:#324754;">Entrez votre prénom pour commencer et enregistrer vos résultats.</p>
-        <p style="margin-bottom:16px; color:#6c7a86; font-size:0.85em;">Les résultats sont sauvegardés uniquement sur cet appareil.</p>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <input type="text" id="input-nom" placeholder="Votre prénom..."
-                   style="padding:12px 16px; border-radius:10px; border:2px solid #2d7f9f; font-size:1em; flex:1; min-width:200px; outline:none; color:#12232e;">
-            <button onclick="validerNom()" style="margin-top:0; padding:12px 24px;">Commencer →</button>
+    <!-- QCM -->
+    <div id="qcm" class="content-section">
+        <h2>❓ Testez Vos Connaissances</h2>
+        <div id="qcm-name-screen">
+            <p style="margin-bottom:16px; color:#324754;">Entrez votre prénom pour commencer et enregistrer vos résultats.</p>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <input type="text" id="input-nom" placeholder="Votre prénom..."
+                       style="padding:12px 16px; border-radius:10px; border:2px solid #2d7f9f; font-size:1em; flex:1; min-width:200px; outline:none; color:#12232e;">
+                <button onclick="validerNom()" style="margin-top:0; padding:12px 24px;">Commencer →</button>
+            </div>
+            <p id="nom-error" style="color:#d64545; font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre prénom.</p>
+            <div id="dashboard-section" style="margin-top:32px; display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 style="margin:0; text-decoration:none; font-size:1.1em;">📊 Historique des résultats</h3>
+                </div>
+                <div id="dashboard-table"></div>
+            </div>
         </div>
-        <p id="nom-error" style="color:#d64545; font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre prénom.</p>
-        <div id="dashboard-section" style="margin-top:32px; display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<div id="qcm-selector" style="display:none;">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+        <p style="margin:0; color:#324754;">Bonjour <strong id="display-nom"></strong> ! Prêt à vous tester ?</p>
+        <button onclick="resetNom()" style="margin-top:0; padding:6px 14px; font-size:0.8em;">← Changer de nom</button>
+    </div>
+    <div class="card clickable" onclick="startQCM()" style="max-width:100%;">
+        <h4>🎯 QCM — Toutes questions</h4>
+        <p>20 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
+        <span class="card-arrow">→</span>
+    </div>
+    <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
+        Voir l'historique des résultats
+    </button>
+</div>
+
+            <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
+                📊 Voir l'historique des résultats
+            </button>
+        </div>
+        <div id="qcm-active" style="display:none;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                <button onclick="resetQCM()" style="margin-top:0; padding:8px 18px; font-size:0.9em;">← Retour</button>
+                <h3 id="qcm-titre" style="margin:0; text-decoration:none; font-size:1.1em;"></h3>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width:0%;">0%</div>
+            </div>
+            <div id="qcmContainer"></div>
+            <div id="scoreResult"></div>
+        </div>
+        <div id="qcm-dashboard" style="display:none;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <button onclick="resetQCM()" style="margin-top:0; padding:8px 18px; font-size:0.9em;">← Retour</button>
                 <h3 style="margin:0; text-decoration:none; font-size:1.1em;">📊 Historique des résultats</h3>
             </div>
-            <div id="dashboard-table"></div>
+            <div id="dashboard-table-full"></div>
         </div>
     </div>
-    <div id="qcm-selector" style="display:none;">
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-            <p style="margin:0; color:#324754;">Bonjour <strong id="display-nom"></strong> ! Choisissez un QCM :</p>
-            <button onclick="resetNom()" style="margin-top:0; padding:6px 14px; font-size:0.8em;">← Changer de nom</button>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-            <div class="card clickable" onclick="startQCM(1)">
-                <h4>🎯 QCM 1</h4>
-                <p>8 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
-                <span class="card-arrow">→</span>
-            </div>
-            <div class="card clickable" onclick="startQCM(2)">
-                <h4>🎯 QCM 2</h4>
-                <p>8 questions différentes, également mixtes tous thèmes.</p>
-                <span class="card-arrow">→</span>
-            </div>
-        </div>
-        
-    </div>
-    <div id="qcm-active" style="display:none;">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
-            <button onclick="resetQCM()" style="margin-top:0; padding:8px 18px; font-size:0.9em;">← Retour</button>
-            <h3 id="qcm-titre" style="margin:0; text-decoration:none; font-size:1.1em;"></h3>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill" style="width:0%;">0%</div>
-        </div>
-        <div id="qcmContainer"></div>
-        <div id="scoreResult"></div>
-    </div>
-    <div id="qcm-dashboard" style="display:none;">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-            <button onclick="resetQCM()" style="margin-top:0; padding:8px 18px; font-size:0.9em;">← Retour</button>
-            <h3 style="margin:0; text-decoration:none; font-size:1.1em;">📊 Historique des résultats</h3>
-        </div>
-        <div id="dashboard-table-full"></div>
-    </div>
-</div>
 
 </div>
+
 <script>
     const questionsPool = [
         { theme:'📦', question: "Que signifie '1P' sur une étiquette Paack ?", options: ["1ère Position","1 Paquet (1 colis)","1 Personne","Priorité 1"], correct: 1 },
@@ -702,7 +685,7 @@ function toggleCard(id) {
         { theme:'📦', question: "Que représente la date sur l'étiquette Paack ?", options: ["La date de fabrication","La date de livraison prévue","La date d'expédition","La date de retour"], correct: 1 },
         { theme:'📮', question: "Quelle est la méthode de livraison prioritaire ?", options: ["Boîte aux lettres","Voisin","Remise en main propre","Dépose devant la porte"], correct: 2 },
         { theme:'📮', question: "Quel critère est OBLIGATOIRE sur la photo en main propre ?", options: ["Le colis seul","Le client seul","Colis + partie du client OU porte entrouverte","Juste la rue"], correct: 2 },
-        { theme:'📮', question: "Pour une dépose en lieu sûr, que faut-il OBLIGATOIREMENT ?", options: ["Rien de spécial","Un accord écrit du client par SMS","Un appel téléphonique","Une signature"], correct: 1 },
+        { theme:'📮', question: "Pour une dépose en lieu sûr (jardin, palier, voisin, etc...), que faut-il OBLIGATOIREMENT ?", options: ["Rien de spécial","Un accord écrit du client par SMS","Un appel téléphonique","Une signature"], correct: 1 },
         { theme:'📮', question: "Après une dépose en lieu sûr, vous devez :", options: ["Rien, c'est bon","Prévenir le client du lieu exact ET lui envoyer une photo","Juste prendre une photo","Juste prévenir le client"], correct: 1 },
         { theme:'📮', question: "Pour une livraison en BAL, quel critère photo est requis ?", options: ["Juste le colis","Colis + étiquette + nom client sur la BAL","Juste la boîte","La rue uniquement"], correct: 1 },
         { theme:'📮', question: "Peut-on déposer un colis chez un voisin sans accord du client ?", options: ["Oui si le client ne répond pas","Oui, toujours","Non, accord client obligatoire","Oui si le voisin accepte"], correct: 2 },
@@ -710,14 +693,12 @@ function toggleCard(id) {
         { theme:'📮', question: "Une photo floue lors d'une livraison main propre est-elle valide ?", options: ["Oui si le colis est visible","Non, elle n'est pas valide","Oui si le client est visible","Oui toujours"], correct: 1 },
         { theme:'📮', question: "Avant de livrer, que faut-il toujours vérifier ?", options: ["La météo","Que vous livrez le bon colis à la bonne adresse","Que le client est disponible","Le poids du colis"], correct: 1 },
         { theme:'📮', question: "Que faire si le client demande une dépose chez le voisin ?", options: ["Refuser systématiquement","Obtenir son accord par SMS et l'envoyer sur WhatsApp","Déposer directement","Appeler le responsable"], correct: 1 },
-        { theme:'⚠️', question: "En cas d'échec, quelle est la première étape ?", options: ["Appeler le client","Choisir le bon motif d'échec sur l'application","Laisser le colis","Rentrer à l'entrepôt"], correct: 1 },
+        { theme:'⚠️', question: "En cas d'impossibilité de livrer le colis, que dois-je faire ?", options: ["Appeler le client","Choisir le bon motif d'échec sur l'application","Laisser le colis","Rentrer à l'entrepôt"], correct: 1 },
         { theme:'⚠️', question: "L'application demande une signature pour un échec. C'est normal ?", options: ["Oui, toujours","Non, revenir en arrière (mauvais clic)","Signer quand même","Appeler le responsable"], correct: 1 },
         { theme:'⚠️', question: "Que faire après avoir déclaré un colis 'Livré' par erreur ?", options: ["Continuer, c'est trop tard","Prévenir le responsable ET le client","Attendre que le client se plaigne","Retourner le chercher sans prévenir"], correct: 1 },
         { theme:'⚠️', question: "Que faire du colis en cas d'échec ?", options: ["Le garder pour le lendemain","Le retenter puis le retourner à l'entrepôt en fin de tournée","Le laisser devant la porte","L'apporter à un voisin"], correct: 1 },
         { theme:'⚠️', question: "Quelle photo prendre en cas d'échec ?", options: ["Aucune","Numéro de rue, lieu ou obstacle + colis","Photo du colis uniquement","Selfie devant l'adresse"], correct: 1 },
         { theme:'⚠️', question: "Pour le motif 'Refus du client', que faut-il obligatoirement ?", options: ["Rien de spécial","Un SMS du client prouvant son refus + envoi sur WhatsApp","Un appel téléphonique","Une signature du client"], correct: 1 },
-        { theme:'⚠️', question: "Vous avez cliqué au mauvais endroit sur l'appli. Que faites-vous ?", options: ["Valider quand même","Revenir en arrière et corriger","Éteindre l'application","Appeler le support"], correct: 1 },
-        { theme:'⚠️', question: "Après une erreur 'Livré', le colis revient sur l'appli. Que faites-vous ?", options: ["L'ignorer","Le statuer avec le bon motif","Le retourner sans le statuer","Appeler le client uniquement"], correct: 1 },
     ];
 
     let currentNom = '';
@@ -725,7 +706,6 @@ function toggleCard(id) {
     let currentQuestions = [];
     let currentIndex = 0;
     let score = 0;
-    let answered = false;
 
     function validerNom() {
         const val = document.getElementById('input-nom').value.trim();
@@ -747,24 +727,22 @@ function toggleCard(id) {
         afficherDashboardMini();
     }
 
-    function startQCM(num) {
-        currentQCMNum = num;
-        currentIndex = 0;
-        score = 0;
-        answered = false;
-        window._selectedAnswer = null;
-        const shuffled = [...questionsPool].sort(() => Math.random() - 0.5);
-        currentQuestions = num === 1 ? shuffled.slice(0, 8) : shuffled.slice(8, 16);
-        document.getElementById('qcm-selector').style.display = 'none';
-        document.getElementById('qcm-dashboard').style.display = 'none';
-        document.getElementById('qcm-active').style.display = 'block';
-        document.getElementById('qcm-titre').textContent = `🎯 QCM ${num} — Questions mixtes`;
-        document.getElementById('scoreResult').innerHTML = '';
-        renderQuestion();
-    }
+function startQCM() {
+    currentQCMNum = 1;
+    currentIndex = 0;
+    score = 0;
+    window.selectedAnswer = null;
+    currentQuestions = [...questionsPool].sort(() => Math.random() - 0.5).slice(0, 20);
+    document.getElementById('qcm-selector').style.display = 'none';
+    document.getElementById('qcm-dashboard').style.display = 'none';
+    document.getElementById('qcm-active').style.display = 'block';
+    document.getElementById('qcm-titre').textContent = 'QCM — Questions mixtes';
+    document.getElementById('scoreResult').innerHTML = '';
+    renderQuestion();
+}
+
 
     function renderQuestion() {
-        answered = false;
         window._selectedAnswer = null;
         const q = currentQuestions[currentIndex];
         const pct = Math.round((currentIndex / currentQuestions.length) * 100);
@@ -793,7 +771,7 @@ function toggleCard(id) {
                 </button>
             </div>`;
         window.selectAnswer = function(j) {
-            if (answered) return;
+            if (window._answered) return;
             window._selectedAnswer = j;
             document.querySelectorAll('.option').forEach((el, i) => {
                 el.style.background = i === j ? '#d0e8f2' : '';
@@ -801,13 +779,14 @@ function toggleCard(id) {
                 el.querySelector('input').checked = i === j;
             });
         };
+        window._answered = false;
     }
 
     function validerReponse() {
         if (window._selectedAnswer === undefined || window._selectedAnswer === null) {
             alert('⚠️ Choisissez une réponse !'); return;
         }
-        answered = true;
+        window._answered = true;
         const q = currentQuestions[currentIndex];
         const chosen = window._selectedAnswer;
         const isCorrect = chosen === q.correct;
@@ -819,13 +798,12 @@ function toggleCard(id) {
             else { el.style.background = ''; el.style.border = '2px solid transparent'; }
         });
         const feedback = document.getElementById('feedback-box');
-        feedback.style.display = 'block';
         if (isCorrect) {
             feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:#e2f6ea; color:#1e6b3a; border:1px solid #b9e5c5;';
-            feedback.innerHTML = '✅ <strong>Correct !</strong> Bien joué.';
+            feedback.innerHTML = '✅ <strong>Correct !</strong>';
         } else {
             feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:#ffe8ea; color:#7c1f28; border:1px solid #f4c0c4;';
-            feedback.innerHTML = `❌ <strong>Incorrect.</strong> Bonne réponse : <em>${q.options[q.correct]}</em><br><span style="font-size:0.88em; color:#7c1f28;">💡 Relisez la section correspondante dans le guide.</span>`;
+            feedback.innerHTML = `❌ <strong>Incorrect.</strong> Bonne réponse : <em>${q.options[q.correct]}</em>`;
         }
         document.getElementById('btn-valider').style.display = 'none';
         document.getElementById('btn-suite').style.display = 'block';
@@ -847,12 +825,18 @@ function toggleCard(id) {
         const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
         results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct });
         localStorage.setItem('paack_results', JSON.stringify(results));
-        fetch('https://script.google.com/a/macros/paack.co/s/AKfycbzY5iFhzJGxMOzzBBjOpr2T2k0PYxdeJqFqMB4zEvy2-420phCJMOvvyXpF4ZXlqwwi/exec', {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct }),
-            headers: { 'Content-Type': 'application/json' }
-        }).catch(err => console.log('Erreur envoi:', err));
+fetch('https://script.google.com/macros/s/AKfycbyXKdsZHVs-P9uks62Z8zlfuhidzonaXrb5V2YlZ--l7_pcsLgqe2voNqpdBBxDFbXYSg/exec', {
+  method: 'POST', 
+  mode: 'no-cors',
+  body: JSON.stringify({
+    nom: currentNom,
+    date: dateStr, 
+    qcm: `QCM ${currentQCMNum}`,
+    score, 
+    total: currentQuestions.length,
+    pct
+  })
+}).catch(err => console.log('Erreur envoi:', err));
         let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
         document.getElementById('qcmContainer').innerHTML = '';
         document.getElementById('scoreResult').innerHTML = `
@@ -863,8 +847,8 @@ function toggleCard(id) {
                 <p style="margin-top:8px;">${msg}</p>
             </div>
             <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
-                <button onclick="startQCM(${currentQCMNum})" style="flex:1; padding:12px; margin-top:0;">🔄 Recommencer ce QCM</button>
-                <button onclick="resetQCM()" style="flex:1; padding:12px; margin-top:0;">← Choisir un autre QCM</button>
+<button onclick="startQCM()" style="flex:1; padding:12px; margin-top:0;">🔄 Recommencer</button>
+
             </div>
             <button onclick="afficherDashboard()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">📊 Voir l'historique</button>`;
     }
@@ -902,8 +886,7 @@ function toggleCard(id) {
                         <th style="padding:10px 12px; text-align:left;">Score</th>
                         <th style="padding:10px 12px; text-align:left; border-radius:0 8px 0 0;">Résultat</th>
                     </tr>
-                </thead>
-                <tbody>`;
+                </thead><tbody>`;
         reversed.forEach((r, i) => {
             const bg = i % 2 === 0 ? '#f5f9fc' : '#ffffff';
             const couleur = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
@@ -963,6 +946,20 @@ function toggleCard(id) {
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // Tracking vue automatique au chargement
+window.addEventListener('load', function() {
+  fetch('https://script.google.com/macros/s/AKfycbyXKdsZHVs-P9uks62Z8zlfuhidzonaXrb5V2YlZ--l7_pcsLgqe2voNqpdBBxDFbXYSg/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify({
+      type: 'vue',
+      date: new Date().toLocaleString('fr-FR'),
+      page: document.title,
+      appareil: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
+    })
+  });
+});
 
     function toggleCard(id) {
         const allCards = ['card-hub','card-ordre','card-creneau','card-date','card-colis','card-barcode'];
