@@ -206,11 +206,6 @@ flex:1;
             color: white; font-size: 0.8em; font-weight: bold;
         }
         .red-chip { background-color: #ffe0e0; padding: 2px 8px; border-radius: 5px; }
-        nav {
-    position: sticky;
-    top: 8px;
-    z-index: 50;
-}
         @media (max-width: 768px) {
             body { padding: 14px; }
             .content-section { padding: 22px 16px 24px; }
@@ -619,7 +614,7 @@ onmouseleave="document.getElementById('card-barcode').style.display='none'"
     <div id="qcm" class="content-section">
         <h2>❓ Testez Vos Connaissances</h2>
         <div id="qcm-name-screen">
-            <p style="margin-bottom:8px; color:#324754;">Entrez votre prénom pour commencer et enregistrer vos résultats.</p> <p style="margin-bottom:16px; color:#6c7a86; font-size:0.85em;">Les résultats sont sauvegardés uniquement sur cet appareil.</p>
+            <p style="margin-bottom:16px; color:#324754;">Entrez votre prénom pour commencer et enregistrer vos résultats.</p>
             <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                 <input type="text" id="input-nom" placeholder="Votre prénom..."
                        style="padding:12px 16px; border-radius:10px; border:2px solid #2d7f9f; font-size:1em; flex:1; min-width:200px; outline:none; color:#12232e;">
@@ -643,7 +638,9 @@ onmouseleave="document.getElementById('card-barcode').style.display='none'"
         <p>20 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
         <span class="card-arrow">→</span>
     </div>
-
+    <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
+        Voir l'historique des résultats
+    </button>
 </div>
 
             <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
@@ -805,8 +802,7 @@ function startQCM() {
             feedback.innerHTML = '✅ <strong>Correct !</strong>';
         } else {
             feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:#ffe8ea; color:#7c1f28; border:1px solid #f4c0c4;';
-            feedback.innerHTML = `❌ <strong>Incorrect.</strong> Bonne réponse : <em><br>
-    <span style="font-size:0.88em; color:#7c1f28;">💡 Relisez la section correspondante dans le guide.</span>`${q.options[q.correct]}</em>`;
+            feedback.innerHTML = `❌ <strong>Incorrect.</strong> Bonne réponse : <em>${q.options[q.correct]}</em>`;
         }
         document.getElementById('btn-valider').style.display = 'none';
         document.getElementById('btn-suite').style.display = 'block';
