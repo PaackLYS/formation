@@ -377,20 +377,119 @@
             h2 { font-size: 1.3em; gap: 6px; }
             .nav-btn { font-size: 0.72em; padding: 8px 6px; }
         }
+
+        /* Nav sticky */
+        nav.sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        /* Encadré À retenir */
+        .retenir {
+            background: linear-gradient(135deg, #e8faf0 0%, #d4f5e4 100%);
+            padding: 18px 20px;
+            border-left: 5px solid var(--paack-accent);
+            margin: 24px 0 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(47,183,129,0.15);
+        }
+        .retenir-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            color: #1a6b42;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+        }
+        .retenir ul { margin-left: 20px; margin-top: 6px; }
+        .retenir li { color: #1a5c3a; font-weight: 600; margin-bottom: 6px; }
+
+        /* Étapes numérotées */
+        .numbered-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin: 16px 0 20px;
+        }
+        .numbered-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: #f5f9fc;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border: 1px solid rgba(26,92,122,0.1);
+            transition: transform 0.2s ease;
+        }
+        .numbered-step:hover { transform: translateX(4px); }
+        .step-number {
+            flex-shrink: 0;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--paack-blue), var(--paack-accent));
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800;
+            font-size: 1.1em;
+            box-shadow: 0 3px 10px rgba(26,92,122,0.3);
+        }
+        .step-text { flex: 1; color: #1b3444; line-height: 1.5; font-size: 0.97em; }
+        .step-text strong { color: var(--paack-blue); }
+
+        /* Bandeau photos À FAIRE / À NE PAS FAIRE */
+        .photo-section-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+            letter-spacing: 0.3px;
+        }
+        .photo-section-header.do {
+            background: linear-gradient(135deg, #e2f6ea, #c8f0d5);
+            color: #1a6b42;
+            border: 2px solid #2fb781;
+        }
+        .photo-section-header.dont {
+            background: linear-gradient(135deg, #ffe8ea, #ffd4d8);
+            color: #7c1f28;
+            border: 2px solid #d64545;
+        }
+
+        /* Photo border glow */
+        .photo-item img.valid-photo {
+            border: 3px solid #2fb781;
+            box-shadow: 0 4px 16px rgba(47,183,129,0.25);
+        }
+        .photo-item img.invalid-photo {
+            border: 3px solid #d64545;
+            box-shadow: 0 4px 16px rgba(214,69,69,0.25);
+        }
+
+        @media (max-width: 768px) {
+            .numbered-step { padding: 12px; gap: 10px; }
+            .step-number { width: 32px; height: 32px; font-size: 0.95em; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
 
-    <header style="background:linear-gradient(135deg,#ffffff 0%,#f0f8fc 60%,#d8eff7 100%); border-radius:18px; padding:28px 30px 22px; margin-bottom:10px; box-shadow:0 14px 40px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
+    <header style="background:linear-gradient(135deg,#ffffff 0%,#f0f8fc 60%,#d8eff7 100%); border-radius:18px; padding:18px 24px 14px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
         <div style="position:absolute; right:-50px; top:-50px; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, rgba(47,183,129,0.15), transparent 65%); pointer-events:none;"></div>
         <div style="position:absolute; left:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(26,92,122,0.1), transparent 65%); pointer-events:none;"></div>
         <div style="display:flex; align-items:center; gap:18px; position:relative; z-index:1;">
             <div style="background:linear-gradient(135deg,#0b2436,#1a5c7a); border-radius:16px; padding:14px; box-shadow:0 6px 20px rgba(0,0,0,0.3); flex-shrink:0;">
-                <span style="font-size:2em; display:block;">📦</span>
+                <span style="font-size:1.6em; display:block;">📦</span>
             </div>
             <div>
-                <h1 style="margin:0; font-size:2em; font-weight:900; color:#0b2436; letter-spacing:-0.5px; line-height:1.1;">
+                <h1 style="margin:0; font-size:1.7em; font-weight:900; color:#0b2436; letter-spacing:-0.5px; line-height:1.1;">
                     Formation <span style="background:linear-gradient(90deg,#1a5c7a,#2d7f9f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Paack</span>
                 </h1>
                 <p style="margin:6px 0 0; color:#4f6473; font-size:0.92em;">Formation interactive · Maîtrisez les processus en quelques minutes</p>
@@ -398,7 +497,7 @@
         </div>
     </header>
 
-    <nav style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; justify-content:stretch; background:linear-gradient(135deg,#0b2436,#173750); padding:5px 10px; border-radius:16px; box-shadow:0 12px 35px rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.06);">
+    <nav class="sticky-nav" style="display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; justify-content:stretch; background:linear-gradient(135deg,#0b2436,#173750); padding:5px 10px; border-radius:16px; box-shadow:0 12px 35px rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.06);">
         <button class="nav-btn active" onclick="showSection('accueil', this)">
             <span class="icon">🏠</span>Accueil
         </button>
@@ -559,6 +658,16 @@
         <div class="danger">
             <strong>⛔ Attention:</strong>h Ne JAMAIS placer de colis lourd sur un colis fragile. Lisez les étiquettes avec attention!
         </div>
+
+    <div class="retenir">
+        <div class="retenir-title">🧠 À retenir — Chargement</div>
+        <ul>
+            <li>Toujours vérifier que tous les colis sont présents avant de partir</li>
+            <li>Charger par ordre de livraison : derniers au fond, premiers à l'ouverture</li>
+            <li>Ne jamais poser de colis lourd sur un colis fragile</li>
+            <li>Signaler immédiatement tout colis manquant ou en trop</li>
+        </ul>
+    </div>
     </div>
     <!-- LIVRAISON -->
     <div id="livraison" class="content-section">
@@ -570,10 +679,16 @@
             <strong>ℹ️ Si le client est injoignable ou en fait la demande:</strong> Vous pouvez explorer d'autres solutions décrites ci-dessous.
         </div>
         <h3>La remise en main propre</h3>
-        <ul>
-            <li>Choisissez le motif de livraison "Client"</li>
-            <li>Prendre une photo respectant les critères pour confirmer la livraison en cas de litige</li>
-        </ul>
+        <div class="numbered-steps">
+            <div class="numbered-step">
+                <div class="step-number">1</div>
+                <div class="step-text"><strong>Choisissez le motif de livraison "Client"</strong></div>
+            </div>
+            <div class="numbered-step">
+                <div class="step-number">2</div>
+                <div class="step-text"><strong>Prendre une photo</strong> respectant les critères pour confirmer la livraison en cas de litige</div>
+            </div>
+        </div>
         <div class="highlight">
             <strong>📸 Critères de la photo valide:</strong>
             <ul style="margin-top:10px;">
@@ -583,7 +698,7 @@
             </ul>
         </div>
         <div style="margin:16px 0 24px;">
-            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos valides :</p>
+            <div class="photo-section-header do">✅ À FAIRE — Photos correctes</div>
             <div class="photo-grid-3">
                 <div class="photo-item">
                     <div style="position:relative; display:inline-block; width:100%;">
@@ -628,7 +743,7 @@
             </ul>
         </div>
         <div style="margin:16px 0 24px;">
-            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos :</p>
+            <div class="photo-section-header do">✅ À FAIRE</div><span style="margin-left:10px;"></span><div class="photo-section-header dont" style="margin-left:10px;">❌ À NE PAS FAIRE</div>
             <div class="photo-grid-3">
                 <div class="photo-item">
                     <div style="position:relative; display:inline-block; width:100%;">
@@ -646,7 +761,7 @@
                 </div>
                 <div class="photo-item">
                     <div style="position:relative; display:inline-block; width:100%;">
-                        <img src="images/BAL3.jpg" alt="BAL Exemple 3" style="border:3px solid #d64545;" onerror="this.style.display='none'">
+                        <img src="images/BAL3.jpg" alt="BAL Exemple 3" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
                         <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
                     </div>
                     <p class="photo-caption" style="color:#7c1f28;">❌ Colis à l'intérieur de la BAL</p>
@@ -675,7 +790,7 @@
             <strong>⚠️ Rappel :</strong> Beaucoup de réclamations viennent du client qui ignore où est livré son colis. TOUJOURS le prévenir précisément et lui envoyer une photo!
         </div>
         <div style="margin:16px 0 24px;">
-            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples d'autorisations valides :</p>
+            <div class="photo-section-header do">✅ EXEMPLES D'AUTORISATIONS VALIDES</div>
             <div class="photo-grid-2">
                 <div class="photo-item">
                     <div style="position:relative; display:inline-block; width:100%;">
@@ -693,16 +808,36 @@
                 </div>
             </div>
         </div>
+
+    <div class="retenir">
+        <div class="retenir-title">🧠 À retenir — Livraison</div>
+        <ul>
+            <li>Toujours tenter la remise en main propre en premier</li>
+            <li>Toujours vérifier que c'est le bon colis avant de livrer</li>
+            <li>Accord SMS obligatoire pour toute dépose hors main propre (sauf BAL)</li>
+            <li>Prévenir le client du lieu exact + envoyer une photo</li>
+            <li>Envoyer les preuves SMS sur le groupe WhatsApp</li>
+        </ul>
+    </div>
     </div>
     <!-- ECHECS -->
     <div id="echecs" class="content-section">
         <h2>⚠️ Phase 3: Échec de Livraison</h2>
         <h3>Procédure en cas d'échec de livraison</h3>
-        <ul>
-            <li><strong>Étape 1:</strong> Choisir le bon motif d'échec sur l'application</li>
-            <li><strong>Étape 2:</strong> Prendre une photo du numéro de rue, du lieu de livraison ou de ce qui vous a empêché à y accéder</li>
-            <li><strong>Étape 3:</strong> Retourner le colis à l'entrepôt en fin de tournée</li>
-        </ul>
+        <div class="numbered-steps">
+            <div class="numbered-step">
+                <div class="step-number">1</div>
+                <div class="step-text"><strong>Choisir le bon motif d'échec</strong> sur l'application</div>
+            </div>
+            <div class="numbered-step">
+                <div class="step-number">2</div>
+                <div class="step-text"><strong>Prendre une photo</strong> du numéro de rue, du lieu de livraison ou de ce qui vous a empêché d'y accéder</div>
+            </div>
+            <div class="numbered-step">
+                <div class="step-number">3</div>
+                <div class="step-text"><strong>Retourner le colis</strong> à l'entrepôt en fin de tournée</div>
+            </div>
+        </div>
         <div class="danger" style="margin-top:20px;">
             <strong>🚫 Motif "Refus du client" — Condition STRICTE :</strong>
             <ul style="margin-top:10px; margin-bottom:0;">
@@ -729,7 +864,7 @@
             </ul>
         </div>
         <div style="margin:24px 0 8px;">
-            <p style="font-weight:700; color:#1a5c7a; margin-bottom:10px;">📸 Exemples de photos d'échec :</p>
+            <div class="photo-section-header do">✅ PHOTOS VALIDES</div>
             <div class="photo-grid-2" style="margin-bottom:14px;">
                 <div class="photo-item">
                     <div style="position:relative; display:inline-block; width:100%;">
@@ -749,20 +884,30 @@
             <div class="photo-grid-2">
                 <div class="photo-item">
                     <div style="position:relative; display:inline-block; width:100%;">
-                        <img src="images/echec4.jpg" alt="Échec Exemple 4" style="border:3px solid #d64545;" onerror="this.style.display='none'">
+                        <img src="images/echec4.jpg" alt="Échec Exemple 4" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
                         <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
                     </div>
                     <p class="photo-caption" style="color:#7c1f28;">❌ Lieu de livraison non visible</p>
                 </div>
                 <div class="photo-item">
                     <div style="position:relative; display:inline-block; width:100%;">
-                        <img src="images/echec5.jpg" alt="Échec Exemple 5" style="border:3px solid #d64545;" onerror="this.style.display='none'">
+                        <img src="images/echec5.jpg" alt="Échec Exemple 5" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
                         <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
                     </div>
                     <p class="photo-caption" style="color:#7c1f28;">❌ Lieu de livraison non visible</p>
                 </div>
             </div>
         </div>
+
+    <div class="retenir">
+        <div class="retenir-title">🧠 À retenir — Échecs</div>
+        <ul>
+            <li>Toujours choisir le bon motif d'échec + prendre une photo</li>
+            <li>Motif "Refus client" = SMS obligatoire + envoi sur WhatsApp</li>
+            <li>Si signature demandée lors d'un échec = mauvais clic, revenir en arrière</li>
+            <li>En cas d'erreur "Livré" : prévenir le responsable + le client immédiatement</li>
+        </ul>
+    </div>
     </div>
     <!-- QCM -->
     <div id="qcm" class="content-section">
