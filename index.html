@@ -542,9 +542,11 @@
             .photo-item img { height: auto; max-height: 450px; object-fit: contain; }
             h2 { font-size: 1.5em; }
             h3 { font-size: 1.2em; }
-            /* Étiquette : réduire et centrer en mobile */
-            .etiquette-image-container { max-width: 85% !important; margin-left: auto !important; margin-right: auto !important; overflow: visible !important; }
-            .etiquette-badge { white-space: nowrap !important; }
+            /* Étiquette : badges en liste sous l'image en mobile */
+            .etiquette-image-container { max-width: 90% !important; margin-left: auto !important; margin-right: auto !important; }
+            .etiquette-badge-wrap { position: static !important; margin-top: 6px; }
+            .etiquette-badge { display: block !important; text-align: center; }
+            .etiquette-tooltip { position: static !important; width: 100% !important; margin-top: 4px; }
             .etiquette-tooltip { font-size: 0.78em !important; min-width: 160px !important; max-width: 200px !important; }
             /* Échecs motifs */
             .ech-motif-layout { flex-direction: column !important; align-items: center !important; }
