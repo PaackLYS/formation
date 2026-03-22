@@ -1983,6 +1983,14 @@ function toggleCard(id) {
     card.classList.toggle('show');
 }
 
+// Désactiver hover sur mobile (évite le double-tap)
+if ('ontouchstart' in window) {
+    document.querySelectorAll('.etiquette-badge').forEach(badge => {
+        badge.removeAttribute('onmouseenter');
+        badge.removeAttribute('onmouseleave');
+    });
+}
+
 // ========== 1. BARRE DE PROGRESSION GLOBALE ==========
 function updateGlobalProgress() {
     const bar = document.getElementById('global-progress');
