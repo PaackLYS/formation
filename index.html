@@ -539,18 +539,18 @@
             .content-section { padding: 22px 16px 24px; }
             .photo-grid-3 { grid-template-columns: 1fr; }
             .photo-grid-2 { grid-template-columns: 1fr; }
-            .photo-item img { height: 250px; }
+            .photo-item img { height: auto; max-height: 450px; object-fit: contain; }
             h2 { font-size: 1.5em; }
             h3 { font-size: 1.2em; }
-            .etiquette-wrapper { position: static !important; display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-            .etiquette-badge-wrap { position: static !important; }
-            .etiquette-tooltip { position: static !important; margin-top: 4px; width: 100% !important; }
+            /* Étiquette : garder les badges SUR l'image en mobile */
             .etiquette-image-container { max-width: 100% !important; }
-            .etiquette-badge-wrap[style*="left:-"] { left: 0 !important; }
-            .etiquette-badge-wrap[style*="right:-"] { right: 0 !important; }
+            .etiquette-badge { font-size: 0.65em !important; padding: 2px 5px !important; }
+            .etiquette-tooltip { font-size: 0.78em !important; min-width: 160px !important; max-width: 200px !important; }
+            /* Échecs motifs */
             .ech-motif-layout { flex-direction: column !important; align-items: center !important; }
             .echec-image-container { max-width: 100% !important; }
             .ech-bubble { font-size: 0.84em !important; padding: 12px 14px !important; }
+            .ech-bubble img { max-width: 100% !important; }
             .steps-flow { flex-direction: column; align-items: center; gap: 8px; }
             .step-card { max-width: 100%; width: 100%; }
             .step-arrow { transform: rotate(90deg); padding: 4px 0; }
