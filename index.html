@@ -1556,6 +1556,16 @@ function renderQuestion() {
     const fill = document.getElementById('progressFill');
     fill.style.width = pct + '%';
     fill.textContent = pct + '%';
+    // Mélanger les options aléatoirement
+    const indices = [0, 1, 2, 3];
+    for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    const shuffledOptions = indices.map(i => q.options[i]);
+    const shuffledCorrect = indices.indexOf(q.correct);
+    window._shuffledCorrect = shuffledCorrect;
+    window._shuffledIndices = indices;
     document.getElementById('qcmContainer').innerHTML = `
         <div class="question">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -1564,7 +1574,7 @@ function renderQuestion() {
             </div>
             <p style="font-weight:600; margin:12px 0 14px;">${q.question}</p>
             <div class="options" id="options-list">
-                ${q.options.map((opt, j) => `
+                ${shuffledOptions.map((opt, j) => `
                     <div class="option" id="opt-${j}" onclick="selectAnswer(${j})" style="cursor:pointer; border-radius:8px; padding:4px; border:2px solid transparent; transition:all 0.2s;">
                         <input type="radio" name="q0" value="${j}" style="pointer-events:none;">
                         <label style="cursor:pointer;">${opt}</label>
@@ -1592,13 +1602,14 @@ function validerReponse() {
     window._answered = true;
     const q = currentQuestions[currentIndex];
     const chosen = window._selectedAnswer;
-    const isCorrect = chosen === q.correct;
+    const correctIdx = window._shuffledCorrect;
+    const isCorrect = chosen === correctIdx;
     if (isCorrect) score++;
-    else wrongAnswers.push({ question: q.question, chosen: q.options[chosen], correct: q.options[q.correct], theme: q.theme });
+    else wrongAnswers.push({ question: q.question, chosen: q.options[window._shuffledIndices[chosen]], correct: q.options[q.correct], theme: q.theme });
     updateGlobalProgress();
     document.querySelectorAll('.option').forEach((el, i) => {
         el.style.pointerEvents = 'none';
-        if (i === q.correct) { el.style.background = '#e2f6ea'; el.style.border = '2px solid #2fb781'; }
+        if (i === correctIdx) { el.style.background = '#e2f6ea'; el.style.border = '2px solid #2fb781'; }
         else if (i === chosen && !isCorrect) { el.style.background = '#ffe8ea'; el.style.border = '2px solid #d64545'; }
         else { el.style.background = ''; el.style.border = '2px solid transparent'; }
     });
