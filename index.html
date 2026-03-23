@@ -1256,6 +1256,7 @@
         <p style="font-size:1.05em; color:#324754; margin-bottom:8px; line-height:1.7;">
             Bravo, vous avez parcouru toutes les étapes! Vous pouvez maintenant <strong>naviguer librement</strong> entre les sections pour revoir ce dont vous avez besoin.
         </p>
+        <button onclick="newSession()" style="margin-bottom:16px; padding:10px 20px; font-size:0.9em; background:linear-gradient(135deg,#4f6473,#324754);">🔄 Nouveau livreur ? Recommencer la formation</button>
         <div class="recap-grid">
             <div class="recap-card" onclick="freeNavTo('chargement')">
                 <h4>📦 Chargement</h4>
@@ -1406,6 +1407,41 @@ function activateFreeMode() {
     // Mettre à jour les boutons "Étape suivante" pour qu'ils deviennent des boutons de nav
     document.querySelectorAll('.btn-next-step').forEach(btn => btn.style.display = 'none');
 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function newSession() {
+    // Réinitialiser tout
+    currentStep = 0;
+    maxReached = 0;
+    freeMode = false;
+    currentNom = '';
+    formationStartTime = null;
+    if (chronoInterval) { clearInterval(chronoInterval); chronoInterval = null; }
+    livCurrentSub = 0; livMaxSub = 0;
+    echCurrentSub = 0; echMaxSub = 0;
+    echMotifsViewed.clear();
+    wrongAnswers = [];
+    localStorage.removeItem('paack_progress');
+
+    // Réafficher le stepper, masquer nav libre
+    document.getElementById('stepper').classList.remove('hidden');
+    document.getElementById('navLibre').classList.remove('visible');
+    const gp = document.getElementById('global-progress');
+    if (gp) gp.style.display = 'none';
+
+    // Réafficher tous les boutons next
+    document.querySelectorAll('.btn-next-step').forEach(btn => btn.style.display = '');
+
+    // Réafficher le champ nom
+    document.getElementById('accueil-name-screen').style.display = 'block';
+    document.getElementById('chrono-bar').style.display = 'none';
+    document.getElementById('input-nom-accueil').value = '';
+
+    // Retourner à l'accueil
+    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('accueil').classList.add('active');
+    updateStepper();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
