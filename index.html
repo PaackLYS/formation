@@ -553,10 +553,10 @@
             .photo-item img { height: auto; max-height: 450px; object-fit: contain; }
             h2 { font-size: 1.5em; }
             h3 { font-size: 1.2em; }
-            /* Étiquette : garder les badges SUR l'image en mobile */
-            .etiquette-image-container { max-width: 80% !important; margin-left: auto !important; margin-right: auto !important; }
+            /* Étiquette : réduire l'image en mobile */
+            .etiquette-image-container { max-width: 65% !important; margin-left: auto !important; margin-right: auto !important; }
             .etiquette-badge { font-size: 0.65em !important; padding: 2px 5px !important; }
-            .etiquette-tooltip { font-size: 0.78em !important; min-width: 160px !important; max-width: 200px !important; }
+            .etiquette-tooltip-new { font-size: 0.78em !important; min-width: 140px !important; max-width: 180px !important; }
             /* Échecs motifs */
             .ech-motif-layout { flex-direction: column !important; align-items: center !important; }
             .echec-image-container { max-width: 100% !important; }
@@ -722,6 +722,45 @@
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
+        /* Tooltip ouverture à droite du badge */
+        .etiquette-tooltip-new.pos-right {
+            bottom: auto;
+            top: 50%;
+            left: calc(100% + 12px);
+            transform: translateY(-50%) translateX(8px);
+        }
+        .etiquette-tooltip-new.pos-right::after {
+            top: 50%;
+            left: -8px;
+            right: auto;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-right-color: white;
+            border-top-color: transparent;
+        }
+        .etiquette-tooltip-new.pos-right.show {
+            transform: translateY(-50%) translateX(0);
+        }
+        /* Tooltip ouverture à gauche du badge */
+        .etiquette-tooltip-new.pos-left {
+            bottom: auto;
+            top: 50%;
+            left: auto;
+            right: calc(100% + 12px);
+            transform: translateY(-50%) translateX(-8px);
+        }
+        .etiquette-tooltip-new.pos-left::after {
+            top: 50%;
+            right: -8px;
+            left: auto;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-left-color: white;
+            border-top-color: transparent;
+        }
+        .etiquette-tooltip-new.pos-left.show {
+            transform: translateY(-50%) translateX(0);
+        }
 
         /* ========== SCROLL TO TOP ========== */
         .scroll-top-btn {
@@ -879,7 +918,7 @@
                 <div class="etiquette-badge" style="background:#2d7f9f; color:white;" onclick="toggleCard('card-creneau')" onmouseenter="document.getElementById('card-creneau').classList.add('show')" onmouseleave="document.getElementById('card-creneau').classList.remove('show')">
                     🕐 Créneau : 09h-22h
                 </div>
-                <div id="card-creneau" class="etiquette-tooltip-new">
+                <div id="card-creneau" class="etiquette-tooltip-new pos-right">
                     <strong style="color:#2d7f9f;">Créneau de livraison</strong><br>Plage horaire attendue par le client.
                 </div>
             </div>
@@ -887,7 +926,7 @@
                 <div class="etiquette-badge" style="background:#f4c440; color:#4f4421;" onclick="toggleCard('card-date')" onmouseenter="document.getElementById('card-date').classList.add('show')" onmouseleave="document.getElementById('card-date').classList.remove('show')">
                     📅 Date : 25/01
                 </div>
-                <div id="card-date" class="etiquette-tooltip-new">
+                <div id="card-date" class="etiquette-tooltip-new pos-left">
                     <strong style="color:#b8941f;">Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
                 </div>
             </div>
