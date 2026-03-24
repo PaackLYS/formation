@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guide Livraison Paack - Formation Interactive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -14,7 +15,7 @@
             --paack-accent: #2fb781;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: radial-gradient(circle at top left, #173750 0%, #0b2436 45%, #061521 100%);
             min-height: 100vh;
             padding: 20px;
@@ -192,10 +193,20 @@
             border-radius: 18px;
             padding: 32px 32px 34px;
             box-shadow: 0 14px 40px rgba(0,0,0,0.45);
-            animation: fadeIn 0.45s ease;
             overflow-x: hidden;
+            transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .content-section.active { display: block; }
+        .content-section.active { display: block; animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .content-section.slide-left { animation: slideOutLeft 0.4s ease forwards; }
+        .content-section.slide-right { animation: slideOutRight 0.4s ease forwards; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInReverse {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -581,6 +592,183 @@
             #ech-bubbles-container { width: 100% !important; }
             .btn-next-step { font-size: 0.95em !important; padding: 14px !important; }
         }
+        /* ========== QCM MICRO-INTERACTIONS ========== */
+        .qcm-option-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 8px;
+            border: 2px solid transparent;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .qcm-option-enhanced::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(47,183,129,0.08), rgba(26,92,122,0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .qcm-option-enhanced:hover {
+            border-color: rgba(26,92,122,0.2);
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .qcm-option-enhanced:hover::before { opacity: 1; }
+        .qcm-option-enhanced.selected {
+            border-color: var(--paack-accent);
+            background: linear-gradient(135deg, #f0faf4, #e6f7ed);
+            transform: translateX(4px);
+            box-shadow: 0 4px 14px rgba(47,183,129,0.15);
+        }
+        .qcm-option-enhanced.correct-answer {
+            border-color: #2fb781;
+            background: #e2f6ea;
+        }
+        .qcm-option-enhanced.wrong-answer {
+            border-color: #d64545;
+            background: #ffe8ea;
+        }
+        .qcm-radio-custom {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 2px solid #c0d0d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .qcm-option-enhanced.selected .qcm-radio-custom {
+            border-color: var(--paack-accent);
+            background: var(--paack-accent);
+            animation: radioSelect 0.4s ease;
+        }
+        .qcm-radio-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: white;
+            transform: scale(0);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .qcm-option-enhanced.selected .qcm-radio-dot { transform: scale(1); }
+        .qcm-option-text {
+            font-size: 0.95em;
+            color: #324754;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+        .qcm-option-enhanced.selected .qcm-option-text { color: #1a6b42; font-weight: 600; }
+        @keyframes radioSelect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* ========== STAGGER ANIMATION ========== */
+        .stagger-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stagger-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== IMPROVED TOOLTIPS ========== */
+        .etiquette-tooltip-new {
+            display: none;
+            position: absolute;
+            z-index: 100;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.82em;
+            color: #1b3444;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+            line-height: 1.5;
+            min-width: 200px;
+            max-width: 260px;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+        }
+        .etiquette-tooltip-new::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: white;
+        }
+        .etiquette-tooltip-new.show {
+            display: block;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ========== SCROLL TO TOP ========== */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--paack-blue), var(--paack-accent));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(47,183,129,0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: none;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            padding: 0;
+            margin: 0;
+        }
+        .scroll-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .scroll-top-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(47,183,129,0.5);
+        }
+
+        /* ========== FOOTER ========== */
+        .site-footer {
+            text-align: center;
+            padding: 24px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.82em;
+            font-weight: 500;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 20px;
+        }
+        .site-footer span { color: var(--paack-accent); font-weight: 700; }
     </style>
 </head><body>
 <div class="container">
@@ -675,48 +863,48 @@
                 <div class="etiquette-badge" style="background:#1a5c7a; color:white;" onclick="toggleCard('card-hub')" onmouseenter="document.getElementById('card-hub').classList.add('show')" onmouseleave="document.getElementById('card-hub').classList.remove('show')">
                     🏢 Nom de tournée : LYS 013
                 </div>
-                <div id="card-hub" class="etiquette-tooltip" style="border-left:4px solid #1a5c7a; width:200px;">
-                    📋 <strong>Nom de la tournée</strong><br>Identifie la route assignée au livreur.
+                <div id="card-hub" class="etiquette-tooltip-new">
+                    <strong style="color:#1a5c7a;">Nom de la tournée</strong><br>Identifie la route assignée au livreur.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; top:12%; right:3%;">
                 <div class="etiquette-badge" style="background:#2fb781; color:white;" onclick="toggleCard('card-ordre')" onmouseenter="document.getElementById('card-ordre').classList.add('show')" onmouseleave="document.getElementById('card-ordre').classList.remove('show')">
                     📍 Ordre livraison : 9
                 </div>
-                <div id="card-ordre" class="etiquette-tooltip" style="border-left:4px solid #2fb781; top:110%; right:0; width:180px;">
-                    🗺️ <strong>Position dans la tournée</strong><br>Ce colis est le 9e arrêt de la journée.
+                <div id="card-ordre" class="etiquette-tooltip-new">
+                    <strong style="color:#2fb781;">Position dans la tournée</strong><br>Ce colis est le 9e arrêt de la journée.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; top:44%; left:-16%;">
                 <div class="etiquette-badge" style="background:#2d7f9f; color:white;" onclick="toggleCard('card-creneau')" onmouseenter="document.getElementById('card-creneau').classList.add('show')" onmouseleave="document.getElementById('card-creneau').classList.remove('show')">
                     🕐 Créneau : 09h-22h
                 </div>
-                <div id="card-creneau" class="etiquette-tooltip" style="border-left:4px solid #2d7f9f; width:200px;">
-                    ⏰ <strong>Créneau de livraison</strong><br>Plage horaire attendue par le client.
+                <div id="card-creneau" class="etiquette-tooltip-new">
+                    <strong style="color:#2d7f9f;">Créneau de livraison</strong><br>Plage horaire attendue par le client.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; top:44%; right:-7%;">
                 <div class="etiquette-badge" style="background:#f4c440; color:#4f4421;" onclick="toggleCard('card-date')" onmouseenter="document.getElementById('card-date').classList.add('show')" onmouseleave="document.getElementById('card-date').classList.remove('show')">
                     📅 Date : 25/01
                 </div>
-                <div id="card-date" class="etiquette-tooltip" style="border-left:4px solid #f4c440; top:110%; right:0; width:180px;">
-                    📆 <strong>Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
+                <div id="card-date" class="etiquette-tooltip-new">
+                    <strong style="color:#b8941f;">Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; bottom:22%; right:10%;">
                 <div class="etiquette-badge" style="background:#d64545; color:white;" onclick="toggleCard('card-colis')" onmouseenter="document.getElementById('card-colis').classList.add('show')" onmouseleave="document.getElementById('card-colis').classList.remove('show')">
                     📦 1P = 1 colis
                 </div>
-                <div id="card-colis" class="etiquette-tooltip" style="border-left:4px solid #d64545; top:110%; right:0; width:180px;">
-                    📦 <strong>Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
+                <div id="card-colis" class="etiquette-tooltip-new">
+                    <strong style="color:#d64545;">Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; bottom:20%; left:3%;">
                 <div class="etiquette-badge" style="background:#6c3483; color:white;" onclick="toggleCard('card-barcode')" onmouseenter="document.getElementById('card-barcode').classList.add('show')" onmouseleave="document.getElementById('card-barcode').classList.remove('show')">
                     🔢 Code barre
                 </div>
-                <div id="card-barcode" class="etiquette-tooltip" style="border-left:4px solid #6c3483; width:210px;">
-                    🔍 <strong>Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
+                <div id="card-barcode" class="etiquette-tooltip-new">
+                    <strong style="color:#6c3483;">Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
                 </div>
             </div>
         </div>
@@ -1280,7 +1468,16 @@
             </div>
         </div>
     </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer">
+        Formation <span>Paack</span> · v2.0 · &copy; 2026<br>
+        <span style="color:rgba(255,255,255,0.25); font-size:0.9em;">Conçu pour les livreurs Paack France</span>
+    </footer>
 </div>
+
+<!-- Scroll to top button -->
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
 
 <script>
 const STEPS = ['accueil', 'chargement', 'livraison', 'echecs', 'qcm'];
@@ -1338,6 +1535,7 @@ function getFormationDuration() {
 }
 
 // ========== GUIDED FLOW ==========
+let _prevStep = 0;
 function goToStep(stepIndex) {
     if (stepIndex > STEPS.length) return;
 
@@ -1347,18 +1545,27 @@ function goToStep(stepIndex) {
         return;
     }
 
+    const direction = stepIndex >= _prevStep ? 'forward' : 'backward';
+    _prevStep = stepIndex;
     currentStep = stepIndex;
     if (stepIndex > maxReached) maxReached = stepIndex;
 
-    // Afficher la bonne section
+    // Afficher la bonne section avec animation directionnelle
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
-    document.getElementById(STEPS[stepIndex]).classList.add('active');
+    const target = document.getElementById(STEPS[stepIndex]);
+    target.style.animation = 'none';
+    target.offsetHeight;
+    target.style.animation = direction === 'forward' ? 'slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'slideInReverse 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    target.classList.add('active');
 
     // Mettre à jour le stepper
     updateStepper();
     updateGlobalProgress();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Trigger stagger animations for numbered steps in the new section
+    setTimeout(() => triggerStaggerAnimations(target), 100);
 }
 
 function updateStepper() {
@@ -1575,9 +1782,9 @@ function renderQuestion() {
             <p style="font-weight:600; margin:12px 0 14px;">${q.question}</p>
             <div class="options" id="options-list">
                 ${shuffledOptions.map((opt, j) => `
-                    <div class="option" id="opt-${j}" onclick="selectAnswer(${j})" style="cursor:pointer; border-radius:8px; padding:4px; border:2px solid transparent; transition:all 0.2s;">
-                        <input type="radio" name="q0" value="${j}" style="pointer-events:none;">
-                        <label style="cursor:pointer;">${opt}</label>
+                    <div class="qcm-option-enhanced" id="opt-${j}" onclick="selectAnswer(${j})">
+                        <div class="qcm-radio-custom"><div class="qcm-radio-dot"></div></div>
+                        <span class="qcm-option-text">${opt}</span>
                     </div>`).join('')}
             </div>
             <div id="feedback-box" style="display:none; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em;"></div>
@@ -1589,10 +1796,8 @@ function renderQuestion() {
     window.selectAnswer = function(j) {
         if (window._answered) return;
         window._selectedAnswer = j;
-        document.querySelectorAll('.option').forEach((el, i) => {
-            el.style.background = i === j ? '#d0e8f2' : '';
-            el.style.border = i === j ? '2px solid #2d7f9f' : '2px solid transparent';
-            el.querySelector('input').checked = i === j;
+        document.querySelectorAll('.qcm-option-enhanced').forEach((el, i) => {
+            el.classList.toggle('selected', i === j);
         });
     };
     window._answered = false;
@@ -1607,11 +1812,11 @@ function validerReponse() {
     if (isCorrect) score++;
     else wrongAnswers.push({ question: q.question, chosen: q.options[window._shuffledIndices[chosen]], correct: q.options[q.correct], theme: q.theme });
     updateGlobalProgress();
-    document.querySelectorAll('.option').forEach((el, i) => {
+    document.querySelectorAll('.qcm-option-enhanced').forEach((el, i) => {
         el.style.pointerEvents = 'none';
-        if (i === correctIdx) { el.style.background = '#e2f6ea'; el.style.border = '2px solid #2fb781'; }
-        else if (i === chosen && !isCorrect) { el.style.background = '#ffe8ea'; el.style.border = '2px solid #d64545'; }
-        else { el.style.background = ''; el.style.border = '2px solid transparent'; }
+        el.classList.remove('selected');
+        if (i === correctIdx) { el.classList.add('correct-answer'); }
+        else if (i === chosen && !isCorrect) { el.classList.add('wrong-answer'); }
     });
     const feedback = document.getElementById('feedback-box');
     if (isCorrect) {
@@ -1751,7 +1956,8 @@ function goToLivSub(index) {
         target.style.display = 'block';
         target.style.animation = 'none';
         target.offsetHeight;
-        target.style.animation = 'fadeIn 0.45s ease';
+        target.style.animation = 'slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        setTimeout(() => triggerStaggerAnimations(target), 100);
     }
 
     // Update mini stepper
@@ -1822,7 +2028,8 @@ function goToEchSub(index) {
         target.style.display = 'block';
         target.style.animation = 'none';
         target.offsetHeight;
-        target.style.animation = 'fadeIn 0.45s ease';
+        target.style.animation = 'slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        setTimeout(() => triggerStaggerAnimations(target), 100);
     }
 
     // Afficher/masquer la barre fixe motifs
@@ -2027,8 +2234,15 @@ function toggleCard(id) {
     const allCards = ['card-hub','card-ordre','card-creneau','card-date','card-colis','card-barcode'];
     allCards.forEach(c => { if (c !== id) document.getElementById(c).classList.remove('show'); });
     const card = document.getElementById(id);
-    card.classList.toggle('show');
+    if (card) card.classList.toggle('show');
 }
+
+// Close tooltips when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.etiquette-badge-wrap')) {
+        document.querySelectorAll('.etiquette-tooltip-new').forEach(t => t.classList.remove('show'));
+    }
+});
 
 // Désactiver hover sur mobile (évite le double-tap)
 if ('ontouchstart' in window) {
@@ -2215,6 +2429,31 @@ window.addEventListener('load', function() {
         method: 'POST', mode: 'no-cors',
         body: JSON.stringify({ type: 'vue', date: new Date().toLocaleString('fr-FR'), page: document.title, appareil: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop' })
     });
+});
+
+// ========== SCROLL TO TOP BUTTON ==========
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('scrollTopBtn');
+    if (btn) {
+        if (window.scrollY > 400) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+    }
+});
+
+// ========== STAGGER ANIMATIONS ==========
+function triggerStaggerAnimations(container) {
+    const items = container.querySelectorAll('.numbered-step, .recap-card, .hero-step-chip');
+    items.forEach((item, i) => {
+        item.classList.add('stagger-animate');
+        item.classList.remove('visible');
+        setTimeout(() => item.classList.add('visible'), i * 100);
+    });
+}
+
+// Trigger stagger on initial load for accueil
+window.addEventListener('load', function() {
+    const accueil = document.getElementById('accueil');
+    if (accueil) setTimeout(() => triggerStaggerAnimations(accueil), 200);
 });
 </script>
 </body>
