@@ -558,11 +558,11 @@
             .etiquette-badge { font-size: 0.65em !important; padding: 2px 5px !important; }
             .etiquette-tooltip-new { font-size: 0.78em !important; min-width: 140px !important; max-width: 180px !important; }
             /* Excentrer les badges gauche/droite sur mobile */
-            .etiquette-badge-wrap[style*="left:3%"] { left: -10% !important; }
-            .etiquette-badge-wrap[style*="left:-16%"] { left: -22% !important; }
-            .etiquette-badge-wrap[style*="right:3%"] { right: -10% !important; }
-            .etiquette-badge-wrap[style*="right:-7%"] { right: -14% !important; }
-            .etiquette-badge-wrap[style*="right:10%"] { right: -2% !important; }
+            .etiquette-badge-wrap[style*="left:3%"] { left: -14% !important; }
+            .etiquette-badge-wrap[style*="left:-16%"] { left: -26% !important; }
+            .etiquette-badge-wrap[style*="right:3%"] { right: -14% !important; }
+            .etiquette-badge-wrap[style*="right:-7%"] { right: -18% !important; }
+            .etiquette-badge-wrap[style*="right:10%"] { right: -6% !important; }
             /* Échecs motifs */
             .ech-motif-layout { flex-direction: column !important; align-items: center !important; }
             .echec-image-container { max-width: 100% !important; }
@@ -767,6 +767,25 @@
         .etiquette-tooltip-new.pos-left.show {
             transform: translateY(-50%) translateX(0);
         }
+        /* Tooltip ouverture en dessous du badge */
+        .etiquette-tooltip-new.pos-bottom {
+            bottom: auto;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        .etiquette-tooltip-new.pos-bottom::after {
+            top: auto;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-bottom-color: white;
+            border-top-color: transparent;
+        }
+        .etiquette-tooltip-new.pos-bottom.show {
+            transform: translateX(-50%) translateY(0);
+        }
 
         /* ========== SCROLL TO TOP ========== */
         .scroll-top-btn {
@@ -924,7 +943,7 @@
                 <div class="etiquette-badge" style="background:#2d7f9f; color:white;" onclick="toggleCard('card-creneau')" onmouseenter="document.getElementById('card-creneau').classList.add('show')" onmouseleave="document.getElementById('card-creneau').classList.remove('show')">
                     🕐 Créneau : 09h-22h
                 </div>
-                <div id="card-creneau" class="etiquette-tooltip-new pos-right">
+                <div id="card-creneau" class="etiquette-tooltip-new">
                     <strong style="color:#2d7f9f;">Créneau de livraison</strong><br>Plage horaire attendue par le client.
                 </div>
             </div>
@@ -932,7 +951,7 @@
                 <div class="etiquette-badge" style="background:#f4c440; color:#4f4421;" onclick="toggleCard('card-date')" onmouseenter="document.getElementById('card-date').classList.add('show')" onmouseleave="document.getElementById('card-date').classList.remove('show')">
                     📅 Date : 25/01
                 </div>
-                <div id="card-date" class="etiquette-tooltip-new pos-left">
+                <div id="card-date" class="etiquette-tooltip-new">
                     <strong style="color:#b8941f;">Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
                 </div>
             </div>
@@ -940,7 +959,7 @@
                 <div class="etiquette-badge" style="background:#d64545; color:white;" onclick="toggleCard('card-colis')" onmouseenter="document.getElementById('card-colis').classList.add('show')" onmouseleave="document.getElementById('card-colis').classList.remove('show')">
                     📦 1P = 1 colis
                 </div>
-                <div id="card-colis" class="etiquette-tooltip-new">
+                <div id="card-colis" class="etiquette-tooltip-new pos-bottom">
                     <strong style="color:#d64545;">Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
                 </div>
             </div>
@@ -948,7 +967,7 @@
                 <div class="etiquette-badge" style="background:#6c3483; color:white;" onclick="toggleCard('card-barcode')" onmouseenter="document.getElementById('card-barcode').classList.add('show')" onmouseleave="document.getElementById('card-barcode').classList.remove('show')">
                     🔢 Code barre
                 </div>
-                <div id="card-barcode" class="etiquette-tooltip-new">
+                <div id="card-barcode" class="etiquette-tooltip-new pos-bottom">
                     <strong style="color:#6c3483;">Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
                 </div>
             </div>
