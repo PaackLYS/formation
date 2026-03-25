@@ -843,6 +843,35 @@
         }
         .site-footer span { color: var(--paack-accent); font-weight: 700; }
 
+        /* ========== DANGER FLASH ========== */
+        .danger-flash {
+            background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+            color: white !important;
+            font-size: 1em !important;
+            font-weight: 700 !important;
+            text-align: center;
+            padding: 20px 22px !important;
+            border-radius: 14px !important;
+            box-shadow: 0 4px 20px rgba(220,38,38,0.35), inset 0 0 0 2px rgba(255,255,255,0.15) !important;
+            animation: dangerPulse 1.8s ease-in-out infinite;
+        }
+        .danger-flash strong {
+            color: #fef08a !important;
+        }
+        @keyframes dangerPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(220,38,38,0.35), inset 0 0 0 2px rgba(255,255,255,0.15); transform: scale(1); }
+            50% { box-shadow: 0 6px 30px rgba(220,38,38,0.6), inset 0 0 0 2px rgba(255,255,255,0.25), 0 0 20px rgba(220,38,38,0.3); transform: scale(1.01); }
+        }
+        .shake-emoji {
+            display: inline-block;
+            animation: emojiShake 0.6s ease-in-out infinite;
+        }
+        @keyframes emojiShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-12deg); }
+            75% { transform: rotate(12deg); }
+        }
+
         /* ========== PARTICLES ========== */
         .particles-container {
             position: fixed;
@@ -1336,8 +1365,8 @@
         <!-- SUB 3: Autres Lieux -->
         <div id="liv-sub-3" class="liv-sub" style="display:none;">
             <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">🚨 Autres Lieux (Dernier Recours)</div>
-            <div class="danger">
-                <strong>🚨 CONDITION STRICTE:</strong> UN MESSAGE D'AUTORISATION DU CLIENT EST OBLIGATOIRE avant toute dépose
+            <div class="danger danger-flash">
+                <span class="shake-emoji">🚨</span> <strong>CONDITION STRICTE:</strong> UN MESSAGE D'AUTORISATION DU CLIENT EST OBLIGATOIRE avant toute dépose
             </div>
             <ul>
                 <li>Obtenez l'accord SMS du client</li>
