@@ -2366,7 +2366,9 @@ function toggleEchMotif(motifId) {
     const badge = document.querySelector('.ech-motif-badge[data-motif="' + motifId + '"]');
     if (!bubble || !badge) return;
 
+    const isMobile = window.innerWidth <= 768;
     const isOpen = bubble.style.display !== 'none';
+
     // Close all other bubbles first
     document.querySelectorAll('.ech-bubble').forEach(b => b.style.display = 'none');
 
@@ -2375,10 +2377,22 @@ function toggleEchMotif(motifId) {
     if (placeholder) placeholder.style.display = 'none';
 
     if (!isOpen) {
+        // Sur mobile : déplacer la bulle juste après le badge cliqué
+        if (isMobile) {
+            badge.parentNode.insertBefore(bubble, badge.nextSibling);
+        } else {
+            // Sur desktop : remettre dans le container original
+            const container = document.getElementById('ech-bubbles-container');
+            if (container && bubble.parentNode !== container) container.appendChild(bubble);
+        }
         bubble.style.display = 'block';
         bubble.style.animation = 'none';
         bubble.offsetHeight;
         bubble.style.animation = 'fadeIn 0.3s ease';
+        // Scroll vers la bulle sur mobile
+        if (isMobile) {
+            setTimeout(() => bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
     }
 
     // Mark as viewed
