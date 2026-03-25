@@ -35,10 +35,17 @@
         }
         .global-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--paack-accent), #4ee6a0);
+            background: linear-gradient(90deg, var(--paack-accent), #4ee6a0, var(--paack-accent));
+            background-size: 200% 100%;
             border-radius: 99px;
             transition: width 0.6s ease;
             width: 0%;
+            animation: progressPulse 2.5s ease infinite;
+        }
+        @keyframes progressPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .global-progress-text {
             text-align: center;
@@ -189,10 +196,12 @@
         /* ========== CONTENT SECTIONS ========== */
         .content-section {
             display: none;
-            background: #fdfefe;
+            background: rgba(253, 254, 254, 0.82);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-radius: 18px;
             padding: 32px 32px 34px;
-            box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.4);
             overflow-x: hidden;
             transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -833,12 +842,141 @@
             margin-top: 20px;
         }
         .site-footer span { color: var(--paack-accent); font-weight: 700; }
+
+        /* ========== PARTICLES ========== */
+        .particles-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+            opacity: 0;
+        }
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.6; transform: scale(0.8); }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* ========== BADGE PULSE ========== */
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.06); box-shadow: 0 4px 18px rgba(0,0,0,0.45); }
+        }
+        .etiquette-badge:not(.badge-clicked) {
+            animation: badgePulse 2.2s ease-in-out infinite;
+        }
+        .etiquette-badge.badge-clicked {
+            animation: none;
+        }
+
+        /* ========== DONUT PROGRESS ========== */
+        .donut-progress-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 6px 0;
+        }
+        .donut-svg {
+            width: 52px;
+            height: 52px;
+            transform: rotate(-90deg);
+            filter: drop-shadow(0 2px 8px rgba(47,183,129,0.3));
+        }
+        .donut-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 5;
+        }
+        .donut-fill {
+            fill: none;
+            stroke: url(#donutGrad);
+            stroke-width: 5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease;
+        }
+        .donut-info {
+            text-align: left;
+        }
+        .donut-pct {
+            font-size: 1.1em;
+            font-weight: 800;
+            color: rgba(255,255,255,0.95);
+            letter-spacing: -0.5px;
+        }
+        .donut-label {
+            font-size: 0.72em;
+            color: rgba(255,255,255,0.5);
+            font-weight: 600;
+        }
+
+        /* ========== PARALLAX HEADER ========== */
+        .header-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: transform 0.3s ease-out;
+        }
+        .header-orb-1 {
+            right: -30px; top: -30px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(47,183,129,0.2), transparent 65%);
+        }
+        .header-orb-2 {
+            left: -20px; bottom: -30px;
+            width: 140px; height: 140px;
+            background: radial-gradient(circle, rgba(26,92,122,0.15), transparent 65%);
+        }
+        .header-orb-3 {
+            right: 30%; top: -20px;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, rgba(244,196,64,0.12), transparent 65%);
+        }
+
+        /* ========== ENHANCED STEPPER DESKTOP ========== */
+        @media (min-width: 900px) {
+            .stepper {
+                padding: 18px 28px 32px;
+                gap: 0;
+                background: linear-gradient(135deg, rgba(11,36,54,0.95), rgba(23,55,80,0.95));
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255,255,255,0.1);
+            }
+            .stepper-dot {
+                width: 44px; height: 44px;
+                font-size: 0.95em;
+            }
+            .stepper-line {
+                max-width: 80px;
+            }
+            .stepper-label {
+                font-size: 0.65em;
+            }
+        }
+
+        /* ========== GLASSMORPHISM NAV ========== */
+        .nav-libre {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
     </style>
 </head><body>
-<div class="container">
-    <header style="background:linear-gradient(135deg,#ffffff 0%,#f0f8fc 60%,#d8eff7 100%); border-radius:18px; padding:18px 24px 14px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
-        <div style="position:absolute; right:-50px; top:-50px; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, rgba(47,183,129,0.15), transparent 65%); pointer-events:none;"></div>
-        <div style="position:absolute; left:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(26,92,122,0.1), transparent 65%); pointer-events:none;"></div>
+<!-- Particules flottantes -->
+<div class="particles-container" id="particles"></div>
+<div class="container" style="position:relative; z-index:1;">
+    <header id="parallax-header" style="background:linear-gradient(135deg,#ffffff 0%,#f0f8fc 60%,#d8eff7 100%); border-radius:18px; padding:18px 24px 14px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
+        <div class="header-orb header-orb-1" id="orb1"></div>
+        <div class="header-orb header-orb-2" id="orb2"></div>
+        <div class="header-orb header-orb-3" id="orb3"></div>
         <div style="display:flex; align-items:center; gap:18px; position:relative; z-index:1;">
             <div style="background:linear-gradient(135deg,#0b2436,#1a5c7a); border-radius:16px; padding:14px; box-shadow:0 6px 20px rgba(0,0,0,0.3); flex-shrink:0;">
                 <span style="font-size:1.6em; display:block;">📦</span>
@@ -854,8 +992,25 @@
 
     <!-- ========== BARRE PROGRESSION GLOBALE ========== -->
     <div id="global-progress" style="display:none; padding:0 4px;">
-        <div class="global-progress-text">📚 Progression : <span id="global-progress-pct">0</span>%</div>
-        <div class="global-progress-bar">
+        <div class="donut-progress-wrap">
+            <svg class="donut-svg" viewBox="0 0 40 40">
+                <defs>
+                    <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--paack-accent)"/>
+                        <stop offset="100%" style="stop-color:#4ee6a0"/>
+                    </linearGradient>
+                </defs>
+                <circle class="donut-bg" cx="20" cy="20" r="16"/>
+                <circle class="donut-fill" id="donut-fill" cx="20" cy="20" r="16"
+                    stroke-dasharray="100.53"
+                    stroke-dashoffset="100.53"/>
+            </svg>
+            <div class="donut-info">
+                <div class="donut-pct"><span id="global-progress-pct">0</span>%</div>
+                <div class="donut-label">Progression</div>
+            </div>
+        </div>
+        <div class="global-progress-bar" style="margin-top:2px;">
             <div class="global-progress-fill" id="global-progress-fill"></div>
         </div>
     </div>
@@ -1943,9 +2098,9 @@ function showResults() {
     document.getElementById('scoreResult').innerHTML = `
         <div class="score-card">
             <h3>Résultats — ${currentNom}</h3>
-            <div class="score-number">${score}/${currentQuestions.length}</div>
-            <p style="font-size:1.1em;">${pct}%</p>
-            <p style="margin-top:8px;">${msg}</p>
+            <div class="score-number"><span id="animated-score">0</span>/${currentQuestions.length}</div>
+            <p style="font-size:1.1em;"><span id="animated-pct">0</span>%</p>
+            <p style="margin-top:8px;" id="animated-msg"></p>
             <span id="hidden-duree" style="display:none;">${duree}</span>
         </div>
         ${errorsHtml}
@@ -1954,7 +2109,25 @@ function showResults() {
         </div>
         <button onclick="afficherDashboard()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">📊 Voir l'historique</button>
         ${!freeMode ? '<button class="btn-next-step" onclick="activateFreeMode()" style="margin-top:16px;">Formation terminée — Accéder au menu libre <span class="arrow-icon">▶</span></button>' : ''}`;
+    // Compteur animé
+    animateCounter('animated-score', 0, score, 1200);
+    animateCounter('animated-pct', 0, pct, 1400, '%');
+    setTimeout(() => { const el = document.getElementById('animated-msg'); if (el) el.textContent = msg; }, 1500);
 }
+function animateCounter(elementId, start, end, duration) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const startTime = performance.now();
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Easing out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(start + (end - start) * eased);
+        el.textContent = current;
+        if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
 
 function afficherDashboard() {
     document.getElementById('qcm-selector').style.display = 'none';
@@ -2353,6 +2526,13 @@ function updateGlobalProgress() {
     progress = Math.min(100, Math.round(progress));
     document.getElementById('global-progress-pct').textContent = progress;
     document.getElementById('global-progress-fill').style.width = progress + '%';
+    // Donut update
+    const donut = document.getElementById('donut-fill');
+    if (donut) {
+        const circumference = 2 * Math.PI * 16; // r=16
+        const offset = circumference - (progress / 100) * circumference;
+        donut.setAttribute('stroke-dashoffset', offset);
+    }
 }
 
 // ========== 3. EMPÊCHER DE QUITTER SANS FINIR ==========
@@ -2471,20 +2651,18 @@ function launchConfetti() {
     const container = document.createElement('div');
     container.className = 'confetti-container';
     document.body.appendChild(container);
-    const colors = ['#2fb781', '#1a5c7a', '#f4c440', '#d64545', '#4ee6a0', '#2d7f9f', '#ff6b6b', '#ffd93d'];
-    const shapes = ['■', '●', '▲', '★'];
-    for (let i = 0; i < 80; i++) {
+    const emojis = ['📦', '🚚', '✅', '🎉', '⭐', '🏆', '💚', '📮', '🎯', '🥳'];
+    for (let i = 0; i < 60; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
-        confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+        confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
         confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.fontSize = (Math.random() * 14 + 8) + 'px';
-        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        confetti.style.animationDelay = (Math.random() * 1.5) + 's';
+        confetti.style.fontSize = (Math.random() * 16 + 14) + 'px';
+        confetti.style.animationDuration = (Math.random() * 2.5 + 2) + 's';
+        confetti.style.animationDelay = (Math.random() * 2) + 's';
         container.appendChild(confetti);
     }
-    setTimeout(() => container.remove(), 5000);
+    setTimeout(() => container.remove(), 6000);
 }
 
 // Tracking vue automatique au chargement
@@ -2518,6 +2696,55 @@ function triggerStaggerAnimations(container) {
 window.addEventListener('load', function() {
     const accueil = document.getElementById('accueil');
     if (accueil) setTimeout(() => triggerStaggerAnimations(accueil), 200);
+});
+
+// ========== 🌟 PARTICULES FLOTTANTES ==========
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    const colors = ['rgba(47,183,129,0.12)', 'rgba(26,92,122,0.1)', 'rgba(78,230,160,0.08)', 'rgba(244,196,64,0.06)'];
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 6 + 3;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDuration = (Math.random() * 15 + 12) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        container.appendChild(p);
+    }
+}
+createParticles();
+
+// ========== 🎯 PARALLAX HEADER ==========
+const parallaxHeader = document.getElementById('parallax-header');
+if (parallaxHeader) {
+    parallaxHeader.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const orb1 = document.getElementById('orb1');
+        const orb2 = document.getElementById('orb2');
+        const orb3 = document.getElementById('orb3');
+        if (orb1) orb1.style.transform = `translate(${x * 20}px, ${y * 15}px)`;
+        if (orb2) orb2.style.transform = `translate(${x * -15}px, ${y * -12}px)`;
+        if (orb3) orb3.style.transform = `translate(${x * 10}px, ${y * -8}px)`;
+    });
+    parallaxHeader.addEventListener('mouseleave', function() {
+        ['orb1','orb2','orb3'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.transform = 'translate(0,0)';
+        });
+    });
+}
+
+// ========== 🎯 BADGE PULSE - arrêter au clic ==========
+document.querySelectorAll('.etiquette-badge').forEach(badge => {
+    badge.addEventListener('click', function() {
+        this.classList.add('badge-clicked');
+    });
 });
 </script>
 </body>
