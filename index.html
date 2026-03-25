@@ -1528,14 +1528,14 @@
 
         </div>
 
-        <!-- Barre motifs (inline) -->
-        <div id="ech-motif-bar" style="display:none; margin-top:20px; text-align:center;">
+        <!-- Barre motifs (inline, même style que les autres boutons) -->
+        <div id="ech-motif-bar" style="display:none; margin-top:20px;">
             <button class="btn-next-step" id="ech-motif-next-btn" onclick="goToEchSub(1)" style="display:none;">
                 Suivant : Erreurs courantes <span class="arrow-icon">▶</span>
             </button>
-            <div id="ech-motif-locked" class="info" style="text-align:center; font-weight:600;">
+            <button class="btn-next-step" id="ech-motif-locked" style="opacity:0.5; cursor:default; filter:grayscale(0.4);" onclick="return false;">
                 🔒 Consultez les 7 motifs pour débloquer la suite
-            </div>
+            </button>
         </div>
 
         <!-- SUB 1: Erreurs courantes -->
