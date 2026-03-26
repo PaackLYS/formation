@@ -2994,7 +2994,7 @@ function closeAdmin() {
     }
 }
 
-const SHEET_API = 'https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec';
+const SHEET_API = 'https://script.google.com/macros/s/AKfycbwNt56FK4Hql5e0BDPWMnYIulocAMhOIqrXnDLyUsh_zOdXtIGczfgcKGKWPPoGtwmfPA/exec';
 
 function renderAdmin() {
     const statsEl = document.getElementById('admin-stats');
@@ -3020,15 +3020,27 @@ function renderAdminData(results) {
     const tableEl = document.getElementById('admin-table-wrap');
     const evoEl = document.getElementById('admin-evolution');
 
-    // Normaliser les clés (Google Sheet peut avoir des noms de colonnes différents)
-    results = results.map(r => ({
-        nom: r.nom || r.Nom || '',
-        date: r.date || r.Date || '',
-        score: Number(r.score || r.Score || 0),
-        total: Number(r.total || r.Total || 20),
-        pct: Number(r.pct || r.Pct || r['%'] || 0),
-        duree: r.duree || r.Duree || r['Durée'] || '—'
-    })).filter(r => r.nom);
+    // Normaliser les clés (Google Sheet a des noms de colonnes différents du localStorage)
+    results = results.map(r => {
+        let pctVal = r.pct || r.Pct || r['%'] || 0;
+        // Le Sheet renvoie % en décimal (0.95), le localStorage en entier (95)
+        if (typeof pctVal === 'number' && pctVal > 0 && pctVal <= 1) pctVal = Math.round(pctVal * 100);
+        if (typeof pctVal === 'string') pctVal = parseInt(pctVal) || 0;
+        let dateVal = r.date || r.Date || '';
+        // Formater la date ISO du Sheet en format lisible
+        if (typeof dateVal === 'string' && dateVal.includes('T')) {
+            const d = new Date(dateVal);
+            dateVal = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+        }
+        return {
+            nom: r.nom || r.Nom || r['Prénom'] || '',
+            date: dateVal,
+            score: Number(r.score || r.Score || 0),
+            total: Number(r.total || r.Total || 20),
+            pct: pctVal,
+            duree: r.duree || r.Duree || r['Durée'] || r['Durée séssion'] || '—'
+        };
+    }).filter(r => r.nom);
 
     if (results.length === 0) {
         statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">Aucune donnée disponible.</p>';
