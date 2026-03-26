@@ -1171,45 +1171,44 @@
 <!-- Particules flottantes -->
 <div class="particles-container" id="particles"></div>
 <div class="container" style="position:relative; z-index:1;">
-    <header id="parallax-header" style="background:linear-gradient(135deg,#ffffff 0%,#f0f8fc 60%,#d8eff7 100%); border-radius:18px; padding:18px 24px 14px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.35); position:relative; overflow:hidden;">
-        <div class="header-orb header-orb-1" id="orb1"></div>
-        <div class="header-orb header-orb-2" id="orb2"></div>
-        <div class="header-orb header-orb-3" id="orb3"></div>
-        <div style="display:flex; align-items:center; gap:18px; position:relative; z-index:1;">
-            <div class="logo-neon-box" style="background:linear-gradient(135deg,#060e18,#0b1e30); border-radius:18px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.4), 0 0 25px rgba(47,183,129,0.25), inset 0 0 30px rgba(47,183,129,0.05); flex-shrink:0; display:flex; align-items:center; justify-content:center; border:1px solid rgba(47,183,129,0.3);">
-                <svg width="100" height="65" viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <header id="parallax-header" style="background:linear-gradient(135deg,#060e18 0%,#0b1e30 50%,#0f2a3d 100%); border-radius:18px; padding:22px 24px 18px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.5), 0 0 30px rgba(47,183,129,0.1); position:relative; overflow:hidden; border:1px solid rgba(47,183,129,0.15);">
+        <div class="header-orb header-orb-1" id="orb1" style="background:radial-gradient(circle, rgba(47,183,129,0.15), transparent 70%);"></div>
+        <div class="header-orb header-orb-2" id="orb2" style="background:radial-gradient(circle, rgba(26,92,122,0.2), transparent 70%);"></div>
+        <div class="header-orb header-orb-3" id="orb3" style="background:radial-gradient(circle, rgba(47,183,129,0.1), transparent 70%);"></div>
+        <div style="display:flex; align-items:center; gap:20px; position:relative; z-index:1;">
+            <div style="flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                <svg width="130" height="85" viewBox="0 0 260 150" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <filter id="ng"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                        <linearGradient id="cabG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3de895"/><stop offset="100%" stop-color="#2fb781"/></linearGradient>
+                        <filter id="neon-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <filter id="neon-soft"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                     </defs>
-                    <!-- Speed lines -->
-                    <line x1="2" y1="28" x2="18" y2="28" stroke="#2fb781" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
-                    <line x1="5" y1="38" x2="22" y2="38" stroke="#2fb781" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-                    <line x1="3" y1="48" x2="16" y2="48" stroke="#2fb781" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
-                    <!-- Carrosserie filled -->
-                    <rect x="24" y="18" width="58" height="38" rx="6" fill="#1a5c7a" filter="url(#ng)"/>
-                    <!-- Cabine filled -->
-                    <path d="M82 24 L102 24 C108 24 112 30 112 35 L112 56 L82 56 Z" fill="url(#cabG)" filter="url(#ng)"/>
-                    <!-- Pare-brise -->
-                    <path d="M86 28 L100 28 C103 28 106 31 106 34 L106 43 L86 43 Z" fill="rgba(255,255,255,0.2)" rx="2"/>
-                    <!-- Colis -->
-                    <rect x="33" y="28" width="16" height="13" rx="2" fill="rgba(47,183,129,0.25)" stroke="#2fb781" stroke-width="1.5"/>
-                    <line x1="41" y1="28" x2="41" y2="41" stroke="#2fb781" stroke-width="1" opacity="0.6"/>
-                    <rect x="55" y="28" width="16" height="13" rx="2" fill="rgba(47,183,129,0.15)" stroke="#2fb781" stroke-width="1.5" opacity="0.6"/>
-                    <!-- Roues -->
-                    <circle cx="44" cy="60" r="8" fill="#060e18" stroke="#2fb781" stroke-width="3"/>
-                    <circle cx="44" cy="60" r="3" fill="#2fb781"/>
-                    <circle cx="102" cy="60" r="8" fill="#060e18" stroke="#2fb781" stroke-width="3"/>
-                    <circle cx="102" cy="60" r="3" fill="#2fb781"/>
-                    <!-- Route glow -->
-                    <line x1="12" y1="70" x2="130" y2="70" stroke="#2fb781" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.3"/>
+                    <!-- Lignes néon -->
+                    <line x1="18" y1="52" x2="48" y2="52" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.5" filter="url(#neon-soft)"/>
+                    <line x1="25" y1="63" x2="52" y2="63" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.7" filter="url(#neon-soft)"/>
+                    <line x1="20" y1="74" x2="46" y2="74" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.4" filter="url(#neon-soft)"/>
+                    <!-- Camion néon outline -->
+                    <rect x="55" y="38" width="75" height="48" rx="7" fill="none" stroke="#1a5c7a" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <path d="M130 45 L158 45 C164 45, 170 51, 170 57 L170 86 L130 86 Z" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <!-- Pare-brise néon -->
+                    <path d="M136 50 L155 50 C159 50, 163 54, 163 58 L163 70 L136 70 Z" fill="none" stroke="rgba(47,183,129,0.5)" stroke-width="1.5"/>
+                    <!-- Colis néon -->
+                    <rect x="68" y="50" width="18" height="15" rx="2" fill="none" stroke="#2fb781" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.6"/>
+                    <rect x="94" y="50" width="18" height="15" rx="2" fill="none" stroke="#2fb781" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.4"/>
+                    <!-- Roues néon -->
+                    <circle cx="82" cy="92" r="11" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <circle cx="82" cy="92" r="4" fill="#2fb781" filter="url(#neon-soft)"/>
+                    <circle cx="155" cy="92" r="11" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <circle cx="155" cy="92" r="4" fill="#2fb781" filter="url(#neon-soft)"/>
+                    <!-- Route néon -->
+                    <line x1="35" y1="104" x2="210" y2="104" stroke="#2fb781" stroke-width="1" stroke-dasharray="8 5" opacity="0.3" filter="url(#neon-soft)"/>
                 </svg>
             </div>
             <div>
-                <h1 style="margin:0; font-size:1.7em; font-weight:900; color:#0b2436; letter-spacing:-0.5px; line-height:1.1;">
-                    Formation <span style="background:linear-gradient(90deg,#1a5c7a,#2d7f9f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Paack</span>
+                <h1 style="margin:0; font-size:1.7em; font-weight:900; letter-spacing:-0.5px; line-height:1.1;">
+                    <span style="color:#2fb781; filter:drop-shadow(0 0 8px rgba(47,183,129,0.4));">PAACK</span> <span style="color:#e0e8f0;">DRIVER</span>
                 </h1>
-                <p style="margin:6px 0 0; color:#4f6473; font-size:0.92em;">Formation interactive · Maîtrisez les processus en quelques minutes</p>
+                <p style="margin:6px 0 0; color:#4ee6a0; font-size:0.85em; letter-spacing:3px; font-weight:600; filter:drop-shadow(0 0 6px rgba(78,230,160,0.3));">FORMATION</p>
+                <p style="margin:5px 0 0; color:#5a7a8a; font-size:0.82em;">Formation interactive · Maîtrisez les processus en quelques minutes</p>
             </div>
         </div>
     </header>
