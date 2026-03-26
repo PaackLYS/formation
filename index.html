@@ -554,6 +554,100 @@
         .ech-sub { display: none; }
         .ech-sub.active { display: block; }
 
+        /* ========== TIMELINE VERTICALE ========== */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--paack-blue), var(--paack-accent), #f4c440);
+            border-radius: 99px;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            background: #f5f9fc;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            border: 1px solid rgba(26,92,122,0.1);
+            animation: timelineSlideIn 0.5s ease forwards;
+            opacity: 0;
+        }
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.5s; }
+        @keyframes timelineSlideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -33px; top: 20px;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--paack-blue);
+            box-shadow: 0 2px 8px rgba(26,92,122,0.2);
+            z-index: 1;
+        }
+        .timeline-dot.green { border-color: var(--paack-accent); }
+        .timeline-dot.yellow { border-color: #f4c440; }
+        .timeline-item strong { color: var(--paack-blue); }
+
+        /* ========== TABS HORIZONTAUX ========== */
+        .tabs-container {
+            display: flex;
+            gap: 0;
+            background: linear-gradient(135deg, #f0f4f7, #e8eff4);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 14px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.82em;
+            color: #7a9aab;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-family: inherit;
+        }
+        .tab-btn.active {
+            background: white;
+            color: var(--paack-blue);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .tab-btn.locked {
+            opacity: 0.4;
+            cursor: default;
+        }
+        .tab-btn:hover:not(.active):not(.locked) {
+            color: var(--paack-blue);
+            background: rgba(255,255,255,0.5);
+        }
+        @media (max-width: 480px) {
+            .tab-btn { font-size: 0.72em; padding: 10px 8px; gap: 3px; }
+            .timeline { padding-left: 34px; }
+            .timeline-dot { left: -27px; width: 16px; height: 16px; }
+            .timeline-item { padding: 12px 14px; }
+        }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             body { padding: 14px; }
@@ -1283,27 +1377,13 @@
     <div id="livraison" class="content-section">
         <h2>📮 Étape 2 — Livraison</h2>
 
-        <!-- Mini stepper livraison -->
-        <div style="display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:20px; padding:12px 14px; background:linear-gradient(135deg, #f0f8fc, #e0eff7); border-radius:14px; border:1px solid rgba(26,92,122,0.12);">
-            <div class="liv-dot active" id="liv-dot-0" onclick="livStepperClick(0)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:pointer; flex-shrink:0; transition:all 0.3s; background:linear-gradient(135deg,var(--paack-blue),var(--paack-accent)); color:white; border:2px solid var(--paack-accent); box-shadow:0 0 12px rgba(47,183,129,0.3); transform:scale(1.1);">
-                <span style="position:relative;">📋</span>
-            </div>
-            <div class="liv-line" id="liv-line-0" style="flex:1; height:3px; max-width:60px; background:rgba(26,92,122,0.15); transition:background 0.4s;"></div>
-            <div class="liv-dot" id="liv-dot-1" onclick="livStepperClick(1)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:default; flex-shrink:0; transition:all 0.3s; background:rgba(26,92,122,0.08); color:rgba(26,92,122,0.35); border:2px solid rgba(26,92,122,0.15); opacity:0.5;">
-                <span style="position:relative;">🤝</span>
-            </div>
-            <div class="liv-line" id="liv-line-1" style="flex:1; height:3px; max-width:60px; background:rgba(26,92,122,0.15); transition:background 0.4s;"></div>
-            <div class="liv-dot" id="liv-dot-2" onclick="livStepperClick(2)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:default; flex-shrink:0; transition:all 0.3s; background:rgba(26,92,122,0.08); color:rgba(26,92,122,0.35); border:2px solid rgba(26,92,122,0.15); opacity:0.5;">
-                <span style="position:relative;">📬</span>
-            </div>
-            <div class="liv-line" id="liv-line-2" style="flex:1; height:3px; max-width:60px; background:rgba(26,92,122,0.15); transition:background 0.4s;"></div>
-            <div class="liv-dot" id="liv-dot-3" onclick="livStepperClick(3)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:default; flex-shrink:0; transition:all 0.3s; background:rgba(26,92,122,0.08); color:rgba(26,92,122,0.35); border:2px solid rgba(26,92,122,0.15); opacity:0.5;">
-                <span style="position:relative;">🚨</span>
-            </div>
-            <div class="liv-line" id="liv-line-3" style="flex:1; height:3px; max-width:60px; background:rgba(26,92,122,0.15); transition:background 0.4s;"></div>
-            <div class="liv-dot" id="liv-dot-4" onclick="livStepperClick(4)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:default; flex-shrink:0; transition:all 0.3s; background:rgba(26,92,122,0.08); color:rgba(26,92,122,0.35); border:2px solid rgba(26,92,122,0.15); opacity:0.5;">
-                <span style="position:relative;">🧠</span>
-            </div>
+        <!-- Tabs livraison -->
+        <div class="tabs-container" id="liv-tabs">
+            <button class="tab-btn active" id="liv-tab-0" onclick="livStepperClick(0)">📋 Général</button>
+            <button class="tab-btn locked" id="liv-tab-1" onclick="livStepperClick(1)">🤝 Main propre</button>
+            <button class="tab-btn locked" id="liv-tab-2" onclick="livStepperClick(2)">📬 BAL</button>
+            <button class="tab-btn locked" id="liv-tab-3" onclick="livStepperClick(3)">🚨 Autres</button>
+            <button class="tab-btn locked" id="liv-tab-4" onclick="livStepperClick(4)">🧠 Résumé</button>
         </div>
 
         <!-- SUB 0: Général -->
@@ -1318,12 +1398,24 @@
             <div class="info">
                 <strong>ℹ️ Si le client est injoignable ou en fait la demande :</strong> Vous pouvez explorer d'autres solutions dans les étapes suivantes.
             </div>
-            <div class="highlight" style="margin-top:16px;">
-                <strong>📌 Ordre de priorité :</strong>
-                <div class="numbered-steps" style="margin-top:10px;">
-                    <div class="numbered-step"><div class="step-number">1</div><div class="step-text"><strong>Remise en main propre</strong> — toujours essayer en premier</div></div>
-                    <div class="numbered-step"><div class="step-number">2</div><div class="step-text"><strong>Boîte aux lettres (BAL)</strong> — uniquement si la remise en main propre a échoué ou si le client le demande, et si le colis rentre</div></div>
-                    <div class="numbered-step"><div class="step-number">3</div><div class="step-text"><strong>Autres lieux</strong> — uniquement avec accord SMS du client</div></div>
+            <div style="margin-top:16px;">
+                <h3>📌 Ordre de priorité</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <strong>1. Remise en main propre</strong>
+                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Toujours essayer en premier — réduit les réclamations clients.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot green"></div>
+                        <strong style="color:var(--paack-accent);">2. Boîte aux lettres (BAL)</strong>
+                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Uniquement si la remise en main propre a échoué ou si le client le demande, et si le colis rentre.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot yellow"></div>
+                        <strong style="color:#b8941f;">3. Autres lieux</strong>
+                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Uniquement avec accord SMS du client.</p>
+                    </div>
                 </div>
             </div>
 
@@ -1506,23 +1598,12 @@
     <div id="echecs" class="content-section">
         <h2>⚠️ Étape 3 — Échec de Livraison</h2>
 
-        <!-- Mini stepper échecs (simplifié: motifs → erreurs → photos → résumé) -->
-        <div style="display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:20px; padding:12px 14px; background:linear-gradient(135deg, #f0f8fc, #e0eff7); border-radius:14px; border:1px solid rgba(26,92,122,0.12);">
-            <div id="ech-dot-0" onclick="echStepperClick(0)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:pointer; flex-shrink:0; transition:all 0.3s; background:linear-gradient(135deg,var(--paack-blue),var(--paack-accent)); color:white; border:2px solid var(--paack-accent); box-shadow:0 0 12px rgba(47,183,129,0.3); transform:scale(1.1);">
-                <span>📱</span>
-            </div>
-            <div id="ech-line-0" style="flex:1; height:3px; max-width:60px; background:rgba(26,92,122,0.15); transition:background 0.4s;"></div>
-            <div id="ech-dot-1" onclick="echStepperClick(1)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:default; flex-shrink:0; transition:all 0.3s; background:rgba(26,92,122,0.08); color:rgba(26,92,122,0.35); border:2px solid rgba(26,92,122,0.15); opacity:0.5;">
-                <span>⚡</span>
-            </div>
-            <div id="ech-line-1" style="flex:1; height:3px; max-width:60px; background:rgba(26,92,122,0.15); transition:background 0.4s;"></div>
-            <div id="ech-dot-2" onclick="echStepperClick(2)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:default; flex-shrink:0; transition:all 0.3s; background:rgba(26,92,122,0.08); color:rgba(26,92,122,0.35); border:2px solid rgba(26,92,122,0.15); opacity:0.5;">
-                <span>📸</span>
-            </div>
-            <div id="ech-line-2" style="flex:1; height:3px; max-width:60px; background:rgba(26,92,122,0.15); transition:background 0.4s;"></div>
-            <div id="ech-dot-3" onclick="echStepperClick(3)" style="width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8em; font-weight:800; cursor:default; flex-shrink:0; transition:all 0.3s; background:rgba(26,92,122,0.08); color:rgba(26,92,122,0.35); border:2px solid rgba(26,92,122,0.15); opacity:0.5;">
-                <span>🧠</span>
-            </div>
+        <!-- Tabs échecs -->
+        <div class="tabs-container" id="ech-tabs">
+            <button class="tab-btn active" id="ech-tab-0" onclick="echStepperClick(0)">📱 Motifs</button>
+            <button class="tab-btn locked" id="ech-tab-1" onclick="echStepperClick(1)">⚡ Erreurs</button>
+            <button class="tab-btn locked" id="ech-tab-2" onclick="echStepperClick(2)">📸 Photos</button>
+            <button class="tab-btn locked" id="ech-tab-3" onclick="echStepperClick(3)">🧠 Résumé</button>
         </div>
 
         <!-- SUB 0: Procédure + image interactive -->
@@ -1997,21 +2078,10 @@ function newSession() {
 function showAllLivSubs() {
     document.querySelectorAll('.liv-sub').forEach(el => el.style.display = 'block');
     document.querySelectorAll('.liv-sub .btn-next-step').forEach(btn => btn.style.display = 'none');
-    // Show the mini stepper as fully completed
+    // Mark all tabs as accessible
     for (let i = 0; i < 5; i++) {
-        const dot = document.getElementById('liv-dot-' + i);
-        if (dot) {
-            dot.style.background = 'var(--paack-accent)';
-            dot.style.color = 'white';
-            dot.style.border = '2px solid var(--paack-accent)';
-            dot.style.opacity = '1';
-            dot.style.transform = 'scale(1)';
-            dot.style.boxShadow = 'none';
-        }
-        if (i < 4) {
-            const line = document.getElementById('liv-line-' + i);
-            if (line) line.style.background = 'var(--paack-accent)';
-        }
+        const tab = document.getElementById('liv-tab-' + i);
+        if (tab) { tab.className = 'tab-btn'; }
     }
 }
 
@@ -2331,39 +2401,15 @@ function goToLivSub(index) {
 
 function updateLivStepper() {
     for (let i = 0; i < 5; i++) {
-        const dot = document.getElementById('liv-dot-' + i);
-        if (!dot) continue;
+        const tab = document.getElementById('liv-tab-' + i);
+        if (!tab) continue;
+        tab.className = 'tab-btn';
         if (i === livCurrentSub) {
-            dot.style.background = 'linear-gradient(135deg, var(--paack-blue), var(--paack-accent))';
-            dot.style.color = 'white';
-            dot.style.border = '2px solid var(--paack-accent)';
-            dot.style.boxShadow = '0 0 12px rgba(47,183,129,0.3)';
-            dot.style.transform = 'scale(1.1)';
-            dot.style.opacity = '1';
-            dot.style.cursor = 'pointer';
+            tab.classList.add('active');
         } else if (i <= livMaxSub) {
-            dot.style.background = 'var(--paack-accent)';
-            dot.style.color = 'white';
-            dot.style.border = '2px solid var(--paack-accent)';
-            dot.style.boxShadow = 'none';
-            dot.style.transform = 'scale(1)';
-            dot.style.opacity = '1';
-            dot.style.cursor = 'pointer';
+            // accessible but not current — no extra class
         } else {
-            dot.style.background = 'rgba(26,92,122,0.08)';
-            dot.style.color = 'rgba(26,92,122,0.35)';
-            dot.style.border = '2px solid rgba(26,92,122,0.15)';
-            dot.style.boxShadow = 'none';
-            dot.style.transform = 'scale(1)';
-            dot.style.opacity = '0.5';
-            dot.style.cursor = 'default';
-        }
-
-        if (i < 4) {
-            const line = document.getElementById('liv-line-' + i);
-            if (line) {
-                line.style.background = i < livMaxSub ? 'var(--paack-accent)' : 'rgba(26,92,122,0.15)';
-            }
+            tab.classList.add('locked');
         }
     }
 }
@@ -2404,36 +2450,15 @@ function goToEchSub(index) {
 
 function updateEchStepper() {
     for (let i = 0; i < ECH_TOTAL; i++) {
-        const dot = document.getElementById('ech-dot-' + i);
-        if (!dot) continue;
+        const tab = document.getElementById('ech-tab-' + i);
+        if (!tab) continue;
+        tab.className = 'tab-btn';
         if (i === echCurrentSub) {
-            dot.style.background = 'linear-gradient(135deg, var(--paack-blue), var(--paack-accent))';
-            dot.style.color = 'white';
-            dot.style.border = '2px solid var(--paack-accent)';
-            dot.style.boxShadow = '0 0 12px rgba(47,183,129,0.3)';
-            dot.style.transform = 'scale(1.1)';
-            dot.style.opacity = '1';
-            dot.style.cursor = 'pointer';
+            tab.classList.add('active');
         } else if (i <= echMaxSub) {
-            dot.style.background = 'var(--paack-accent)';
-            dot.style.color = 'white';
-            dot.style.border = '2px solid var(--paack-accent)';
-            dot.style.boxShadow = 'none';
-            dot.style.transform = 'scale(1)';
-            dot.style.opacity = '1';
-            dot.style.cursor = 'pointer';
+            // accessible
         } else {
-            dot.style.background = 'rgba(26,92,122,0.08)';
-            dot.style.color = 'rgba(26,92,122,0.35)';
-            dot.style.border = '2px solid rgba(26,92,122,0.15)';
-            dot.style.boxShadow = 'none';
-            dot.style.transform = 'scale(1)';
-            dot.style.opacity = '0.5';
-            dot.style.cursor = 'default';
-        }
-        if (i < ECH_TOTAL - 1) {
-            const line = document.getElementById('ech-line-' + i);
-            if (line) line.style.background = i < echMaxSub ? 'var(--paack-accent)' : 'rgba(26,92,122,0.15)';
+            tab.classList.add('locked');
         }
     }
 }
@@ -2464,19 +2489,8 @@ function showAllEchSubs() {
     const nextBtn = document.getElementById('ech-motif-next-btn');
     if (nextBtn) nextBtn.style.display = 'none';
     for (let i = 0; i < ECH_TOTAL; i++) {
-        const dot = document.getElementById('ech-dot-' + i);
-        if (dot) {
-            dot.style.background = 'var(--paack-accent)';
-            dot.style.color = 'white';
-            dot.style.border = '2px solid var(--paack-accent)';
-            dot.style.opacity = '1';
-            dot.style.transform = 'scale(1)';
-            dot.style.boxShadow = 'none';
-        }
-        if (i < ECH_TOTAL - 1) {
-            const line = document.getElementById('ech-line-' + i);
-            if (line) line.style.background = 'var(--paack-accent)';
-        }
+        const tab = document.getElementById('ech-tab-' + i);
+        if (tab) { tab.className = 'tab-btn'; }
     }
 }
 
