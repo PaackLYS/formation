@@ -1795,7 +1795,10 @@
     <!-- ========== ADMIN DASHBOARD ========== -->
     <div id="admin-page" class="content-section" style="display:none;">
         <h2>📊 Tableau de bord Admin</h2>
-        <p style="color:#4f6473; font-size:0.85em; margin-bottom:12px;">🌐 Données synchronisées depuis Google Sheet — tous les appareils confondus</p>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+            <p style="color:#4f6473; font-size:0.85em; margin:0;">🌐 Données synchronisées depuis Google Sheet</p>
+            <button onclick="renderAdmin()" style="margin:0; padding:8px 18px; font-size:0.85em;">🔄 Actualiser</button>
+        </div>
         <div class="admin-stats" id="admin-stats"></div>
         <h3>📋 Historique complet</h3>
         <div style="overflow-x:auto;" id="admin-table-wrap"></div>
