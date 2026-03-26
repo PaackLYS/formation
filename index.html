@@ -1176,8 +1176,34 @@
         <div class="header-orb header-orb-2" id="orb2"></div>
         <div class="header-orb header-orb-3" id="orb3"></div>
         <div style="display:flex; align-items:center; gap:18px; position:relative; z-index:1;">
-            <div style="background:linear-gradient(135deg,#0b2436,#1a5c7a); border-radius:16px; padding:14px; box-shadow:0 6px 20px rgba(0,0,0,0.3); flex-shrink:0;">
-                <span style="font-size:1.6em; display:block;">📦</span>
+            <div class="logo-neon-box" style="background:linear-gradient(135deg,#060e18,#0b1e30); border-radius:18px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.4), 0 0 25px rgba(47,183,129,0.25), inset 0 0 30px rgba(47,183,129,0.05); flex-shrink:0; display:flex; align-items:center; justify-content:center; border:1px solid rgba(47,183,129,0.3);">
+                <svg width="100" height="65" viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="ng"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <linearGradient id="cabG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3de895"/><stop offset="100%" stop-color="#2fb781"/></linearGradient>
+                    </defs>
+                    <!-- Speed lines -->
+                    <line x1="2" y1="28" x2="18" y2="28" stroke="#2fb781" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+                    <line x1="5" y1="38" x2="22" y2="38" stroke="#2fb781" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+                    <line x1="3" y1="48" x2="16" y2="48" stroke="#2fb781" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
+                    <!-- Carrosserie filled -->
+                    <rect x="24" y="18" width="58" height="38" rx="6" fill="#1a5c7a" filter="url(#ng)"/>
+                    <!-- Cabine filled -->
+                    <path d="M82 24 L102 24 C108 24 112 30 112 35 L112 56 L82 56 Z" fill="url(#cabG)" filter="url(#ng)"/>
+                    <!-- Pare-brise -->
+                    <path d="M86 28 L100 28 C103 28 106 31 106 34 L106 43 L86 43 Z" fill="rgba(255,255,255,0.2)" rx="2"/>
+                    <!-- Colis -->
+                    <rect x="33" y="28" width="16" height="13" rx="2" fill="rgba(47,183,129,0.25)" stroke="#2fb781" stroke-width="1.5"/>
+                    <line x1="41" y1="28" x2="41" y2="41" stroke="#2fb781" stroke-width="1" opacity="0.6"/>
+                    <rect x="55" y="28" width="16" height="13" rx="2" fill="rgba(47,183,129,0.15)" stroke="#2fb781" stroke-width="1.5" opacity="0.6"/>
+                    <!-- Roues -->
+                    <circle cx="44" cy="60" r="8" fill="#060e18" stroke="#2fb781" stroke-width="3"/>
+                    <circle cx="44" cy="60" r="3" fill="#2fb781"/>
+                    <circle cx="102" cy="60" r="8" fill="#060e18" stroke="#2fb781" stroke-width="3"/>
+                    <circle cx="102" cy="60" r="3" fill="#2fb781"/>
+                    <!-- Route glow -->
+                    <line x1="12" y1="70" x2="130" y2="70" stroke="#2fb781" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.3"/>
+                </svg>
             </div>
             <div>
                 <h1 style="margin:0; font-size:1.7em; font-weight:900; color:#0b2436; letter-spacing:-0.5px; line-height:1.1;">
