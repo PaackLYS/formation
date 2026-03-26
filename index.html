@@ -1795,6 +1795,7 @@
     <!-- ========== ADMIN DASHBOARD ========== -->
     <div id="admin-page" class="content-section" style="display:none;">
         <h2>📊 Tableau de bord Admin</h2>
+        <p style="color:#4f6473; font-size:0.85em; margin-bottom:12px;">🌐 Données synchronisées depuis Google Sheet — tous les appareils confondus</p>
         <div class="admin-stats" id="admin-stats"></div>
         <h3>📋 Historique complet</h3>
         <div style="overflow-x:auto;" id="admin-table-wrap"></div>
@@ -2187,7 +2188,7 @@ function showResults() {
     const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
     results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree });
     localStorage.setItem('paack_results', JSON.stringify(results));
-    fetch('https://script.google.com/macros/s/AKfycbwXxD4IuUDFxe2jugew_75ye-Apxi_SBWKPDpgwcpATUgUS2VqWfXBeoROxgPXt3Ed7oA/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec', {
         method: 'POST', mode: 'no-cors',
         body: JSON.stringify({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
     }).catch(err => console.log('Erreur envoi:', err));
@@ -2801,7 +2802,7 @@ function launchConfetti() {
 
 // Tracking vue automatique au chargement
 window.addEventListener('load', function() {
-    fetch('https://script.google.com/macros/s/AKfycbwXxD4IuUDFxe2jugew_75ye-Apxi_SBWKPDpgwcpATUgUS2VqWfXBeoROxgPXt3Ed7oA/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec', {
         method: 'POST', mode: 'no-cors',
         body: JSON.stringify({ type: 'vue', date: new Date().toLocaleString('fr-FR'), page: document.title, appareil: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop' })
     });
@@ -2990,11 +2991,41 @@ function closeAdmin() {
     }
 }
 
+const SHEET_API = 'https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec';
+
 function renderAdmin() {
-    const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
     const statsEl = document.getElementById('admin-stats');
     const tableEl = document.getElementById('admin-table-wrap');
     const evoEl = document.getElementById('admin-evolution');
+
+    statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">⏳ Chargement des données depuis Google Sheet...</p>';
+    tableEl.innerHTML = '';
+    evoEl.innerHTML = '';
+
+    fetch(SHEET_API)
+        .then(r => r.json())
+        .then(data => renderAdminData(data))
+        .catch(err => {
+            console.log('Fetch Sheet échoué, fallback localStorage:', err);
+            const local = JSON.parse(localStorage.getItem('paack_results') || '[]');
+            renderAdminData(local);
+        });
+}
+
+function renderAdminData(results) {
+    const statsEl = document.getElementById('admin-stats');
+    const tableEl = document.getElementById('admin-table-wrap');
+    const evoEl = document.getElementById('admin-evolution');
+
+    // Normaliser les clés (Google Sheet peut avoir des noms de colonnes différents)
+    results = results.map(r => ({
+        nom: r.nom || r.Nom || '',
+        date: r.date || r.Date || '',
+        score: Number(r.score || r.Score || 0),
+        total: Number(r.total || r.Total || 20),
+        pct: Number(r.pct || r.Pct || r['%'] || 0),
+        duree: r.duree || r.Duree || r['Durée'] || '—'
+    })).filter(r => r.nom);
 
     if (results.length === 0) {
         statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">Aucune donnée disponible.</p>';
