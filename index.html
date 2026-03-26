@@ -2885,52 +2885,6 @@ document.querySelectorAll('.etiquette-badge').forEach(badge => {
     });
 });
 
-// ========== 📱 SWIPE NAVIGATION MOBILE ==========
-(function() {
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const minSwipe = 60;
-
-    document.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    document.addEventListener('touchend', function(e) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    }, { passive: true });
-
-    function handleSwipe() {
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) < minSwipe) return;
-        if (freeMode) return; // pas de swipe en mode libre
-
-        // Swipe gauche = suivant
-        if (diff > 0) {
-            // Vérifier si on est dans une sous-étape
-            const activeSection = STEPS[currentStep];
-            if (activeSection === 'livraison' && livCurrentSub < livMaxSub) {
-                goToLivSub(livCurrentSub + 1);
-            } else if (activeSection === 'echecs' && echCurrentSub < echMaxSub) {
-                goToEchSub(echCurrentSub + 1);
-            } else if (currentStep < maxReached) {
-                goToStep(currentStep + 1);
-            }
-        }
-        // Swipe droite = précédent
-        else {
-            const activeSection = STEPS[currentStep];
-            if (activeSection === 'livraison' && livCurrentSub > 0) {
-                goToLivSub(livCurrentSub - 1);
-            } else if (activeSection === 'echecs' && echCurrentSub > 0) {
-                goToEchSub(echCurrentSub - 1);
-            } else if (currentStep > 0) {
-                goToStep(currentStep - 1);
-            }
-        }
-    }
-})();
-
 // ========== 🔊 FEEDBACK SONORE ==========
 let soundMuted = false;
 
