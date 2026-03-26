@@ -3079,22 +3079,12 @@ function renderAdminData(results) {
         </div>
     `;
 
-    // Table complète
+    // Table paginée (20 par page)
     const reversed = [...results].reverse();
-    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
-    reversed.forEach(r => {
-        const color = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
-        const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
-        html += `<tr>
-            <td style="font-weight:600; color:var(--paack-blue);">${r.nom}</td>
-            <td style="color:#4f6473; font-size:0.85em;">${r.date}</td>
-            <td style="color:#4f6473; font-size:0.85em;">${r.duree || '—'}</td>
-            <td style="font-weight:700;">${r.score}/${r.total}</td>
-            <td style="font-weight:700; color:${color};">${emoji} ${r.pct}%</td>
-        </tr>`;
-    });
-    html += '</tbody></table>';
-    tableEl.innerHTML = html;
+    const PAGE_SIZE = 20;
+    window._adminResults = reversed;
+    window._adminPage = 0;
+    renderAdminPage(tableEl, reversed, 0, PAGE_SIZE);
 
     // Évolution par livreur
     const byName = {};
@@ -3120,6 +3110,51 @@ function renderAdminData(results) {
         evoHtml += '</div></div>';
     });
     evoEl.innerHTML = evoHtml || '<p style="color:#7a9aab; font-size:0.9em;">Les évolutions apparaîtront quand un livreur aura fait le QCM plusieurs fois.</p>';
+}
+
+function renderAdminPage(container, data, page, pageSize) {
+    const totalPages = Math.ceil(data.length / pageSize);
+    const start = page * pageSize;
+    const pageData = data.slice(start, start + pageSize);
+
+    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
+    pageData.forEach(r => {
+        const color = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
+        const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
+        html += `<tr>
+            <td style="font-weight:600; color:var(--paack-blue);">${r.nom}</td>
+            <td style="color:#4f6473; font-size:0.85em;">${r.date}</td>
+            <td style="color:#4f6473; font-size:0.85em;">${r.duree || '—'}</td>
+            <td style="font-weight:700;">${r.score}/${r.total}</td>
+            <td style="font-weight:700; color:${color};">${emoji} ${r.pct}%</td>
+        </tr>`;
+    });
+    html += '</tbody></table>';
+
+    // Pagination
+    if (totalPages > 1) {
+        html += '<div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap;">';
+        html += `<button onclick="adminGoToPage(${page - 1})" style="padding:6px 14px; font-size:0.85em; margin:0;${page === 0 ? ' opacity:0.3; pointer-events:none;' : ''}">← Précédent</button>`;
+        for (let i = 0; i < totalPages; i++) {
+            const active = i === page ? 'background:var(--paack-accent); color:white;' : 'background:rgba(26,92,122,0.08); color:var(--paack-blue);';
+            html += `<button onclick="adminGoToPage(${i})" style="padding:6px 12px; font-size:0.85em; margin:0; min-width:36px; ${active}">${i + 1}</button>`;
+        }
+        html += `<button onclick="adminGoToPage(${page + 1})" style="padding:6px 14px; font-size:0.85em; margin:0;${page >= totalPages - 1 ? ' opacity:0.3; pointer-events:none;' : ''}">Suivant →</button>`;
+        html += `</div><p style="text-align:center; color:#7a9aab; font-size:0.8em; margin-top:6px;">${start + 1}–${Math.min(start + pageSize, data.length)} sur ${data.length} résultats</p>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function adminGoToPage(page) {
+    const data = window._adminResults;
+    if (!data) return;
+    const totalPages = Math.ceil(data.length / 20);
+    if (page < 0 || page >= totalPages) return;
+    window._adminPage = page;
+    const container = document.getElementById('admin-table-wrap');
+    renderAdminPage(container, data, page, 20);
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Auto-ouvrir admin si ?admin dans l'URL
