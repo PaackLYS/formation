@@ -1609,7 +1609,7 @@
                 </li>
                 <li style="margin-top:10px;">Sélectionnez l'endroit exact (<strong>Jardin</strong>, <strong>Voisin</strong> ou <strong>Autre</strong>) et précisez dans <strong>"Autres informations"</strong></li>
                 <li><strong>Prévenir le client du lieu EXACT</strong> où le colis est laissé</li>
-                <li>Envoyer l'accord SMS sur le groupe Whatsapp</li>
+                <li>Envoyer l'accord SMS sur le groupe Slack</li>
             </ul>
             <div class="danger">
                 <strong>⚠️ Rappel :</strong> Beaucoup de réclamations viennent du client qui ignore où est livré son colis. TOUJOURS le prévenir précisément et lui envoyer une photo!
@@ -1648,7 +1648,7 @@
                     <li>Toujours vérifier que c'est le bon colis avant de livrer</li>
                     <li>Accord SMS obligatoire pour toute dépose hors main propre (sauf BAL)</li>
                     <li>Prévenir le client du lieu exact + envoyer une photo</li>
-                    <li>Envoyer les preuves SMS sur le groupe WhatsApp</li>
+                    <li>Envoyer les preuves SMS sur le groupe Slack</li>
                 </ul>
             </div>
 
@@ -1752,7 +1752,7 @@
                     <div id="bubble-refus" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
                         <strong style="color:#d64545;">🚫 Refusée par le client</strong> <span style="background:#ffe0e0; padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:#7c1f28;">⛔ Encadré</span><br>
                         Le client refuse → demandez un <strong>SMS de confirmation</strong>.<br>
-                        Capture d'écran → envoyez sur <strong>WhatsApp</strong>.<br>
+                        Capture d'écran → envoyez sur <strong>Slack</strong>.<br>
                         <strong style="color:#d64545;">❌ Pas de SMS = pas de "Refus" !</strong>
                     </div>
                     <div id="bubble-exigence" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
@@ -1857,7 +1857,7 @@
                 <div class="retenir-title">🧠 À retenir — Échecs</div>
                 <ul>
                     <li>Toujours choisir le bon motif d'échec + prendre une photo</li>
-                    <li>Motif "Refus client" = SMS obligatoire + envoi sur WhatsApp</li>
+                    <li>Motif "Refus client" = SMS obligatoire + envoi sur Slack</li>
                     <li>Si signature demandée lors d'un échec = mauvais clic, revenir en arrière</li>
                     <li>En cas d'erreur "Livré" : prévenir le responsable + le client immédiatement</li>
                     <li>Toujours retourner les colis non livrés à l'entrepôt</li>
@@ -2200,16 +2200,16 @@ const questionsPool = [
     { theme:'📮', question: "Pour une dépose en lieu sûr (jardin, palier, voisin, etc...), que faut-il OBLIGATOIREMENT ?", options: ["Rien de spécial","Un accord écrit du client par SMS","Un appel téléphonique","Une signature"], correct: 1 },
     { theme:'📮', question: "Pour une livraison en BAL, quel critère photo est requis ?", options: ["Juste le colis","Colis + étiquette + nom client sur la BAL","Juste la boîte","La rue uniquement"], correct: 1 },
     { theme:'📮', question: "Peut-on déposer un colis chez un voisin sans accord du client ?", options: ["Oui si le client ne répond pas","Oui, toujours","Non, accord client obligatoire","Oui si le voisin accepte"], correct: 2 },
-    { theme:'📮', question: "La capture d'écran de l'accord client doit être envoyée :", options: ["Gardée pour soi","Sur le groupe WhatsApp","Par email au responsable","Supprimée après livraison"], correct: 1 },
+    { theme:'📮', question: "La capture d'écran de l'accord client doit être envoyée :", options: ["Gardée pour soi","Sur le groupe Slack","Par email au responsable","Supprimée après livraison"], correct: 1 },
     { theme:'📮', question: "Une photo floue lors d'une livraison main propre est-elle valide ?", options: ["Oui si le colis est visible","Non, elle n'est pas valide","Oui si le client est visible","Oui toujours"], correct: 1 },
     { theme:'📮', question: "Avant de livrer, que faut-il toujours vérifier ?", options: ["La météo","Que vous livrez le bon colis à la bonne adresse","Que le client est disponible","Le poids du colis"], correct: 1 },
-    { theme:'📮', question: "Que faire si le client demande une dépose chez le voisin ?", options: ["Refuser systématiquement","Obtenir son accord par SMS et l'envoyer sur WhatsApp","Déposer directement","Appeler le responsable"], correct: 1 },
+    { theme:'📮', question: "Que faire si le client demande une dépose chez le voisin ?", options: ["Refuser systématiquement","Obtenir son accord par SMS et l'envoyer sur Slack","Déposer directement","Appeler le responsable"], correct: 1 },
     { theme:'⚠️', question: "En cas d'impossibilité de livrer le colis, que dois-je faire ?", options: ["Appeler le client","Choisir le bon motif d'échec sur l'application","Laisser le colis","Rentrer à l'entrepôt"], correct: 1 },
     { theme:'⚠️', question: "L'application demande une signature pour un échec. C'est normal ?", options: ["Oui, toujours","Non, revenir en arrière (mauvais clic)","Signer quand même","Appeler le responsable"], correct: 1 },
     { theme:'⚠️', question: "Que faire après avoir déclaré un colis 'Livré' par erreur ?", options: ["Continuer, c'est trop tard","Prévenir le responsable ET le client","Attendre que le client se plaigne","Retourner le chercher sans prévenir"], correct: 1 },
     { theme:'⚠️', question: "Que faire du colis en cas d'échec ?", options: ["Le garder pour le lendemain","Le retenter puis le retourner à l'entrepôt en fin de tournée","Le laisser devant la porte","L'apporter à un voisin"], correct: 1 },
     { theme:'⚠️', question: "Quelle photo prendre en cas d'échec ?", options: ["Aucune","Numéro de rue, lieu ou obstacle + colis","Photo du colis uniquement","Selfie devant l'adresse"], correct: 1 },
-    { theme:'⚠️', question: "Pour le motif 'Refus du client', que faut-il obligatoirement ?", options: ["Rien de spécial","Un SMS du client prouvant son refus + envoi sur WhatsApp","Un appel téléphonique","Une signature du client"], correct: 1 },
+    { theme:'⚠️', question: "Pour le motif 'Refus du client', que faut-il obligatoirement ?", options: ["Rien de spécial","Un SMS du client prouvant son refus + envoi sur Slack","Un appel téléphonique","Une signature du client"], correct: 1 },
 ];
 let currentQCMNum = null;
 let currentQuestions = [];
@@ -3001,7 +3001,7 @@ function toggleMute() {
 // ========== 📊 ADMIN DASHBOARD ==========
 function openAdmin() {
     const pwd = prompt('🔒 Mot de passe admin :');
-    if (pwd !== 'AllezOM93') { alert('❌ Mot de passe incorrect'); return; }
+    if (pwd !== 'Driver26fr') { alert('❌ Mot de passe incorrect'); return; }
     // Masquer tout, afficher admin
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
     document.getElementById('stepper').classList.add('hidden');
