@@ -1,0 +1,3295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Livraison Paack - Formation Interactive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --paack-dark: #0b2436;
+            --paack-blue: #1a5c7a;
+            --paack-light-blue: #2d7f9f;
+            --paack-bg-card: #e8f4f8;
+            --paack-accent: #2fb781;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top left, #173750 0%, #0b2436 45%, #061521 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #12232e;
+            overflow-x: hidden;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        /* ========== BARRE DE PROGRESSION GLOBALE ========== */
+        .global-progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 99px;
+            height: 8px;
+            margin: 8px 0 4px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .global-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--paack-accent), #4ee6a0, var(--paack-accent));
+            background-size: 200% 100%;
+            border-radius: 99px;
+            transition: width 0.6s ease;
+            width: 0%;
+            animation: progressPulse 2.5s ease infinite;
+        }
+        @keyframes progressPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .global-progress-text {
+            text-align: center;
+            font-size: 0.78em;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        /* ========== CONFETTIS ========== */
+        .confetti-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; overflow: hidden;
+        }
+        .confetti {
+            position: absolute; top: -10px;
+            width: 10px; height: 10px;
+            opacity: 0.9;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* ========== STEPPER PROGRESS ========== */
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 14px;
+            padding: 14px 16px 28px;
+            background: linear-gradient(135deg, #0b2436, #173750);
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+            border: 1px solid rgba(255,255,255,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .stepper.hidden { display: none; }
+        .stepper-dot {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85em; font-weight: 800;
+            color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .stepper-dot.active {
+            background: linear-gradient(135deg, var(--paack-blue), var(--paack-accent));
+            color: white;
+            border-color: var(--paack-accent);
+            box-shadow: 0 0 16px rgba(47,183,129,0.4);
+            transform: scale(1.1);
+        }
+        .stepper-dot.done {
+            background: var(--paack-accent);
+            color: white;
+            border-color: var(--paack-accent);
+        }
+        .stepper-dot.locked {
+            cursor: default;
+            opacity: 0.5;
+        }
+        .stepper-line {
+            flex: 1;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            max-width: 60px;
+            transition: background 0.4s ease;
+        }
+        .stepper-line.done { background: var(--paack-accent); }
+        .stepper-label {
+            position: absolute;
+            bottom: -18px;
+            font-size: 0.55em;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .stepper-dot.active .stepper-label,
+        .stepper-dot.done .stepper-label { color: rgba(255,255,255,0.8); }
+
+        @media (max-width: 480px) {
+            .stepper-dot { width: 32px; height: 32px; font-size: 0.75em; }
+            .stepper-label { font-size: 0.48em; }
+            .stepper { padding: 14px 10px 26px; }
+        }
+
+        /* ========== NAV LIBRE ========== */
+        .nav-libre {
+            display: none;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            justify-content: stretch;
+            background: linear-gradient(135deg,#0b2436,#173750);
+            padding: 5px 10px;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+            border: 1px solid rgba(255,255,255,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .nav-libre.visible { display: flex; }
+        .nav-btn {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            justify-content: center;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+        .nav-btn span.icon { font-size: 0.95em; }
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+            color: white;
+        }
+        .nav-btn.active {
+            background: linear-gradient(135deg, #1a5c7a, #2d7f9f);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+            transform: translateY(-1px);
+        }
+
+        /* ========== CONTENT SECTIONS ========== */
+        .content-section {
+            display: none;
+            background: rgba(253, 254, 254, 0.82);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 18px;
+            padding: 32px 32px 34px;
+            box-shadow: 0 14px 40px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.4);
+            overflow-x: hidden;
+            transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .content-section.active { display: block; animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .content-section.slide-left { animation: slideOutLeft 0.4s ease forwards; }
+        .content-section.slide-right { animation: slideOutRight 0.4s ease forwards; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInReverse {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes echPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(26,92,122,0); }
+            50% { border-color: rgba(47,183,129,1); box-shadow: 0 0 8px 2px rgba(47,183,129,0.3); }
+        }
+
+        /* ========== NEXT STEP BUTTON ========== */
+        .btn-next-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 1.2em;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--paack-accent) 0%, #25a06e 50%, #1a8a5c 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 800;
+            box-shadow: 0 8px 28px rgba(47,183,129,0.4);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-next-step::after {
+            content: "";
+            position: absolute;
+            top: -50%; left: -60%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .btn-next-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(47,183,129,0.5);
+            filter: brightness(1.08);
+        }
+        .btn-next-step .arrow-icon {
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+        }
+        .btn-next-step:hover .arrow-icon {
+            transform: translateX(6px);
+        }
+
+        /* ========== ACCUEIL HERO ========== */
+        .hero-start {
+            text-align: center;
+            padding: 20px 0 10px;
+        }
+        .hero-start .hero-emoji { font-size: 3.5em; margin-bottom: 16px; display: block; }
+        .hero-start h2 { justify-content: center; border: none; font-size: 2em; margin-bottom: 10px; }
+        .hero-start p { font-size: 1.05em; color: #4b616e; line-height: 1.7; max-width: 600px; margin: 0 auto 10px; }
+        .hero-steps-preview {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 28px 0 10px;
+            flex-wrap: wrap;
+        }
+        .hero-step-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--paack-bg-card);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.92em;
+            color: var(--paack-blue);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+        .hero-step-chip .chip-num {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--paack-blue), var(--paack-accent));
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8em; font-weight: 800;
+        }
+
+        /* ========== RECAP / FREE NAV MODE ========== */
+        .recap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .recap-card {
+            background: linear-gradient(145deg, var(--paack-bg-card) 0%, #d0e8f2 100%);
+            border-radius: 14px;
+            padding: 22px 18px;
+            box-shadow: 0 6px 18px rgba(1,12,20,0.35);
+            transition: all 0.25s ease;
+            border-left: 4px solid var(--paack-blue);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .recap-card::after {
+            content: "";
+            position: absolute;
+            right: -40px; bottom: -40px;
+            width: 110px; height: 110px;
+            border-radius: 40%;
+            background: radial-gradient(circle, rgba(26,92,122,0.18), transparent 65%);
+            pointer-events: none;
+        }
+        .recap-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.55); border-left-color: var(--paack-accent); }
+        .recap-card h4 { color: var(--paack-blue); margin-bottom: 6px; font-size: 1.1em; transition: color 0.2s; }
+        .recap-card:hover h4 { color: var(--paack-accent); }
+        .recap-card p { color: #1b3444; font-size: 0.9em; line-height: 1.5; }
+        .recap-card .card-arrow {
+            position: absolute; bottom: 12px; right: 14px;
+            font-size: 1.1em; opacity: 0; transform: translateX(-4px);
+            transition: all 0.2s ease; color: var(--paack-light-blue); pointer-events: none;
+        }
+        .recap-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+        /* ========== GENERAL STYLES ========== */
+        h2 {
+            color: var(--paack-blue);
+            margin-bottom: 22px;
+            font-size: 1.9em;
+            border-bottom: 3px solid rgba(26,92,122,0.15);
+            padding-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h3 {
+            color: var(--paack-light-blue);
+            margin-top: 24px;
+            margin-bottom: 14px;
+            font-size: 1.4em;
+            font-weight: 700;
+            position: relative;
+            padding-left: 14px;
+        }
+        h3::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 4px; bottom: 4px;
+            width: 4px;
+            border-radius: 4px;
+            background: linear-gradient(180deg, var(--paack-blue), var(--paack-accent));
+        }
+        .card {
+            background: linear-gradient(145deg, var(--paack-bg-card) 0%, #d0e8f2 100%);
+            border-radius: 14px;
+            padding: 20px 18px;
+            box-shadow: 0 6px 18px rgba(1,12,20,0.35);
+            transition: all 0.25s ease;
+            border-left: 4px solid var(--paack-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::after {
+            content: "";
+            position: absolute; right: -40px; bottom: -40px;
+            width: 110px; height: 110px; border-radius: 40%;
+            background: radial-gradient(circle, rgba(26,92,122,0.18), transparent 65%);
+            pointer-events: none;
+        }
+        .card h4 { color: var(--paack-blue); margin-bottom: 8px; font-size: 1.1em; }
+        .card p { color: #1b3444; line-height: 1.55; font-size: 0.97em; }
+        .card.clickable { cursor: pointer; }
+        .card.clickable:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.55); border-left-color: var(--paack-accent); }
+        .card.clickable:hover h4 { color: var(--paack-accent); }
+        .card.clickable .card-arrow {
+            position: absolute; bottom: 12px; right: 14px;
+            font-size: 1.1em; opacity: 0; transform: translateX(-4px);
+            transition: all 0.2s ease; color: var(--paack-light-blue); pointer-events: none;
+        }
+        .card.clickable:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+        ul { margin-left: 24px; margin-top: 10px; }
+        ul li { margin-bottom: 9px; color: #233744; line-height: 1.6; font-size: 0.98em; }
+        .highlight, .danger, .info {
+            padding: 16px 18px;
+            margin: 16px 0;
+            border-radius: 14px;
+            font-weight: 500;
+            font-size: 0.93em;
+            line-height: 1.7;
+            position: relative;
+            border: none;
+        }
+        .danger {
+            background: linear-gradient(135deg, #fff0f0 0%, #fde8e8 100%);
+            color: #5c1a1a;
+            box-shadow: 0 2px 12px rgba(214,69,69,0.08), inset 0 0 0 1px rgba(214,69,69,0.12);
+        }
+        .highlight {
+            background: linear-gradient(135deg, #fffbf0 0%, #fff5de 100%);
+            color: #4a3a0a;
+            box-shadow: 0 2px 12px rgba(212,160,23,0.08), inset 0 0 0 1px rgba(212,160,23,0.15);
+        }
+        .info {
+            background: linear-gradient(135deg, #f0f8fc 0%, #e4f1f8 100%);
+            color: #0e3549;
+            box-shadow: 0 2px 12px rgba(26,92,122,0.06), inset 0 0 0 1px rgba(26,92,122,0.1);
+        }
+        button {
+            background: linear-gradient(135deg, var(--paack-blue) 0%, var(--paack-light-blue) 45%, var(--paack-accent) 100%);
+            color: white; border: none;
+            padding: 12px 30px; border-radius: 999px;
+            cursor: pointer; font-size: 1em; font-weight: 600;
+            transition: all 0.25s ease; margin-top: 10px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.65); filter: brightness(1.03); }
+
+        /* QCM styles */
+        .question {
+            background: #f5f9fc; border-left: 4px solid var(--paack-blue);
+            padding: 18px; margin-bottom: 18px; border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(4,22,35,0.2);
+        }
+        .question h4 { color: var(--paack-blue); margin-bottom: 10px; font-size: 1.02em; }
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        .option { display: flex; align-items: center; }
+        input[type="radio"] { margin-right: 10px; cursor: pointer; width: 18px; height: 18px; accent-color: var(--paack-blue); }
+        .option label { cursor: pointer; flex: 1; padding: 8px 10px; border-radius: 6px; transition: background 0.18s ease; }
+        .option:hover label { background: #e6f2f8; }
+        .score-card {
+            background: linear-gradient(135deg, var(--paack-blue) 0%, var(--paack-light-blue) 60%);
+            color: white; padding: 24px 22px 26px; border-radius: 14px;
+            text-align: center; margin: 20px 0 10px;
+            box-shadow: 0 12px 34px rgba(0,0,0,0.7);
+            position: relative; overflow: hidden;
+        }
+        .score-card h3 { color: #f6feff; font-size: 1.6em; margin-bottom: 6px; position: relative; z-index: 1; }
+        .score-card h3::before { display: none; }
+        .score-number { font-size: 2.6em; font-weight: bold; margin: 10px 0 6px; position: relative; z-index: 1; }
+        .progress-bar { background: #dde7ef; border-radius: 999px; height: 18px; margin: 18px 0 10px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.25); }
+        .progress-fill { background: linear-gradient(90deg, var(--paack-accent) 0%, var(--paack-light-blue) 70%); height: 100%; transition: width 0.25s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8em; font-weight: bold; }
+        .red-chip { background-color: #ffe0e0; padding: 2px 8px; border-radius: 5px; }
+
+        /* Étiquette badges */
+        .etiquette-badge { font-size: 0.75em; font-weight: 700; padding: 5px 10px; border-radius: 20px; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; user-select: none; }
+        .etiquette-badge:hover, .etiquette-badge:active { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .etiquette-tooltip { display: none; position: absolute; z-index: 100; background: white; border-radius: 8px; padding: 8px 12px; margin-top: 4px; font-size: 0.8em; color: #1b3444; box-shadow: 0 4px 14px rgba(0,0,0,0.3); line-height: 1.5; }
+        .etiquette-tooltip.show { display: block; }
+
+        /* Photo grids */
+        .photo-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .photo-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .photo-item { text-align: center; }
+        .photo-item img { width: 100%; height: 350px; object-fit: cover; border-radius: 10px; display: block; }
+        .photo-item .photo-badge { position: absolute; top: 8px; left: 8px; color: white; font-size: 0.72em; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+        .photo-item .photo-caption { font-size: 0.78em; margin-top: 6px; font-weight: 600; }
+
+        /* Steps flow */
+        .steps-flow { display: flex; align-items: stretch; justify-content: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+        .step-card { flex: 1; min-width: 150px; max-width: 220px; border-radius: 16px; padding: 24px 18px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+        .step-arrow { display: flex; align-items: center; justify-content: center; padding: 0 6px; flex-shrink: 0; color: #2d7f9f; font-size: 1.6em; }
+
+        /* Encadré À retenir */
+        .retenir {
+            background: linear-gradient(135deg, #f0faf4 0%, #e2f5eb 100%);
+            padding: 20px 22px;
+            margin: 24px 0 10px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(47,183,129,0.08), inset 0 0 0 1px rgba(47,183,129,0.12);
+        }
+        .retenir-title { display: flex; align-items: center; gap: 8px; font-weight: 800; color: #1a6b42; font-size: 1.05em; margin-bottom: 10px; }
+        .retenir ul { margin-left: 20px; margin-top: 6px; }
+        .retenir li { color: #1e4a32; font-weight: 600; margin-bottom: 6px; }
+
+        /* Étapes numérotées */
+        .numbered-steps { display: flex; flex-direction: column; gap: 14px; margin: 16px 0 20px; }
+        .numbered-step { display: flex; align-items: flex-start; gap: 14px; background: #f5f9fc; border-radius: 12px; padding: 16px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); border: 1px solid rgba(26,92,122,0.1); transition: transform 0.2s ease; }
+        .numbered-step:hover { transform: translateX(4px); }
+        .step-number { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--paack-blue), var(--paack-accent)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1em; box-shadow: 0 3px 10px rgba(26,92,122,0.3); }
+        .step-text { flex: 1; color: #1b3444; line-height: 1.5; font-size: 0.97em; }
+        .step-text strong { color: var(--paack-blue); }
+
+        /* Bandeau photos */
+        .photo-section-header { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 10px; font-weight: 800; font-size: 0.9em; margin-bottom: 12px; letter-spacing: 0.3px; }
+        .photo-section-header.do { background: linear-gradient(135deg, #e2f6ea, #c8f0d5); color: #1a6b42; border: 2px solid #2fb781; }
+        .photo-section-header.dont { background: linear-gradient(135deg, #ffe8ea, #ffd4d8); color: #7c1f28; border: 2px solid #d64545; }
+        .photo-item img.valid-photo { border: 3px solid #2fb781; box-shadow: 0 4px 16px rgba(47,183,129,0.25); }
+        .photo-item img.invalid-photo { border: 3px solid #d64545; box-shadow: 0 4px 16px rgba(214,69,69,0.25); }
+
+        /* Sections pliables (collapsible) — toutes ouvertes par défaut en mode guidé */
+        details.collapsible {
+            margin: 16px 0; border-radius: 14px;
+            background: linear-gradient(145deg, #f8fbfd 0%, #eef5f9 100%);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1px solid rgba(26,92,122,0.12);
+            overflow: hidden; transition: all 0.3s ease;
+        }
+        details.collapsible[open] { box-shadow: 0 6px 22px rgba(0,0,0,0.12); border-color: rgba(26,92,122,0.2); }
+        details.collapsible > summary {
+            display: flex; align-items: center; gap: 10px;
+            padding: 16px 20px; cursor: pointer;
+            font-size: 1.1em; font-weight: 700;
+            color: var(--paack-light-blue); list-style: none;
+            user-select: none; transition: all 0.2s ease; position: relative;
+        }
+        details.collapsible > summary::-webkit-details-marker { display: none; }
+        details.collapsible > summary::after {
+            content: "▸"; position: absolute; right: 18px;
+            font-size: 1.2em; transition: transform 0.3s ease; color: var(--paack-blue);
+        }
+        details.collapsible[open] > summary::after { transform: rotate(90deg); }
+        details.collapsible > summary:hover { background: rgba(26,92,122,0.05); }
+        details.collapsible[open] > summary {
+            border-bottom: 1px solid rgba(26,92,122,0.1);
+            background: linear-gradient(135deg, rgba(26,92,122,0.06) 0%, rgba(47,183,129,0.04) 100%);
+        }
+        details.collapsible .collapsible-content { padding: 20px; }
+        details.collapsible[open] .collapsible-content { animation: slideDown 0.3s ease; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        details.collapsible .collapsible-content h3 { margin-top: 0; }
+
+        /* Livraison & Echecs sub-steps */
+        .liv-sub { display: none; }
+        .liv-sub.active { display: block; }
+        .ech-sub { display: none; }
+        .ech-sub.active { display: block; }
+
+        /* ========== TIMELINE VERTICALE ========== */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--paack-blue), var(--paack-accent), #f4c440);
+            border-radius: 99px;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            background: #f5f9fc;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            border: 1px solid rgba(26,92,122,0.1);
+            animation: timelineSlideIn 0.5s ease forwards;
+            opacity: 0;
+        }
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.5s; }
+        @keyframes timelineSlideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -33px; top: 20px;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--paack-blue);
+            box-shadow: 0 2px 8px rgba(26,92,122,0.2);
+            z-index: 1;
+        }
+        .timeline-dot.green { border-color: var(--paack-accent); }
+        .timeline-dot.yellow { border-color: #f4c440; }
+        .timeline-item strong { color: var(--paack-blue); }
+
+        /* ========== TABS HORIZONTAUX ========== */
+        .tabs-container {
+            display: flex;
+            gap: 0;
+            background: linear-gradient(135deg, #f0f4f7, #e8eff4);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 14px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.82em;
+            color: #7a9aab;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-family: inherit;
+        }
+        .tab-btn.active {
+            background: white;
+            color: var(--paack-blue);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .tab-btn.locked {
+            opacity: 0.4;
+            cursor: default;
+        }
+        .tab-btn:hover:not(.active):not(.locked) {
+            color: var(--paack-blue);
+            background: rgba(255,255,255,0.5);
+        }
+        @media (max-width: 480px) {
+            .tab-btn { font-size: 0.72em; padding: 10px 8px; gap: 3px; }
+            .timeline { padding-left: 34px; }
+            .timeline-dot { left: -27px; width: 16px; height: 16px; }
+            .timeline-item { padding: 12px 14px; }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            body { padding: 14px; }
+            .content-section { padding: 22px 16px 24px; }
+            .photo-grid-3 { grid-template-columns: 1fr; }
+            .photo-grid-2 { grid-template-columns: 1fr; }
+            .photo-item img { height: auto; max-height: 450px; object-fit: contain; }
+            h2 { font-size: 1.5em; }
+            h3 { font-size: 1.2em; }
+            /* Étiquette : réduire l'image en mobile */
+            .etiquette-image-container { max-width: 65% !important; margin-left: auto !important; margin-right: auto !important; }
+            .etiquette-badge { font-size: 0.65em !important; padding: 2px 5px !important; }
+            .etiquette-tooltip-new { font-size: 0.78em !important; min-width: 140px !important; max-width: 180px !important; }
+            /* Excentrer les badges gauche/droite sur mobile */
+            .etiquette-badge-wrap[style*="left:3%"] { left: -14% !important; }
+            .etiquette-badge-wrap[style*="left:-16%"] { left: -26% !important; }
+            .etiquette-badge-wrap[style*="right:3%"] { right: -14% !important; }
+            .etiquette-badge-wrap[style*="right:-7%"] { right: -18% !important; }
+            .etiquette-badge-wrap[style*="right:10%"] { right: -6% !important; }
+            /* Échecs motifs */
+            .ech-motif-layout { flex-direction: column !important; align-items: center !important; }
+            .echec-image-container { max-width: 100% !important; }
+            .ech-bubble { font-size: 0.84em !important; padding: 12px 14px !important; }
+            .ech-bubble img { max-width: 100% !important; }
+            .steps-flow { flex-direction: column; align-items: center; gap: 8px; }
+            .step-card { max-width: 100%; width: 100%; }
+            .step-arrow { transform: rotate(90deg); padding: 4px 0; }
+            .numbered-step { padding: 12px; gap: 10px; }
+            .step-number { width: 32px; height: 32px; font-size: 0.95em; }
+            details.collapsible > summary { padding: 14px 16px; font-size: 1em; }
+            details.collapsible .collapsible-content { padding: 16px; }
+            .hero-start h2 { font-size: 1.5em; }
+            .btn-next-step { font-size: 1.05em; padding: 16px; }
+            .recap-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            body { padding: 8px; }
+            .content-section { padding: 16px 10px 18px; }
+            h2 { font-size: 1.2em; gap: 6px; }
+            .nav-btn { font-size: 0.72em; padding: 8px 6px; }
+            .stepper-dot { width: 34px !important; height: 34px !important; font-size: 0.75em !important; }
+            .stepper-label { font-size: 0.6em !important; }
+            .stepper-line { max-width: 30px !important; }
+            .liv-dot, .ech-dot { width: 30px !important; height: 30px !important; font-size: 0.7em !important; }
+            .liv-line, .ech-line { max-width: 40px !important; }
+            .hero-start h2 { font-size: 1.3em; }
+            .hero-steps-preview { flex-wrap: wrap; }
+            .hero-step-chip { font-size: 0.8em; padding: 6px 10px; }
+            .score-card { padding: 20px 14px; }
+            .score-number { font-size: 2em !important; }
+            .ech-motif-badge img { border-radius: 5px !important; }
+            #ech-bubbles-container { width: 100% !important; }
+            .btn-next-step { font-size: 0.95em !important; padding: 14px !important; }
+        }
+        /* ========== QCM MICRO-INTERACTIONS ========== */
+        .qcm-option-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 8px;
+            border: 2px solid transparent;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .qcm-option-enhanced::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(47,183,129,0.08), rgba(26,92,122,0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .qcm-option-enhanced:hover {
+            border-color: rgba(26,92,122,0.2);
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .qcm-option-enhanced:hover::before { opacity: 1; }
+        .qcm-option-enhanced.selected {
+            border-color: var(--paack-accent);
+            background: linear-gradient(135deg, #f0faf4, #e6f7ed);
+            transform: translateX(4px);
+            box-shadow: 0 4px 14px rgba(47,183,129,0.15);
+        }
+        .qcm-option-enhanced.correct-answer {
+            border-color: #2fb781;
+            background: #e2f6ea;
+        }
+        .qcm-option-enhanced.wrong-answer {
+            border-color: #d64545;
+            background: #ffe8ea;
+        }
+        .qcm-radio-custom {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 2px solid #c0d0d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .qcm-option-enhanced.selected .qcm-radio-custom {
+            border-color: var(--paack-accent);
+            background: var(--paack-accent);
+            animation: radioSelect 0.4s ease;
+        }
+        .qcm-radio-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: white;
+            transform: scale(0);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .qcm-option-enhanced.selected .qcm-radio-dot { transform: scale(1); }
+        .qcm-option-text {
+            font-size: 0.95em;
+            color: #324754;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+        .qcm-option-enhanced.selected .qcm-option-text { color: #1a6b42; font-weight: 600; }
+        @keyframes radioSelect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* ========== STAGGER ANIMATION ========== */
+        .stagger-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stagger-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== IMPROVED TOOLTIPS ========== */
+        .etiquette-tooltip-new {
+            display: none;
+            position: absolute;
+            z-index: 100;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.82em;
+            color: #1b3444;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+            line-height: 1.5;
+            min-width: 200px;
+            max-width: 260px;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+        }
+        .etiquette-tooltip-new::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: white;
+        }
+        .etiquette-tooltip-new.show {
+            display: block;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        /* Tooltip ouverture à droite du badge */
+        .etiquette-tooltip-new.pos-right {
+            bottom: auto;
+            top: 50%;
+            left: calc(100% + 12px);
+            transform: translateY(-50%) translateX(8px);
+        }
+        .etiquette-tooltip-new.pos-right::after {
+            top: 50%;
+            left: -8px;
+            right: auto;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-right-color: white;
+            border-top-color: transparent;
+        }
+        .etiquette-tooltip-new.pos-right.show {
+            transform: translateY(-50%) translateX(0);
+        }
+        /* Tooltip ouverture à gauche du badge */
+        .etiquette-tooltip-new.pos-left {
+            bottom: auto;
+            top: 50%;
+            left: auto;
+            right: calc(100% + 12px);
+            transform: translateY(-50%) translateX(-8px);
+        }
+        .etiquette-tooltip-new.pos-left::after {
+            top: 50%;
+            right: -8px;
+            left: auto;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-left-color: white;
+            border-top-color: transparent;
+        }
+        .etiquette-tooltip-new.pos-left.show {
+            transform: translateY(-50%) translateX(0);
+        }
+        /* Tooltip ouverture en dessous du badge */
+        .etiquette-tooltip-new.pos-bottom {
+            bottom: auto;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        .etiquette-tooltip-new.pos-bottom::after {
+            top: auto;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-bottom-color: white;
+            border-top-color: transparent;
+        }
+        .etiquette-tooltip-new.pos-bottom.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ========== SCROLL TO TOP ========== */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--paack-blue), var(--paack-accent));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(47,183,129,0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: none;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            padding: 0;
+            margin: 0;
+        }
+        .scroll-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .scroll-top-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(47,183,129,0.5);
+        }
+
+        /* ========== FOOTER ========== */
+        .site-footer {
+            text-align: center;
+            padding: 24px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.82em;
+            font-weight: 500;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 20px;
+        }
+        .site-footer span { color: var(--paack-accent); font-weight: 700; }
+
+        /* ========== DANGER FLASH ========== */
+        .danger-flash {
+            background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+            color: white !important;
+            font-size: 1em !important;
+            font-weight: 700 !important;
+            text-align: center;
+            padding: 20px 22px !important;
+            border-radius: 14px !important;
+            box-shadow: 0 4px 20px rgba(220,38,38,0.35), inset 0 0 0 2px rgba(255,255,255,0.15) !important;
+            animation: dangerPulse 1.8s ease-in-out infinite;
+        }
+        .danger-flash strong {
+            color: #fef08a !important;
+        }
+        @keyframes dangerPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(220,38,38,0.35), inset 0 0 0 2px rgba(255,255,255,0.15); transform: scale(1); }
+            50% { box-shadow: 0 6px 30px rgba(220,38,38,0.6), inset 0 0 0 2px rgba(255,255,255,0.25), 0 0 20px rgba(220,38,38,0.3); transform: scale(1.01); }
+        }
+        .shake-emoji {
+            display: inline-block;
+            animation: emojiShake 0.6s ease-in-out infinite;
+        }
+        @keyframes emojiShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-12deg); }
+            75% { transform: rotate(12deg); }
+        }
+
+        /* ========== PARTICLES ========== */
+        .particles-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+            opacity: 0;
+        }
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.6; transform: scale(0.8); }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* ========== BADGE PULSE ========== */
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.06); box-shadow: 0 4px 18px rgba(0,0,0,0.45); }
+        }
+        .etiquette-badge:not(.badge-clicked) {
+            animation: badgePulse 2.2s ease-in-out infinite;
+        }
+        .etiquette-badge.badge-clicked {
+            animation: none;
+        }
+
+        /* ========== DONUT PROGRESS ========== */
+        .donut-progress-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 6px 0;
+        }
+        .donut-svg {
+            width: 52px;
+            height: 52px;
+            transform: rotate(-90deg);
+            filter: drop-shadow(0 2px 8px rgba(47,183,129,0.3));
+        }
+        .donut-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 5;
+        }
+        .donut-fill {
+            fill: none;
+            stroke: url(#donutGrad);
+            stroke-width: 5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease;
+        }
+        .donut-info {
+            text-align: left;
+        }
+        .donut-pct {
+            font-size: 1.1em;
+            font-weight: 800;
+            color: rgba(255,255,255,0.95);
+            letter-spacing: -0.5px;
+        }
+        .donut-label {
+            font-size: 0.72em;
+            color: rgba(255,255,255,0.5);
+            font-weight: 600;
+        }
+
+        /* ========== PARALLAX HEADER ========== */
+        .header-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: transform 0.3s ease-out;
+        }
+        .header-orb-1 {
+            right: -30px; top: -30px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(47,183,129,0.2), transparent 65%);
+        }
+        .header-orb-2 {
+            left: -20px; bottom: -30px;
+            width: 140px; height: 140px;
+            background: radial-gradient(circle, rgba(26,92,122,0.15), transparent 65%);
+        }
+        .header-orb-3 {
+            right: 30%; top: -20px;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, rgba(244,196,64,0.12), transparent 65%);
+        }
+
+        /* ========== ENHANCED STEPPER DESKTOP ========== */
+        @media (min-width: 900px) {
+            .stepper {
+                padding: 18px 28px 32px;
+                gap: 0;
+                background: linear-gradient(135deg, rgba(11,36,54,0.95), rgba(23,55,80,0.95));
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255,255,255,0.1);
+            }
+            .stepper-dot {
+                width: 44px; height: 44px;
+                font-size: 0.95em;
+            }
+            .stepper-line {
+                max-width: 80px;
+            }
+            .stepper-label {
+                font-size: 0.65em;
+            }
+        }
+
+        /* ========== GLASSMORPHISM NAV ========== */
+        .nav-libre {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* ========== MUTE BUTTON ========== */
+        .mute-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(11,36,54,0.85);
+            backdrop-filter: blur(10px);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0;
+            margin: 0;
+        }
+        .mute-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        /* ========== ADMIN DASHBOARD ========== */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .admin-stat-card {
+            background: linear-gradient(145deg, var(--paack-bg-card), #d0e8f2);
+            border-radius: 14px;
+            padding: 18px 14px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            border: 1px solid rgba(26,92,122,0.1);
+        }
+        .admin-stat-value {
+            font-size: 2em;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .admin-stat-label {
+            font-size: 0.78em;
+            color: #7a9aab;
+            font-weight: 600;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            margin-top: 12px;
+        }
+        .admin-table th {
+            background: var(--paack-blue);
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .admin-table th:first-child { border-radius: 8px 0 0 0; }
+        .admin-table th:last-child { border-radius: 0 8px 0 0; }
+        .admin-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid #e8f0f4;
+        }
+        .admin-table tr:nth-child(even) { background: #f5f9fc; }
+    </style>
+</head><body>
+<!-- Particules flottantes -->
+<div class="particles-container" id="particles"></div>
+<div class="container" style="position:relative; z-index:1;">
+    <header id="parallax-header" style="background:linear-gradient(135deg,#060e18 0%,#0b1e30 50%,#0f2a3d 100%); border-radius:18px; padding:22px 24px 18px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.5), 0 0 30px rgba(47,183,129,0.1); position:relative; overflow:hidden; border:1px solid rgba(47,183,129,0.15);">
+        <div class="header-orb header-orb-1" id="orb1" style="background:radial-gradient(circle, rgba(47,183,129,0.15), transparent 70%);"></div>
+        <div class="header-orb header-orb-2" id="orb2" style="background:radial-gradient(circle, rgba(26,92,122,0.2), transparent 70%);"></div>
+        <div class="header-orb header-orb-3" id="orb3" style="background:radial-gradient(circle, rgba(47,183,129,0.1), transparent 70%);"></div>
+        <div style="display:flex; align-items:center; gap:20px; position:relative; z-index:1;">
+            <div style="flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                <svg width="170" height="95" viewBox="10 30 200 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="neon-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <filter id="neon-soft"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    </defs>
+                    <!-- Lignes néon -->
+                    <line x1="18" y1="52" x2="48" y2="52" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.5" filter="url(#neon-soft)"/>
+                    <line x1="25" y1="63" x2="52" y2="63" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.7" filter="url(#neon-soft)"/>
+                    <line x1="20" y1="74" x2="46" y2="74" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.4" filter="url(#neon-soft)"/>
+                    <!-- Camion néon outline -->
+                    <rect x="55" y="38" width="75" height="48" rx="7" fill="none" stroke="#1a5c7a" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <path d="M130 45 L158 45 C164 45, 170 51, 170 57 L170 86 L130 86 Z" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <!-- Pare-brise néon -->
+                    <path d="M136 50 L155 50 C159 50, 163 54, 163 58 L163 70 L136 70 Z" fill="none" stroke="rgba(47,183,129,0.5)" stroke-width="1.5"/>
+                    <!-- Colis néon -->
+                    <rect x="68" y="50" width="18" height="15" rx="2" fill="none" stroke="#2fb781" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.6"/>
+                    <rect x="94" y="50" width="18" height="15" rx="2" fill="none" stroke="#2fb781" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.4"/>
+                    <!-- Roues néon -->
+                    <circle cx="82" cy="92" r="11" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <circle cx="82" cy="92" r="4" fill="#2fb781" filter="url(#neon-soft)"/>
+                    <circle cx="155" cy="92" r="11" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <circle cx="155" cy="92" r="4" fill="#2fb781" filter="url(#neon-soft)"/>
+                    <!-- Route néon -->
+                    <line x1="35" y1="104" x2="210" y2="104" stroke="#2fb781" stroke-width="1" stroke-dasharray="8 5" opacity="0.3" filter="url(#neon-soft)"/>
+                </svg>
+            </div>
+            <div>
+                <h1 style="margin:0; font-size:1.7em; font-weight:900; letter-spacing:-0.5px; line-height:1.1;">
+                    <span style="color:#2fb781; filter:drop-shadow(0 0 8px rgba(47,183,129,0.4));">PAACK</span> <span style="color:#e0e8f0;">DRIVER</span>
+                </h1>
+                <p style="margin:6px 0 0; color:#4ee6a0; font-size:0.85em; letter-spacing:3px; font-weight:600; filter:drop-shadow(0 0 6px rgba(78,230,160,0.3));">FORMATION</p>
+                <p style="margin:5px 0 0; color:#5a7a8a; font-size:0.82em;">Formation interactive · Maîtrisez les processus en quelques minutes</p>
+            </div>
+        </div>
+        <!-- Silhouette panoramique Lyon -->
+        <svg class="lyon-skyline" style="position:absolute; right:0; bottom:0; height:100%; width:auto; max-width:50%; opacity:0.13; z-index:0;" viewBox="0 0 600 150" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMax meet">
+            <!-- Skyline continue style panoramique -->
+            <path d="
+                M0 150 L0 110
+                Q15 100, 30 110 Q45 100, 60 108
+                L60 105 L65 105 L65 95 L72 95 L72 88 L78 88 L78 95 L85 95 L85 105 L90 105 L90 110
+                Q100 102, 110 108
+                L110 100 L115 100 L115 85 L118 85 L118 72 L122 65 L126 72 L126 85 L129 85 L129 100 L134 100 L134 110
+                L140 108 L140 95 L146 95 L146 82 L150 75 L154 82 L154 95 L160 95 L160 108
+                L168 105 L168 90 L172 90 L172 70 L175 70 L175 50 L178 45 L181 38
+                L184 30 L187 25 L190 20 L193 25 L196 30
+                L199 38 L202 45 L205 50 L205 55 L208 55 L208 42 L211 38 L214 42 L214 55 L217 55
+                L217 50 L220 46 L223 50 L223 55
+                L226 55 L226 70 L229 70 L229 90 L233 90 L233 105
+                L240 108 L240 100
+                L243 100 L243 18 L245 18 L247 8 L249 18 L251 18 L251 100
+                L256 105
+                L260 100 L260 80 L264 80 L264 68 L268 62 L272 68 L272 80 L276 80 L276 100
+                L282 105 L282 98 L282 78 L290 78 L290 72 L298 72 L298 78 L306 78 L306 98
+                L312 100
+                L316 98 L316 60 L320 60 L320 48 L324 42 L328 48 L328 60 L332 60 L332 98
+                L340 105
+                L344 100 L344 70 L350 70 L350 62 L358 62 L358 70 L364 70 L364 100
+                L372 105 L372 85 L378 85 L378 78 L384 78 L384 85 L390 85 L390 105
+                Q405 100, 420 105
+                L420 95 L428 95 L428 88 L434 88 L434 82 L438 82 L438 88 L444 88 L444 95 L450 95 L450 105
+                L458 108
+                L462 105 L462 35 L465 35 L467 12 L469 35 L472 35 L472 105
+                L480 108 L480 90 L486 90 L486 80 L494 80 L494 90 L500 90 L500 108
+                L508 110 L508 92 L514 92 L514 85 L520 85 L520 78 L526 78 L526 85 L532 85 L532 92 L538 92 L538 110
+                L548 112 L548 95 L554 95 L554 88 L562 88 L562 95 L568 95 L568 112
+                L578 115 L578 100 L584 100 L584 95 L590 95 L590 100 L596 100 L596 115
+                L600 118 L600 150 Z
+            " fill="#2fb781"/>
+            <!-- Reflet rivière -->
+            <path d="M0 140 Q50 135, 100 140 Q150 145, 200 140 Q250 135, 300 140 Q350 145, 400 140 Q450 135, 500 140 Q550 145, 600 140" stroke="#2fb781" stroke-width="0.8" fill="none" opacity="0.3"/>
+            <path d="M0 145 Q60 142, 120 145 Q180 148, 240 145 Q300 142, 360 145 Q420 148, 480 145 Q540 142, 600 145" stroke="#2fb781" stroke-width="0.5" fill="none" opacity="0.15"/>
+        </svg>
+    </header>
+
+    <!-- ========== BARRE PROGRESSION GLOBALE ========== -->
+    <div id="global-progress" style="display:none; padding:0 4px;">
+        <div class="donut-progress-wrap">
+            <svg class="donut-svg" viewBox="0 0 40 40">
+                <defs>
+                    <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--paack-accent)"/>
+                        <stop offset="100%" style="stop-color:#4ee6a0"/>
+                    </linearGradient>
+                </defs>
+                <circle class="donut-bg" cx="20" cy="20" r="16"/>
+                <circle class="donut-fill" id="donut-fill" cx="20" cy="20" r="16"
+                    stroke-dasharray="100.53"
+                    stroke-dashoffset="100.53"/>
+            </svg>
+            <div class="donut-info">
+                <div class="donut-pct"><span id="global-progress-pct">0</span>%</div>
+                <div class="donut-label">Progression</div>
+            </div>
+        </div>
+        <div class="global-progress-bar" style="margin-top:2px;">
+            <div class="global-progress-fill" id="global-progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- ========== STEPPER (mode guidé) ========== -->
+    <div class="stepper" id="stepper">
+        <div class="stepper-dot active" id="dot-0" onclick="stepperClick(0)">1<span class="stepper-label">Accueil</span></div>
+        <div class="stepper-line" id="line-0"></div>
+        <div class="stepper-dot locked" id="dot-1" onclick="stepperClick(1)">2<span class="stepper-label">Chargement</span></div>
+        <div class="stepper-line" id="line-1"></div>
+        <div class="stepper-dot locked" id="dot-2" onclick="stepperClick(2)">3<span class="stepper-label">Livraison</span></div>
+        <div class="stepper-line" id="line-2"></div>
+        <div class="stepper-dot locked" id="dot-3" onclick="stepperClick(3)">4<span class="stepper-label">Échecs</span></div>
+        <div class="stepper-line" id="line-3"></div>
+        <div class="stepper-dot locked" id="dot-4" onclick="stepperClick(4)">5<span class="stepper-label">QCM</span></div>
+    </div>
+
+    <!-- ========== NAV LIBRE (après parcours terminé) ========== -->
+    <nav class="nav-libre" id="navLibre">
+        <button class="nav-btn active" onclick="freeNav('accueil', this)"><span class="icon">🏠</span>Accueil</button>
+        <button class="nav-btn" onclick="freeNav('chargement', this)"><span class="icon">📦</span>Chargement</button>
+        <button class="nav-btn" onclick="freeNav('livraison', this)"><span class="icon">📮</span>Livraison</button>
+        <button class="nav-btn" onclick="freeNav('echecs', this)"><span class="icon">⚠️</span>Échecs</button>
+        <button class="nav-btn" onclick="freeNav('qcm', this)"><span class="icon">❓</span>QCM</button>
+    </nav>
+
+    <!-- ========== ACCUEIL ========== -->
+    <div id="accueil" class="content-section active">
+        <div class="hero-start">
+            <span class="hero-emoji">🎯</span>
+            <h2>Bienvenue dans votre formation!</h2>
+            <p>
+                Ce guide va vous accompagner <strong>étape par étape</strong> pour maîtriser les règles de livraison Paack. Suivez le parcours, puis testez vos connaissances avec le QCM.
+            </p>
+            <div class="hero-steps-preview">
+                <div class="hero-step-chip"><div class="chip-num">1</div> Chargement</div>
+                <div class="hero-step-chip"><div class="chip-num">2</div> Livraison</div>
+                <div class="hero-step-chip"><div class="chip-num">3</div> Échecs</div>
+                <div class="hero-step-chip"><div class="chip-num">4</div> QCM</div>
+            </div>
+        </div>
+
+        <!-- Champ nom sur l'accueil -->
+        <div id="accueil-name-screen" style="max-width:500px; margin:20px auto 0; text-align:center;">
+            <p style="margin-bottom:12px; color:#324754; font-size:1.05em;">Entrez votre <strong>prénom et nom</strong> pour commencer :</p>
+            <div style="display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
+                <input type="text" id="input-nom-accueil" placeholder="Prénom Nom..." style="padding:14px 18px; border-radius:12px; border:2px solid #2d7f9f; font-size:1.1em; flex:1; min-width:200px; outline:none; color:#12232e; text-align:center;">
+            </div>
+            <p id="nom-error-accueil" style="color:#d64545; font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre nom.</p>
+        </div>
+
+        <button class="btn-next-step" onclick="startFormation()">
+            Commencer la formation <span class="arrow-icon">▶</span>
+        </button>
+
+        <!-- Chrono visible pendant la formation -->
+        <div id="chrono-bar" style="display:none;">
+            ⏱️ Temps écoulé : <strong id="chrono-display">00:00</strong>
+        </div>
+    </div>
+
+    <!-- ========== CHARGEMENT ========== -->
+    <div id="chargement" class="content-section">
+        <h2>📦 Étape 1 — Chargement</h2>
+        <h3>Comment lire l'étiquette Paack</h3>
+        <div class="etiquette-image-container" style="position:relative; display:block; width:100%; max-width:520px; margin:25px auto; overflow:visible;">
+            <img src="images/etiquette.jpg" alt="Étiquette Paack" style="width:100%; border-radius:12px; box-shadow:0 6px 22px rgba(0,0,0,0.25); display:block;" onerror="this.style.display='none'">
+            <div class="etiquette-badge-wrap" style="position:absolute; top:12%; left:3%;">
+                <div class="etiquette-badge" style="background:#1a5c7a; color:white;" onclick="toggleCard('card-hub')" onmouseenter="document.getElementById('card-hub').classList.add('show')" onmouseleave="document.getElementById('card-hub').classList.remove('show')">
+                    🏢 Nom de tournée : LYS 013
+                </div>
+                <div id="card-hub" class="etiquette-tooltip-new">
+                    <strong style="color:#1a5c7a;">Nom de la tournée</strong><br>Identifie la route assignée au livreur.
+                </div>
+            </div>
+            <div class="etiquette-badge-wrap" style="position:absolute; top:12%; right:3%;">
+                <div class="etiquette-badge" style="background:#2fb781; color:white;" onclick="toggleCard('card-ordre')" onmouseenter="document.getElementById('card-ordre').classList.add('show')" onmouseleave="document.getElementById('card-ordre').classList.remove('show')">
+                    📍 Ordre livraison : 9
+                </div>
+                <div id="card-ordre" class="etiquette-tooltip-new">
+                    <strong style="color:#2fb781;">Position dans la tournée</strong><br>Ce colis est le 9e arrêt de la journée.
+                </div>
+            </div>
+            <div class="etiquette-badge-wrap" style="position:absolute; top:44%; left:-16%;">
+                <div class="etiquette-badge" style="background:#2d7f9f; color:white;" onclick="toggleCard('card-creneau')" onmouseenter="document.getElementById('card-creneau').classList.add('show')" onmouseleave="document.getElementById('card-creneau').classList.remove('show')">
+                    🕐 Créneau : 09h-22h
+                </div>
+                <div id="card-creneau" class="etiquette-tooltip-new">
+                    <strong style="color:#2d7f9f;">Créneau de livraison</strong><br>Plage horaire attendue par le client.
+                </div>
+            </div>
+            <div class="etiquette-badge-wrap" style="position:absolute; top:44%; right:-7%;">
+                <div class="etiquette-badge" style="background:#f4c440; color:#4f4421;" onclick="toggleCard('card-date')" onmouseenter="document.getElementById('card-date').classList.add('show')" onmouseleave="document.getElementById('card-date').classList.remove('show')">
+                    📅 Date : 25/01
+                </div>
+                <div id="card-date" class="etiquette-tooltip-new">
+                    <strong style="color:#b8941f;">Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
+                </div>
+            </div>
+            <div class="etiquette-badge-wrap" style="position:absolute; bottom:22%; right:10%;">
+                <div class="etiquette-badge" style="background:#d64545; color:white;" onclick="toggleCard('card-colis')" onmouseenter="document.getElementById('card-colis').classList.add('show')" onmouseleave="document.getElementById('card-colis').classList.remove('show')">
+                    📦 1P = 1 colis
+                </div>
+                <div id="card-colis" class="etiquette-tooltip-new pos-bottom">
+                    <strong style="color:#d64545;">Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
+                </div>
+            </div>
+            <div class="etiquette-badge-wrap" style="position:absolute; bottom:20%; left:3%;">
+                <div class="etiquette-badge" style="background:#6c3483; color:white;" onclick="toggleCard('card-barcode')" onmouseenter="document.getElementById('card-barcode').classList.add('show')" onmouseleave="document.getElementById('card-barcode').classList.remove('show')">
+                    🔢 Code barre
+                </div>
+                <div id="card-barcode" class="etiquette-tooltip-new pos-bottom">
+                    <strong style="color:#6c3483;">Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
+                </div>
+            </div>
+        </div>
+        <p style="text-align:center; font-size:0.85em; color:#4f6473; margin-top:8px;">👆 Cliquez sur chaque badge pour en savoir plus</p>
+
+        <h3>Conseils essentiels pour le tri</h3>
+        <div class="highlight">
+            <strong>⚠️ Important:</strong> Si un colis manque durant le chargement, vérifier une deuxième fois si le colis est bien manquant, si c'est le cas, signalez-le à votre responsable IMMÉDIATEMENT. Une fois partis de l'entrepôt, vous en êtes responsable!
+        </div>
+        <div class="highlight">
+            <strong>⚠️ Important:</strong> Si vous avez un colis qui n'est pas sur votre application, rapportez le à votre responsable.
+        </div>
+
+        <h3>Comment charger les colis?</h3>
+        <div class="steps-flow">
+            <div class="step-card" style="background:linear-gradient(145deg,#0b2436,#1a5c7a);">
+                <div style="font-size:2.4em; margin-bottom:10px;">📋</div>
+                <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Par ordre<br>de livraison</div>
+            </div>
+            <div class="step-arrow">▶</div>
+            <div class="step-card" style="background:linear-gradient(145deg,#1a5c7a,#2d7f9f);">
+                <div style="font-size:2.4em; margin-bottom:10px;">🔙</div>
+                <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Derniers colis<br>au fond du camion</div>
+            </div>
+            <div class="step-arrow">▶</div>
+            <div class="step-card" style="background:linear-gradient(145deg,#2d7f9f,#5ba8c4);">
+                <div style="font-size:2.4em; margin-bottom:10px;">🚪</div>
+                <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Premiers colis<br>à l'ouverture du camion</div>
+            </div>
+        </div>
+
+        <h3>Attention aux colis fragiles!</h3>
+        <div class="danger">
+            <strong>⛔ Attention:</strong> Ne JAMAIS placer de colis lourd sur un colis fragile. Lisez les étiquettes avec attention!
+        </div>
+
+        <div class="retenir">
+            <div class="retenir-title">🧠 À retenir — Chargement</div>
+            <ul>
+                <li>Toujours vérifier que tous les colis sont présents avant de partir</li>
+                <li>Charger par ordre de livraison : derniers au fond, premiers à l'ouverture</li>
+                <li>Ne jamais poser de colis lourd sur un colis fragile</li>
+                <li>Signaler immédiatement tout colis manquant ou en trop</li>
+            </ul>
+        </div>
+
+        <button class="btn-next-step" onclick="goToStep(2)">
+            Étape suivante : Livraison <span class="arrow-icon">▶</span>
+        </button>
+    </div>
+
+    <!-- ========== LIVRAISON ========== -->
+    <div id="livraison" class="content-section">
+        <h2>📮 Étape 2 — Livraison</h2>
+
+        <!-- Tabs livraison -->
+        <div class="tabs-container" id="liv-tabs">
+            <button class="tab-btn active" id="liv-tab-0" onclick="livStepperClick(0)">📋 Général</button>
+            <button class="tab-btn locked" id="liv-tab-1" onclick="livStepperClick(1)">🤝 Main propre</button>
+            <button class="tab-btn locked" id="liv-tab-2" onclick="livStepperClick(2)">📬 BAL</button>
+            <button class="tab-btn locked" id="liv-tab-3" onclick="livStepperClick(3)">🚨 Autres</button>
+            <button class="tab-btn locked" id="liv-tab-4" onclick="livStepperClick(4)">🧠 Résumé</button>
+        </div>
+
+        <!-- SUB 0: Général -->
+        <div id="liv-sub-0" class="liv-sub active" style="animation:fadeIn 0.45s ease;">
+            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">📋 Règles générales</div>
+            <p style="margin-bottom:15px;line-height:1.75;color:#324754;">
+                La <strong>remise en main propre</strong> est la méthode préférée car elle réduit drastiquement les réclamations clients. C'est pourquoi il est <strong>obligatoire</strong> d'essayer en priorité une livraison en main propre pour tous les colis standard.
+            </p>
+            <div class="danger">
+                <strong>⚠️ TOUJOURS vérifier que vous livrez le bon colis avant de livrer.</strong>
+            </div>
+            <div class="info">
+                <strong>ℹ️ Si le client est injoignable ou en fait la demande :</strong> Vous pouvez explorer d'autres solutions dans les étapes suivantes.
+            </div>
+            <div style="margin-top:16px;">
+                <h3>📌 Ordre de priorité</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <strong>1. Remise en main propre</strong>
+                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Toujours essayer en premier — réduit les réclamations clients.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot green"></div>
+                        <strong style="color:var(--paack-accent);">2. Boîte aux lettres (BAL)</strong>
+                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Uniquement si la remise en main propre a échoué ou si le client le demande, et si le colis rentre.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot yellow"></div>
+                        <strong style="color:#b8941f;">3. Autres lieux</strong>
+                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Uniquement avec accord SMS du client.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-next-step" onclick="goToLivSub(1)">
+                Suivant : Remise en main propre <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+
+        <!-- SUB 1: Main propre -->
+        <div id="liv-sub-1" class="liv-sub" style="display:none;">
+            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">🤝 La remise en main propre</div>
+            <div class="numbered-steps">
+                <div class="numbered-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text"><strong>Choisissez le motif de livraison "Client"</strong></div>
+                </div>
+                <div class="numbered-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text"><strong>Prendre une photo</strong> respectant les critères pour confirmer la livraison en cas de litige</div>
+                </div>
+            </div>
+            <div class="highlight">
+                <strong>📸 Critères de la photo valide:</strong>
+                <ul style="margin-top:10px;">
+                    <li>✅ Le colis avec étiquette visible</li>
+                    <li>✅ Une partie du client (chaussures, bras, mains) OU porte entrouverte</li>
+                    <li>❌ Photo floue, sans client ou porte ouverte = NON VALIDE</li>
+                </ul>
+            </div>
+            <div style="margin:16px 0 24px;">
+                <div class="photo-section-header do">✅ À FAIRE — Photos correctes</div>
+                <div class="photo-grid-3">
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/MP1.jpg" alt="Exemple 1" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Client + Etiquette</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/MP2.jpg" alt="Exemple 2" style="border:3px solid #2fb781; object-position:top;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Client + Etiquette</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/MP3.jpg" alt="Exemple 3" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Client + Etiquette</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-next-step" onclick="goToLivSub(2)">
+                Méthode suivante : Boîte aux Lettres <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+
+        <!-- SUB 2: BAL -->
+        <div id="liv-sub-2" class="liv-sub" style="display:none;">
+            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:20px 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">📬 Boîte aux Lettres (BAL)</div>
+            <p><strong>Uniquement si les dimensions du colis le permettent :</strong></p>
+            <ul>
+                <ul style="margin-top:10px;">
+                    <li><span class="red-chip"><strong>SANS endommager</strong> l'emballage ou le contenu</span></li>
+                    <li><span class="red-chip"><strong>SANS bloquer la porte</strong></span></li>
+                </ul>
+                <li>Choisissez le motif de livraison "Lieu sûr" puis cliquez sur "Boîte aux lettres"</li>
+                <li>Prendre une photo respectant les critères pour confirmer la livraison en cas de litige</li>
+            </ul>
+            <div class="highlight" style="margin:15px 0;">
+                <strong>📸 Critères de la photo valide:</strong>
+                <ul style="margin-top:10px;">
+                    <li>✅ Colis DEVANT la boîte aux lettres</li>
+                    <li>✅ Le colis avec étiquette visible</li>
+                    <li>✅ Nom du client visible sur la boîte aux lettres</li>
+                </ul>
+            </div>
+            <div style="margin:16px 0 24px;">
+                <div class="photo-section-header do">✅ À FAIRE</div><span style="margin-left:10px;"></span><div class="photo-section-header dont" style="margin-left:10px;">❌ À NE PAS FAIRE</div>
+                <div class="photo-grid-3">
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/BAL1.jpg" alt="BAL Exemple 1" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Étiquette + Nom sur la BAL visible</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/BAL2.jpg" alt="BAL Exemple 2" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Étiquette + Nom sur la BAL visible</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/BAL3.jpg" alt="BAL Exemple 3" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#7c1f28;">❌ Colis à l'intérieur de la BAL</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-next-step" onclick="goToLivSub(3)">
+                Méthode suivante : Autres Lieux <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+
+        <!-- SUB 3: Autres Lieux -->
+        <div id="liv-sub-3" class="liv-sub" style="display:none;">
+            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">🚨 Autres Lieux (Dernier Recours)</div>
+            <div class="danger danger-flash">
+                <span class="shake-emoji">🚨</span> <strong>CONDITION STRICTE:</strong> UN MESSAGE D'AUTORISATION DU CLIENT EST OBLIGATOIRE avant toute dépose
+            </div>
+            <ul>
+                <li>Obtenez l'accord SMS du client</li>
+                <li>Choisissez le bon motif de livraison :
+                    <ul style="margin-top:10px;">
+                        <li>📦 Vous remettez le colis à quelqu'un → choisissez <strong>"Tiers"</strong></li>
+                        <li>🏠 Vous le déposez quelque part → choisissez <strong>"Lieu sûr"</strong></li>
+                    </ul>
+                </li>
+                <li style="margin-top:10px;">Sélectionnez l'endroit exact (<strong>Jardin</strong>, <strong>Voisin</strong> ou <strong>Autre</strong>) et précisez dans <strong>"Autres informations"</strong></li>
+                <li><strong>Prévenir le client du lieu EXACT</strong> où le colis est laissé</li>
+                <li>Envoyer l'accord SMS sur le groupe Whatsapp</li>
+            </ul>
+            <div class="danger">
+                <strong>⚠️ Rappel :</strong> Beaucoup de réclamations viennent du client qui ignore où est livré son colis. TOUJOURS le prévenir précisément et lui envoyer une photo!
+            </div>
+            <div style="margin:16px 0 24px;">
+                <div class="photo-section-header do">✅ EXEMPLES D'AUTORISATIONS VALIDES</div>
+                <div class="photo-grid-2">
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/SMS1.jpg" alt="SMS Exemple 1" style="object-fit:contain; background:#f5f5f5; border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Accord écrit du client + photo envoyée</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/SMS2.jpg" alt="SMS Exemple 2" style="object-fit:contain; background:#f5f5f5; border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Accord écrit du client + photo envoyée</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-next-step" onclick="goToLivSub(4)">
+                Voir le résumé à retenir <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+
+        <!-- SUB 4: Résumé + passage à l'étape suivante -->
+        <div id="liv-sub-4" class="liv-sub" style="display:none;">
+            <div class="retenir">
+                <div class="retenir-title">🧠 À retenir — Livraison</div>
+                <ul>
+                    <li>Toujours tenter la remise en main propre en premier</li>
+                    <li>Toujours vérifier que c'est le bon colis avant de livrer</li>
+                    <li>Accord SMS obligatoire pour toute dépose hors main propre (sauf BAL)</li>
+                    <li>Prévenir le client du lieu exact + envoyer une photo</li>
+                    <li>Envoyer les preuves SMS sur le groupe WhatsApp</li>
+                </ul>
+            </div>
+
+            <button class="btn-next-step" onclick="goToStep(3)">
+                Étape suivante : Échecs de livraison <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== ECHECS ========== -->
+    <div id="echecs" class="content-section">
+        <h2>⚠️ Étape 3 — Échec de Livraison</h2>
+
+        <!-- Tabs échecs -->
+        <div class="tabs-container" id="ech-tabs">
+            <button class="tab-btn active" id="ech-tab-0" onclick="echStepperClick(0)">📱 Motifs</button>
+            <button class="tab-btn locked" id="ech-tab-1" onclick="echStepperClick(1)">⚡ Erreurs</button>
+            <button class="tab-btn locked" id="ech-tab-2" onclick="echStepperClick(2)">📸 Photos</button>
+            <button class="tab-btn locked" id="ech-tab-3" onclick="echStepperClick(3)">🧠 Résumé</button>
+        </div>
+
+        <!-- SUB 0: Procédure + image interactive -->
+        <div id="ech-sub-0" class="ech-sub" style="display:block; animation:fadeIn 0.45s ease;">
+            <h3>📋 Procédure en cas d'échec</h3>
+            <div class="numbered-steps">
+                <div class="numbered-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text"><strong>Choisir le bon motif d'échec</strong> sur l'application</div>
+                </div>
+                <div class="numbered-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text"><strong>Prendre une photo</strong> du numéro de rue / lieu / obstacle</div>
+                </div>
+                <div class="numbered-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text"><strong>Retourner le colis</strong> à l'entrepôt en fin de tournée</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top:28px;">📱 Cliquez sur chaque motif pour apprendre quand l'utiliser</h3>
+            <p style="color:#4b616e; margin-bottom:6px;">Vous devez <strong>tous les consulter</strong> pour passer à la suite.</p>
+
+            <!-- Compteur -->
+            <div id="ech-motif-counter" style="display:inline-flex; align-items:center; gap:8px; background:#fff9e6; border:2px solid #f4c440; padding:8px 16px; border-radius:10px; font-weight:700; font-size:0.9em; color:#4f4421; margin-bottom:16px;">
+                📖 Motifs consultés : <span id="ech-motif-count">0</span> / 7
+            </div>
+
+            <!-- Layout flex : boutons-images à gauche, bulle à droite -->
+            <div class="ech-motif-layout" style="display:flex; gap:20px; align-items:flex-start; justify-content:center; flex-wrap:wrap; overflow:hidden;">
+
+                <!-- Boutons-images découpées -->
+                <div class="echec-image-container" style="display:flex; flex-direction:column; gap:4px; width:100%; max-width:320px; flex-shrink:0;">
+                    <div class="ech-motif-badge" data-motif="endommage" onclick="toggleEchMotif('endommage')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; overflow:hidden;">
+                        <img src="images/motif_endommage.jpg" alt="Colis endommagé" style="width:100%; display:block; border-radius:7px;">
+                    </div>
+                    <div class="ech-motif-badge" data-motif="absent" onclick="toggleEchMotif('absent')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; animation-delay:0.15s; overflow:hidden;">
+                        <img src="images/motif_absent.jpg" alt="Client absent" style="width:100%; display:block; border-radius:7px;">
+                    </div>
+                    <div class="ech-motif-badge" data-motif="adresse" onclick="toggleEchMotif('adresse')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; animation-delay:0.3s; overflow:hidden;">
+                        <img src="images/motif_adresse.jpg" alt="Adresse incorrecte" style="width:100%; display:block; border-radius:7px;">
+                    </div>
+                    <div class="ech-motif-badge" data-motif="refus" onclick="toggleEchMotif('refus')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; animation-delay:0.45s; overflow:hidden;">
+                        <img src="images/motif_refus.jpg" alt="Refusée par le client" style="width:100%; display:block; border-radius:7px;">
+                    </div>
+                    <div class="ech-motif-badge" data-motif="exigence" onclick="toggleEchMotif('exigence')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; animation-delay:0.6s; overflow:hidden;">
+                        <img src="images/motif_exigence.jpg" alt="Exigence non remplie" style="width:100%; display:block; border-radius:7px;">
+                    </div>
+                    <div class="ech-motif-badge" data-motif="meteo" onclick="toggleEchMotif('meteo')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; animation-delay:0.75s; overflow:hidden;">
+                        <img src="images/motif_meteo.jpg" alt="Météo perturbation grève" style="width:100%; display:block; border-radius:7px;">
+                    </div>
+                    <div class="ech-motif-badge" data-motif="ferme" onclick="toggleEchMotif('ferme')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; animation-delay:0.9s; overflow:hidden;">
+                        <img src="images/motif_ferme.jpg" alt="Entreprise fermée" style="width:100%; display:block; border-radius:7px;">
+                    </div>
+                    <p style="text-align:center; font-size:0.8em; color:#4f6473; margin-top:4px;">👆 Cliquez sur chaque motif</p>
+                </div>
+
+                <!-- Bulle d'explication (à droite) -->
+                <div id="ech-bubbles-container" style="flex:1; min-width:0;">
+                    <div id="ech-bubble-placeholder" style="padding:20px; border-radius:12px; background:rgba(26,92,122,0.04); border:2px dashed rgba(26,92,122,0.15); text-align:center; color:#7a9aab; font-size:0.9em; min-height:120px; display:flex; align-items:center; justify-content:center;">
+                        Cliquez sur un motif pour voir l'explication
+                    </div>
+                    <div id="bubble-endommage" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
+                        <strong style="color:#d64545;">📦 Colis endommagé</strong> <span style="background:#ffe0e0; padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:#7c1f28;">⚠️ À éviter</span><br>
+                        Uniquement si le colis est <strong>inutilisable</strong> (ouvert, écrasé, contenu détruit).<br>
+                        Colis vérifié au départ → <strong>votre responsabilité peut être engagée</strong>.<br>
+                        Dommage léger = livrez quand même.
+                    </div>
+                    <div id="bubble-absent" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #1a5c7a; font-size:0.88em; color:#1b3444; line-height:1.6;">
+                        <strong style="color:#1a5c7a;">🚪 Client absent</strong><br>
+                        Personne ne répond après avoir sonné et contacté le client.<br>
+                        → Photo du numéro de rue / interphone.<br>
+                        💡 Vérifiez les consignes de dépose (BAL) avant.<br><br>
+                        <img src="images/echec1.jpg" alt="Exemple client absent" style="width:100%; max-width:300px; border-radius:10px; border:2px solid #1a5c7a; margin-top:4px;">
+                    </div>
+                    <div id="bubble-adresse" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #2fb781; font-size:0.88em; color:#1b3444; line-height:1.6;">
+                        <strong style="color:#2fb781;">📍 Adresse incorrecte</strong><br>
+                        L'adresse n'existe pas ou est introuvable.<br>
+                        → Contactez le client, puis photo de la rue.<br>
+                        Nouvelle adresse ? → Prévenez le responsable.
+                    </div>
+                    <div id="bubble-refus" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
+                        <strong style="color:#d64545;">🚫 Refusée par le client</strong> <span style="background:#ffe0e0; padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:#7c1f28;">⛔ Encadré</span><br>
+                        Le client refuse → demandez un <strong>SMS de confirmation</strong>.<br>
+                        Capture d'écran → envoyez sur <strong>WhatsApp</strong>.<br>
+                        <strong style="color:#d64545;">❌ Pas de SMS = pas de "Refus" !</strong>
+                    </div>
+                    <div id="bubble-exigence" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
+                        <strong style="color:#d64545;">⚠️ Exigence non remplie</strong> <span style="background:#ffe0e0; padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:#7c1f28;">❌ Ne jamais utiliser</span><br>
+                        Ce motif est réservé <strong>uniquement</strong> quand le client n'a pas le code OTP.<br>
+                        <strong style="color:#d64545;">Ne l'utilisez jamais pour un autre cas.</strong>
+                    </div>
+                    <div id="bubble-meteo" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #f4c440; font-size:0.88em; color:#1b3444; line-height:1.6;">
+                        <strong style="color:#b8941f;">🌧️ Météo / perturbation / grève</strong><br>
+                        Uniquement si situation dangereuse (verglas, inondation, route bloquée).<br>
+                        ❌ Simple pluie = pas ce motif.<br><br>
+                        <img src="images/routebarree.jpeg" alt="Exemple route barrée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid #f4c440; margin-top:4px;">
+                    </div>
+                    <div id="bubble-ferme" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #0b2436; font-size:0.88em; color:#1b3444; line-height:1.6;">
+                        <strong style="color:#0b2436;">🏪 Entreprise/magasin fermé(e)</strong><br>
+                        L'entreprise ou le magasin est fermé(e) à votre passage.<br>
+                        → Photo de la devanture fermée.<br><br>
+                        <img src="images/entreprise.jpeg" alt="Exemple photo devanture fermée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid #0b2436; margin-top:4px;">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Barre motifs (inline, même style que les autres boutons) -->
+        <div id="ech-motif-bar" style="display:none; margin-top:20px;">
+            <button class="btn-next-step" id="ech-motif-next-btn" onclick="goToEchSub(1)" style="display:none;">
+                Suivant : Erreurs courantes <span class="arrow-icon">▶</span>
+            </button>
+            <button class="btn-next-step" id="ech-motif-locked" style="opacity:0.5; cursor:default; filter:grayscale(0.4);" onclick="return false;">
+                🔒 Consultez les 7 motifs pour débloquer la suite
+            </button>
+        </div>
+
+        <!-- SUB 1: Erreurs courantes -->
+        <div id="ech-sub-1" class="ech-sub" style="display:none;">
+            <h3>⚡ Erreurs courantes à ÉVITER</h3>
+            <div class="danger">
+                <strong>🚫 L'application demande une signature ?</strong> Si l'application vous demande une signature lors d'un échec de livraison = VOUS AVEZ CLIQUÉ AU MAUVAIS ENDROIT! Revenir en arrière et vérifier!
+            </div>
+            <div class="highlight" style="margin-top:16px;">
+                <strong>😰 Vous avez déclaré "Livré" par erreur ?</strong>
+                <ul style="margin-top:10px;">
+                    <li>Prévenir votre responsable <strong>immédiatement</strong></li>
+                    <li>Attendre que le colis revienne sur votre application pour le statuer avec le bon motif</li>
+                    <li><strong>Contacter le client</strong> pour lui expliquer qu'il s'agissait d'une erreur</li>
+                    <li>Reliver le colis plus tard ou le jour suivant</li>
+                </ul>
+            </div>
+            <button class="btn-next-step" onclick="goToEchSub(2)">
+                Suivant : Photos valides / invalides <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+
+        <!-- SUB 2: Photos -->
+        <div id="ech-sub-2" class="ech-sub" style="display:none;">
+            <h3>📸 Exemples de photos</h3>
+            <div style="margin:16px 0 8px;">
+                <div class="photo-section-header do">✅ PHOTOS VALIDES</div>
+                <div class="photo-grid-2" style="margin-bottom:14px;">
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/echec1.jpg" alt="Échec Exemple 1" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Adresse de livraison + colis visibles</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/echec3.jpg" alt="Échec Exemple 3" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#1e6b3a;">✅ Obstacle à l'accès visible</p>
+                    </div>
+                </div>
+                <div class="photo-section-header dont" style="margin-top:16px;">❌ PHOTOS INVALIDES</div>
+                <div class="photo-grid-2">
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/echec4.jpg" alt="Échec Exemple 4" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#7c1f28;">❌ Lieu de livraison non visible</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="images/echec5.jpg" alt="Échec Exemple 5" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:#7c1f28;">❌ Lieu de livraison non visible</p>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-next-step" onclick="goToEchSub(3)">
+                Voir le résumé à retenir <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+
+        <!-- SUB 3: Résumé -->
+        <div id="ech-sub-3" class="ech-sub" style="display:none;">
+            <div class="retenir">
+                <div class="retenir-title">🧠 À retenir — Échecs</div>
+                <ul>
+                    <li>Toujours choisir le bon motif d'échec + prendre une photo</li>
+                    <li>Motif "Refus client" = SMS obligatoire + envoi sur WhatsApp</li>
+                    <li>Si signature demandée lors d'un échec = mauvais clic, revenir en arrière</li>
+                    <li>En cas d'erreur "Livré" : prévenir le responsable + le client immédiatement</li>
+                    <li>Toujours retourner les colis non livrés à l'entrepôt</li>
+                </ul>
+            </div>
+            <button class="btn-next-step" onclick="goToStep(4)">
+                Dernière étape : Testez vos connaissances! <span class="arrow-icon">▶</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== QCM ========== -->
+    <div id="qcm" class="content-section">
+        <h2>❓ Testez Vos Connaissances</h2>
+        <div id="qcm-selector">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+                <p style="margin:0; color:#324754;">👋 <strong id="display-nom"></strong>, prêt à vous tester ?</p>
+                <div id="chrono-qcm" style="display:none;"><span id="chrono-display-qcm">00:00</span></div>
+            </div>
+            <div class="card clickable" onclick="startQCM()" style="max-width:100%;">
+                <h4>🎯 QCM — Toutes questions</h4>
+                <p>20 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
+                <span class="card-arrow">→</span>
+            </div>
+            <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
+                📊 Voir l'historique des résultats
+            </button>
+        </div>
+        <div id="qcm-active" style="display:none;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                <button onclick="resetQCM()" style="margin-top:0; padding:8px 18px; font-size:0.9em;">← Retour</button>
+                <h3 id="qcm-titre" style="margin:0; font-size:1.1em;"></h3>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width:0%;">0%</div>
+            </div>
+            <div id="qcmContainer"></div>
+            <div id="scoreResult"></div>
+        </div>
+        <div id="qcm-dashboard" style="display:none;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <button onclick="resetQCM()" style="margin-top:0; padding:8px 18px; font-size:0.9em;">← Retour</button>
+                <h3 style="margin:0; font-size:1.1em;">📊 Historique des résultats</h3>
+            </div>
+            <div id="dashboard-table-full"></div>
+        </div>
+    </div>
+
+    <!-- ========== RECAP (après parcours terminé) ========== -->
+    <div id="recap" class="content-section">
+        <h2>🎉 Formation terminée!</h2>
+        <p style="font-size:1.05em; color:#324754; margin-bottom:8px; line-height:1.7;">
+            Bravo, vous avez parcouru toutes les étapes! Vous pouvez maintenant <strong>naviguer librement</strong> entre les sections pour revoir ce dont vous avez besoin.
+        </p>
+        <button onclick="newSession()" style="margin-bottom:16px; padding:10px 20px; font-size:0.9em; background:linear-gradient(135deg,#4f6473,#324754);">🔄 Nouveau livreur ? Recommencer la formation</button>
+        <div class="recap-grid">
+            <div class="recap-card" onclick="freeNavTo('chargement')">
+                <h4>📦 Chargement</h4>
+                <p>Étiquettes, tri et chargement du véhicule.</p>
+                <span class="card-arrow">→</span>
+            </div>
+            <div class="recap-card" onclick="freeNavTo('livraison')">
+                <h4>📮 Livraison</h4>
+                <p>Main propre, BAL et lieux sûrs.</p>
+                <span class="card-arrow">→</span>
+            </div>
+            <div class="recap-card" onclick="freeNavTo('echecs')">
+                <h4>⚠️ Échecs</h4>
+                <p>Gestion des échecs et erreurs.</p>
+                <span class="card-arrow">→</span>
+            </div>
+            <div class="recap-card" onclick="freeNavTo('qcm')">
+                <h4>❓ QCM</h4>
+                <p>Retester vos connaissances.</p>
+                <span class="card-arrow">→</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ADMIN DASHBOARD ========== -->
+    <div id="admin-page" class="content-section" style="display:none;">
+        <h2>📊 Tableau de bord Admin</h2>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+            <p style="color:#4f6473; font-size:0.85em; margin:0;">🌐 Données synchronisées depuis Google Sheet</p>
+            <button onclick="renderAdmin()" style="margin:0; padding:8px 18px; font-size:0.85em;">🔄 Actualiser</button>
+        </div>
+        <div class="admin-stats" id="admin-stats"></div>
+        <h3>📋 Historique complet</h3>
+        <div style="overflow-x:auto;" id="admin-table-wrap"></div>
+        <h3 style="margin-top:24px;">📈 Évolution par livreur</h3>
+        <div id="admin-evolution"></div>
+        <button onclick="closeAdmin()" style="width:100%; margin-top:20px; padding:14px;">← Retour à la formation</button>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer">
+        Formation <span>Paack</span> · v3.0 · &copy; 2026<br>
+        <span style="color:rgba(255,255,255,0.25); font-size:0.9em;">Conçu pour les livreurs Paack France</span>
+        <br><span style="cursor:pointer; color:rgba(255,255,255,0.15); font-size:0.7em;" onclick="openAdmin()">admin</span>
+    </footer>
+</div>
+
+<!-- Scroll to top button -->
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<!-- Mute button -->
+<button class="mute-btn" id="muteBtn" onclick="toggleMute()" title="Son ON/OFF">🔊</button>
+
+<script>
+const STEPS = ['accueil', 'chargement', 'livraison', 'echecs', 'qcm'];
+let currentStep = 0;
+let maxReached = 0;
+let freeMode = false;
+
+// ========== CHRONO & NOM ==========
+let formationStartTime = null;
+let chronoInterval = null;
+let currentNom = '';
+
+function startFormation() {
+    const val = document.getElementById('input-nom-accueil').value.trim();
+    if (!val) {
+        document.getElementById('nom-error-accueil').style.display = 'block';
+        return;
+    }
+    document.getElementById('nom-error-accueil').style.display = 'none';
+    currentNom = val;
+    document.getElementById('display-nom').textContent = currentNom;
+
+    // Démarrer le chrono
+    formationStartTime = Date.now();
+    updateChrono();
+    chronoInterval = setInterval(updateChrono, 1000);
+
+    // Masquer le champ nom, afficher le chrono
+    document.getElementById('accueil-name-screen').style.display = 'none';
+    document.getElementById('chrono-bar').style.display = 'block';
+    document.getElementById('global-progress').style.display = 'block';
+
+    // Passer à l'étape 1
+    goToStep(1);
+}
+
+function updateChrono() {
+    if (!formationStartTime) return;
+    const elapsed = Math.floor((Date.now() - formationStartTime) / 1000);
+    const min = String(Math.floor(elapsed / 60)).padStart(2, '0');
+    const sec = String(elapsed % 60).padStart(2, '0');
+    const timeStr = min + ':' + sec;
+    const el = document.getElementById('chrono-display');
+    if (el) el.textContent = timeStr;
+    const el2 = document.getElementById('chrono-display-qcm');
+    if (el2) el2.textContent = timeStr;
+}
+
+function getFormationDuration() {
+    if (!formationStartTime) return '—';
+    const elapsed = Math.floor((Date.now() - formationStartTime) / 1000);
+    const min = Math.floor(elapsed / 60);
+    const sec = elapsed % 60;
+    return min + ' min ' + String(sec).padStart(2, '0') + ' s';
+}
+
+// ========== GUIDED FLOW ==========
+let _prevStep = 0;
+function goToStep(stepIndex) {
+    if (stepIndex > STEPS.length) return;
+
+    // Si on dépasse la dernière étape → mode libre
+    if (stepIndex >= STEPS.length) {
+        activateFreeMode();
+        return;
+    }
+
+    const direction = stepIndex >= _prevStep ? 'forward' : 'backward';
+    _prevStep = stepIndex;
+    currentStep = stepIndex;
+    if (stepIndex > maxReached) maxReached = stepIndex;
+
+    // Afficher la bonne section avec animation directionnelle
+    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+    const target = document.getElementById(STEPS[stepIndex]);
+    target.style.animation = 'none';
+    target.offsetHeight;
+    target.style.animation = direction === 'forward' ? 'slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'slideInReverse 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    target.classList.add('active');
+
+    // Mettre à jour le stepper
+    updateStepper();
+    updateGlobalProgress();
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Trigger stagger animations for numbered steps in the new section
+    setTimeout(() => triggerStaggerAnimations(target), 100);
+}
+
+function updateStepper() {
+    for (let i = 0; i < STEPS.length; i++) {
+        const dot = document.getElementById('dot-' + i);
+        const line = i < STEPS.length - 1 ? document.getElementById('line-' + i) : null;
+
+        dot.className = 'stepper-dot';
+        if (i === currentStep) {
+            dot.classList.add('active');
+        } else if (i <= maxReached) {
+            dot.classList.add('done');
+        } else {
+            dot.classList.add('locked');
+        }
+
+        if (line) {
+            line.className = 'stepper-line';
+            if (i < maxReached) line.classList.add('done');
+        }
+    }
+}
+
+function stepperClick(index) {
+    if (index <= maxReached) {
+        goToStep(index);
+    }
+}
+
+// ========== FREE MODE ==========
+function activateFreeMode() {
+    freeMode = true;
+    // Masquer le stepper, afficher la nav libre
+    document.getElementById('stepper').classList.add('hidden');
+    document.getElementById('navLibre').classList.add('visible');
+    // Masquer barre progression et chrono
+    const gp = document.getElementById('global-progress');
+    if (gp) gp.style.display = 'none';
+    // Effacer la sauvegarde
+    localStorage.removeItem('paack_progress');
+
+    // Afficher la page récap
+    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('recap').classList.add('active');
+
+    // Mettre à jour les boutons "Étape suivante" pour qu'ils deviennent des boutons de nav
+    document.querySelectorAll('.btn-next-step').forEach(btn => btn.style.display = 'none');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function newSession() {
+    // Réinitialiser tout
+    currentStep = 0;
+    maxReached = 0;
+    freeMode = false;
+    currentNom = '';
+    formationStartTime = null;
+    if (chronoInterval) { clearInterval(chronoInterval); chronoInterval = null; }
+    livCurrentSub = 0; livMaxSub = 0;
+    echCurrentSub = 0; echMaxSub = 0;
+    echMotifsViewed.clear();
+    wrongAnswers = [];
+    localStorage.removeItem('paack_progress');
+
+    // Réafficher le stepper, masquer nav libre
+    document.getElementById('stepper').classList.remove('hidden');
+    document.getElementById('navLibre').classList.remove('visible');
+    const gp = document.getElementById('global-progress');
+    if (gp) gp.style.display = 'none';
+
+    // Réafficher tous les boutons next
+    document.querySelectorAll('.btn-next-step').forEach(btn => btn.style.display = '');
+
+    // Réafficher le champ nom
+    document.getElementById('accueil-name-screen').style.display = 'block';
+    document.getElementById('chrono-bar').style.display = 'none';
+    document.getElementById('input-nom-accueil').value = '';
+
+    // Retourner à l'accueil
+    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('accueil').classList.add('active');
+    updateStepper();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showAllLivSubs() {
+    document.querySelectorAll('.liv-sub').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('.liv-sub .btn-next-step').forEach(btn => btn.style.display = 'none');
+    // Mark all tabs as accessible
+    for (let i = 0; i < 5; i++) {
+        const tab = document.getElementById('liv-tab-' + i);
+        if (tab) { tab.className = 'tab-btn'; }
+    }
+}
+
+function freeNav(sectionId, btnEl) {
+    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+    if (sectionId === 'livraison') showAllLivSubs();
+    if (sectionId === 'echecs') showAllEchSubs();
+    if (sectionId === 'qcm') {
+        document.getElementById('qcm-active').style.display = 'none';
+        document.getElementById('qcm-dashboard').style.display = 'none';
+        document.getElementById('qcm-selector').style.display = 'block';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function freeNavTo(sectionId) {
+    const order = ['accueil','chargement','livraison','echecs','qcm'];
+    const idx = order.indexOf(sectionId);
+    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    const btns = document.querySelectorAll('.nav-btn');
+    if (idx !== -1 && btns[idx]) btns[idx].classList.add('active');
+    if (sectionId === 'livraison') showAllLivSubs();
+    if (sectionId === 'echecs') showAllEchSubs();
+    if (sectionId === 'qcm') {
+        document.getElementById('qcm-active').style.display = 'none';
+        document.getElementById('qcm-dashboard').style.display = 'none';
+        document.getElementById('qcm-selector').style.display = 'block';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========== QCM ==========
+const questionsPool = [
+    { theme:'📦', question: "Que signifie '1P' sur une étiquette Paack ?", options: ["1ère Position","1 Paquet (1 colis)","1 Personne","Priorité 1"], correct: 1 },
+    { theme:'📦', question: "Comment doit-on charger les colis ?", options: ["N'importe comment","Derniers au fond, premiers à l'ouverture, par ordre de livraison","Les plus lourds devant","Au hasard"], correct: 1 },
+    { theme:'📦', question: "Où place-t-on un colis fragile dans le véhicule ?", options: ["Sous les colis lourds","Au-dessus, dans une zone protégée","N'importe où","En dernier"], correct: 1 },
+    { theme:'📦', question: "À quoi sert le numéro dans le carré noir sur l'étiquette ?", options: ["Le poids du colis","L'ordre de livraison","Le nombre de colis","Le code du hub"], correct: 1 },
+    { theme:'📦', question: "Que signifie 'LYS 013' sur l'étiquette ?", options: ["Le code postal","Le nom de la tournée / route","Le numéro de colis","L'adresse du client"], correct: 1 },
+    { theme:'📦', question: "Que faire si un colis est endommagé au chargement ?", options: ["Le charger quand même","Le signaler au responsable avant de partir","L'ignorer","Le laisser sans prévenir"], correct: 1 },
+    { theme:'📦', question: "Les premiers colis à livrer doivent être placés :", options: ["Au fond du véhicule","Au milieu","À l'ouverture du véhicule","N'importe où"], correct: 2 },
+    { theme:'📦', question: "Que faire si vous ne trouvez pas un colis à l'entrepôt ?", options: ["Partir sans","Vérifier une 2e fois puis signaler au responsable","Appeler le client","Attendre le lendemain"], correct: 1 },
+    { theme:'📦', question: "Le code barre sert à :", options: ["Identifier la couleur","Scanner le colis sur l'application lors de la collecte","Connaître le poids","Identifier le livreur"], correct: 1 },
+    { theme:'📦', question: "Peut-on empiler des colis lourds sur des colis fragiles ?", options: ["Oui si c'est rapide","Oui si la distance est courte","Non, jamais","Oui avec précaution"], correct: 2 },
+    { theme:'📦', question: "Que représente la date sur l'étiquette Paack ?", options: ["La date de fabrication","La date de livraison prévue","La date d'expédition","La date de retour"], correct: 1 },
+    { theme:'📮', question: "Quelle est la méthode de livraison prioritaire ?", options: ["Boîte aux lettres","Voisin","Remise en main propre","Dépose devant la porte"], correct: 2 },
+    { theme:'📮', question: "Quel critère est OBLIGATOIRE sur la photo en main propre ?", options: ["Le colis seul","Le client seul","Colis + partie du client OU porte entrouverte","Juste la rue"], correct: 2 },
+    { theme:'📮', question: "Pour une dépose en lieu sûr (jardin, palier, voisin, etc...), que faut-il OBLIGATOIREMENT ?", options: ["Rien de spécial","Un accord écrit du client par SMS","Un appel téléphonique","Une signature"], correct: 1 },
+    { theme:'📮', question: "Pour une livraison en BAL, quel critère photo est requis ?", options: ["Juste le colis","Colis + étiquette + nom client sur la BAL","Juste la boîte","La rue uniquement"], correct: 1 },
+    { theme:'📮', question: "Peut-on déposer un colis chez un voisin sans accord du client ?", options: ["Oui si le client ne répond pas","Oui, toujours","Non, accord client obligatoire","Oui si le voisin accepte"], correct: 2 },
+    { theme:'📮', question: "La capture d'écran de l'accord client doit être envoyée :", options: ["Gardée pour soi","Sur le groupe WhatsApp","Par email au responsable","Supprimée après livraison"], correct: 1 },
+    { theme:'📮', question: "Une photo floue lors d'une livraison main propre est-elle valide ?", options: ["Oui si le colis est visible","Non, elle n'est pas valide","Oui si le client est visible","Oui toujours"], correct: 1 },
+    { theme:'📮', question: "Avant de livrer, que faut-il toujours vérifier ?", options: ["La météo","Que vous livrez le bon colis à la bonne adresse","Que le client est disponible","Le poids du colis"], correct: 1 },
+    { theme:'📮', question: "Que faire si le client demande une dépose chez le voisin ?", options: ["Refuser systématiquement","Obtenir son accord par SMS et l'envoyer sur WhatsApp","Déposer directement","Appeler le responsable"], correct: 1 },
+    { theme:'⚠️', question: "En cas d'impossibilité de livrer le colis, que dois-je faire ?", options: ["Appeler le client","Choisir le bon motif d'échec sur l'application","Laisser le colis","Rentrer à l'entrepôt"], correct: 1 },
+    { theme:'⚠️', question: "L'application demande une signature pour un échec. C'est normal ?", options: ["Oui, toujours","Non, revenir en arrière (mauvais clic)","Signer quand même","Appeler le responsable"], correct: 1 },
+    { theme:'⚠️', question: "Que faire après avoir déclaré un colis 'Livré' par erreur ?", options: ["Continuer, c'est trop tard","Prévenir le responsable ET le client","Attendre que le client se plaigne","Retourner le chercher sans prévenir"], correct: 1 },
+    { theme:'⚠️', question: "Que faire du colis en cas d'échec ?", options: ["Le garder pour le lendemain","Le retenter puis le retourner à l'entrepôt en fin de tournée","Le laisser devant la porte","L'apporter à un voisin"], correct: 1 },
+    { theme:'⚠️', question: "Quelle photo prendre en cas d'échec ?", options: ["Aucune","Numéro de rue, lieu ou obstacle + colis","Photo du colis uniquement","Selfie devant l'adresse"], correct: 1 },
+    { theme:'⚠️', question: "Pour le motif 'Refus du client', que faut-il obligatoirement ?", options: ["Rien de spécial","Un SMS du client prouvant son refus + envoi sur WhatsApp","Un appel téléphonique","Une signature du client"], correct: 1 },
+];
+let currentQCMNum = null;
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+
+function startQCM() {
+    currentQCMNum = 1;
+    currentIndex = 0;
+    score = 0;
+    wrongAnswers = [];
+    window.selectedAnswer = null;
+    currentQuestions = [...questionsPool].sort(() => Math.random() - 0.5).slice(0, 20);
+    document.getElementById('qcm-selector').style.display = 'none';
+    document.getElementById('qcm-dashboard').style.display = 'none';
+    document.getElementById('qcm-active').style.display = 'block';
+    document.getElementById('qcm-titre').textContent = 'QCM — Questions mixtes';
+    document.getElementById('scoreResult').innerHTML = '';
+    renderQuestion();
+}
+
+function renderQuestion() {
+    window._selectedAnswer = null;
+    const q = currentQuestions[currentIndex];
+    const pct = Math.round((currentIndex / currentQuestions.length) * 100);
+    const fill = document.getElementById('progressFill');
+    fill.style.width = pct + '%';
+    fill.textContent = pct + '%';
+    // Mélanger les options aléatoirement
+    const indices = [0, 1, 2, 3];
+    for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    const shuffledOptions = indices.map(i => q.options[i]);
+    const shuffledCorrect = indices.indexOf(q.correct);
+    window._shuffledCorrect = shuffledCorrect;
+    window._shuffledIndices = indices;
+    document.getElementById('qcmContainer').innerHTML = `
+        <div class="question">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <h4 style="margin:0;">Question ${currentIndex + 1} / ${currentQuestions.length}</h4>
+                <span style="background:#e8f4f8; color:#1a5c7a; font-size:0.75em; font-weight:700; padding:3px 10px; border-radius:20px;">${q.theme}</span>
+            </div>
+            <p style="font-weight:600; margin:12px 0 14px;">${q.question}</p>
+            <div class="options" id="options-list">
+                ${shuffledOptions.map((opt, j) => `
+                    <div class="qcm-option-enhanced" id="opt-${j}" onclick="selectAnswer(${j})">
+                        <div class="qcm-radio-custom"><div class="qcm-radio-dot"></div></div>
+                        <span class="qcm-option-text">${opt}</span>
+                    </div>`).join('')}
+            </div>
+            <div id="feedback-box" style="display:none; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em;"></div>
+            <button id="btn-valider" onclick="validerReponse()" style="margin-top:14px; width:100%; padding:12px;">✅ Valider</button>
+            <button id="btn-suite" onclick="nextQuestion()" style="display:none; margin-top:10px; width:100%; padding:12px;">
+                ${currentIndex + 1 < currentQuestions.length ? 'Question suivante →' : '🏁 Voir mes résultats'}
+            </button>
+        </div>`;
+    window.selectAnswer = function(j) {
+        if (window._answered) return;
+        window._selectedAnswer = j;
+        document.querySelectorAll('.qcm-option-enhanced').forEach((el, i) => {
+            el.classList.toggle('selected', i === j);
+        });
+    };
+    window._answered = false;
+}
+function validerReponse() {
+    if (window._selectedAnswer === undefined || window._selectedAnswer === null) { alert('⚠️ Choisissez une réponse !'); return; }
+    window._answered = true;
+    const q = currentQuestions[currentIndex];
+    const chosen = window._selectedAnswer;
+    const correctIdx = window._shuffledCorrect;
+    const isCorrect = chosen === correctIdx;
+    if (isCorrect) { score++; playFeedbackSound(true); }
+    else { wrongAnswers.push({ question: q.question, chosen: q.options[window._shuffledIndices[chosen]], correct: q.options[q.correct], theme: q.theme }); playFeedbackSound(false); }
+    updateGlobalProgress();
+    document.querySelectorAll('.qcm-option-enhanced').forEach((el, i) => {
+        el.style.pointerEvents = 'none';
+        el.classList.remove('selected');
+        if (i === correctIdx) { el.classList.add('correct-answer'); }
+        else if (i === chosen && !isCorrect) { el.classList.add('wrong-answer'); }
+    });
+    const feedback = document.getElementById('feedback-box');
+    if (isCorrect) {
+        feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:#e2f6ea; color:#1e6b3a; border:1px solid #b9e5c5;';
+        feedback.innerHTML = '✅ <strong>Correct !</strong>';
+    } else {
+        feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:#ffe8ea; color:#7c1f28; border:1px solid #f4c0c4;';
+        feedback.innerHTML = `❌ <strong>Incorrect.</strong> Bonne réponse : <em>${q.options[q.correct]}</em>`;
+    }
+    document.getElementById('btn-valider').style.display = 'none';
+    document.getElementById('btn-suite').style.display = 'block';
+    window._selectedAnswer = null;
+}
+
+function nextQuestion() {
+    currentIndex++;
+    if (currentIndex < currentQuestions.length) { renderQuestion(); }
+    else { showResults(); }
+}
+
+function showResults() {
+    const pct = Math.round(score / currentQuestions.length * 100);
+    const fill = document.getElementById('progressFill');
+    fill.style.width = '100%';
+    fill.textContent = '100%';
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    const duree = getFormationDuration();
+    // Arrêter le chrono
+    if (chronoInterval) { clearInterval(chronoInterval); chronoInterval = null; }
+    const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
+    results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree });
+    localStorage.setItem('paack_results', JSON.stringify(results));
+    fetch('https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec', {
+        method: 'POST', mode: 'no-cors',
+        body: JSON.stringify({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
+    }).catch(err => console.log('Erreur envoi:', err));
+    let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
+    // Confettis si 100% !
+    if (pct === 100) launchConfetti();
+    // Effacer la sauvegarde de progression
+    localStorage.removeItem('paack_progress');
+    updateGlobalProgress();
+
+    // Récap erreurs
+    let errorsHtml = '';
+    if (wrongAnswers.length > 0) {
+        errorsHtml = '<div style="margin-top:20px; text-align:left;"><h3 style="color:#d64545; margin-bottom:12px; font-size:1.1em;">❌ Questions ratées :</h3>';
+        wrongAnswers.forEach((w, i) => {
+            errorsHtml += `<div style="background:#fff5f5; border-radius:10px; padding:12px 14px; margin-bottom:8px; border-left:4px solid #d64545; font-size:0.88em; line-height:1.5;">
+                <strong>${w.theme} Q${i+1}:</strong> ${w.question}<br>
+                <span style="color:#d64545;">Votre réponse : ${w.chosen}</span><br>
+                <span style="color:#1e6b3a;">✅ Bonne réponse : ${w.correct}</span>
+            </div>`;
+        });
+        errorsHtml += '</div>';
+    }
+
+    document.getElementById('qcmContainer').innerHTML = '';
+    document.getElementById('scoreResult').innerHTML = `
+        <div class="score-card">
+            <h3>Résultats — ${currentNom}</h3>
+            <div class="score-number"><span id="animated-score">0</span>/${currentQuestions.length}</div>
+            <p style="font-size:1.1em;"><span id="animated-pct">0</span>%</p>
+            <p style="margin-top:8px;" id="animated-msg"></p>
+            <span id="hidden-duree" style="display:none;">${duree}</span>
+        </div>
+        ${errorsHtml}
+        <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+            <button onclick="startQCM()" style="flex:1; padding:12px; margin-top:0;">🔄 Recommencer</button>
+        </div>
+        ${pct >= 80 ? '<button onclick="downloadAttestation()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,#f4c440,#e6a817); color:#4a3a0a;">📄 Télécharger mon attestation PDF</button>' : ''}
+        <button onclick="afficherDashboard()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">📊 Voir l'historique</button>
+        ${!freeMode ? '<button class="btn-next-step" onclick="activateFreeMode()" style="margin-top:16px;">Formation terminée — Accéder au menu libre <span class="arrow-icon">▶</span></button>' : ''}`;
+    // Compteur animé
+    animateCounter('animated-score', 0, score, 1200);
+    animateCounter('animated-pct', 0, pct, 1400, '%');
+    setTimeout(() => { const el = document.getElementById('animated-msg'); if (el) el.textContent = msg; }, 1500);
+}
+function animateCounter(elementId, start, end, duration) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const startTime = performance.now();
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Easing out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(start + (end - start) * eased);
+        el.textContent = current;
+        if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+}
+
+function afficherDashboard() {
+    document.getElementById('qcm-selector').style.display = 'none';
+    document.getElementById('qcm-active').style.display = 'none';
+    document.getElementById('qcm-dashboard').style.display = 'block';
+    renderDashboard('dashboard-table-full');
+}
+
+function renderDashboard(containerId) {
+    const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
+    const container = document.getElementById(containerId);
+    if (results.length === 0) { container.innerHTML = '<p style="color:#4f6473; font-style:italic;">Aucun résultat enregistré.</p>'; return; }
+    const reversed = [...results].reverse();
+    let html = `<div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9em;">
+            <thead><tr style="background:#1a5c7a; color:white;">
+                <th style="padding:10px 12px; text-align:left; border-radius:8px 0 0 0;">Nom</th>
+                <th style="padding:10px 12px; text-align:left;">Date</th>
+                <th style="padding:10px 12px; text-align:left;">Durée</th>
+                <th style="padding:10px 12px; text-align:left;">Score</th>
+                <th style="padding:10px 12px; text-align:left; border-radius:0 8px 0 0;">Résultat</th>
+            </tr></thead><tbody>`;
+    reversed.forEach((r, i) => {
+        const bg = i % 2 === 0 ? '#f5f9fc' : '#ffffff';
+        const couleur = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
+        const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
+        html += `<tr style="background:${bg};">
+            <td style="padding:9px 12px; font-weight:600; color:#1a5c7a;">${r.nom}</td>
+            <td style="padding:9px 12px; color:#4f6473; font-size:0.85em;">${r.date}</td>
+            <td style="padding:9px 12px; color:#4f6473; font-size:0.85em;">${r.duree || '—'}</td>
+            <td style="padding:9px 12px; font-weight:700;">${r.score}/${r.total}</td>
+            <td style="padding:9px 12px; font-weight:700; color:${couleur};">${emoji} ${r.pct}%</td>
+        </tr>`;
+    });
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+}
+
+function resetQCM() {
+    currentIndex = 0; score = 0; window._selectedAnswer = null;
+    document.getElementById('qcm-active').style.display = 'none';
+    document.getElementById('qcm-dashboard').style.display = 'none';
+    document.getElementById('scoreResult').innerHTML = '';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressFill').textContent = '0%';
+    document.getElementById('qcm-selector').style.display = 'block';
+}
+
+// ========== LIVRAISON SUB-STEPS ==========
+let livCurrentSub = 0;
+let livMaxSub = 0;
+
+function goToLivSub(index) {
+    livCurrentSub = index;
+    if (index > livMaxSub) livMaxSub = index;
+
+    // Hide all subs, show target
+    document.querySelectorAll('.liv-sub').forEach(el => {
+        el.style.display = 'none';
+    });
+    const target = document.getElementById('liv-sub-' + index);
+    if (target) {
+        target.style.display = 'block';
+        target.style.animation = 'none';
+        target.offsetHeight;
+        target.style.animation = 'slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        setTimeout(() => triggerStaggerAnimations(target), 100);
+    }
+
+    // Update mini stepper
+    updateLivStepper();
+    updateGlobalProgress();
+
+    // Scroll to top of livraison section
+    document.getElementById('livraison').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateLivStepper() {
+    for (let i = 0; i < 5; i++) {
+        const tab = document.getElementById('liv-tab-' + i);
+        if (!tab) continue;
+        tab.className = 'tab-btn';
+        if (i === livCurrentSub) {
+            tab.classList.add('active');
+        } else if (i <= livMaxSub) {
+            // accessible but not current — no extra class
+        } else {
+            tab.classList.add('locked');
+        }
+    }
+}
+
+function livStepperClick(index) {
+    if (index <= livMaxSub) {
+        goToLivSub(index);
+    }
+}
+
+// ========== ECHECS SUB-STEPS ==========
+let echCurrentSub = 0;
+let echMaxSub = 0;
+const ECH_TOTAL = 4;
+
+function goToEchSub(index) {
+    echCurrentSub = index;
+    if (index > echMaxSub) echMaxSub = index;
+
+    document.querySelectorAll('.ech-sub').forEach(el => el.style.display = 'none');
+    const target = document.getElementById('ech-sub-' + index);
+    if (target) {
+        target.style.display = 'block';
+        target.style.animation = 'none';
+        target.offsetHeight;
+        target.style.animation = 'slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        setTimeout(() => triggerStaggerAnimations(target), 100);
+    }
+
+    // Afficher/masquer la barre fixe motifs
+    const motifBar = document.getElementById('ech-motif-bar');
+    if (motifBar) motifBar.style.display = (index === 0) ? 'block' : 'none';
+
+    updateEchStepper();
+    updateGlobalProgress();
+    document.getElementById('echecs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateEchStepper() {
+    for (let i = 0; i < ECH_TOTAL; i++) {
+        const tab = document.getElementById('ech-tab-' + i);
+        if (!tab) continue;
+        tab.className = 'tab-btn';
+        if (i === echCurrentSub) {
+            tab.classList.add('active');
+        } else if (i <= echMaxSub) {
+            // accessible
+        } else {
+            tab.classList.add('locked');
+        }
+    }
+}
+
+function echStepperClick(index) {
+    if (index <= echMaxSub) goToEchSub(index);
+}
+
+function showAllEchSubs() {
+    document.querySelectorAll('.ech-sub').forEach(el => el.style.display = 'block');
+    document.querySelectorAll('#echecs .ech-sub .btn-next-step').forEach(btn => btn.style.display = 'none');
+    // Masquer la barre fixe en mode libre
+    const motifBar = document.getElementById('ech-motif-bar');
+    if (motifBar) motifBar.style.display = 'none';
+    // Show all motif bubbles and mark as viewed in free mode
+    document.querySelectorAll('.ech-bubble').forEach(b => b.style.display = 'block');
+    document.querySelectorAll('.ech-motif-badge').forEach(badge => {
+        const motif = badge.getAttribute('data-motif');
+        if (motif) echMotifsViewed.add(motif);
+        badge.style.border = '3px solid #2fb781';
+        badge.style.boxShadow = '0 0 12px rgba(47,183,129,0.5)';
+        badge.style.animation = 'none';
+    });
+    const counter = document.getElementById('ech-motif-count');
+    if (counter) counter.textContent = ECH_MOTIFS_TOTAL;
+    const locked = document.getElementById('ech-motif-locked');
+    if (locked) locked.style.display = 'none';
+    const nextBtn = document.getElementById('ech-motif-next-btn');
+    if (nextBtn) nextBtn.style.display = 'none';
+    for (let i = 0; i < ECH_TOTAL; i++) {
+        const tab = document.getElementById('ech-tab-' + i);
+        if (tab) { tab.className = 'tab-btn'; }
+    }
+}
+
+// ========== ECHECS MOTIF BUBBLES ==========
+const echMotifsViewed = new Set();
+const ECH_MOTIFS_TOTAL = 7;
+
+function toggleEchMotif(motifId) {
+    const bubble = document.getElementById('bubble-' + motifId);
+    const badge = document.querySelector('.ech-motif-badge[data-motif="' + motifId + '"]');
+    if (!bubble || !badge) return;
+
+    const isMobile = window.innerWidth <= 768;
+    const isOpen = bubble.style.display !== 'none';
+
+    // Close all other bubbles first
+    document.querySelectorAll('.ech-bubble').forEach(b => b.style.display = 'none');
+
+    // Hide placeholder
+    const placeholder = document.getElementById('ech-bubble-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+
+    if (!isOpen) {
+        // Sur mobile : déplacer la bulle juste après le badge cliqué
+        if (isMobile) {
+            badge.parentNode.insertBefore(bubble, badge.nextSibling);
+        } else {
+            // Sur desktop : remettre dans le container original
+            const container = document.getElementById('ech-bubbles-container');
+            if (container && bubble.parentNode !== container) container.appendChild(bubble);
+        }
+        bubble.style.display = 'block';
+        bubble.style.animation = 'none';
+        bubble.offsetHeight;
+        bubble.style.animation = 'fadeIn 0.3s ease';
+        // Scroll vers la bulle sur mobile
+        if (isMobile) {
+            setTimeout(() => bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
+    }
+
+    // Mark as viewed
+    if (!echMotifsViewed.has(motifId)) {
+        echMotifsViewed.add(motifId);
+        badge.style.opacity = '0.5';
+        // Ajouter un check vert
+        if (!badge.querySelector('.motif-check')) {
+            const check = document.createElement('span');
+            check.className = 'motif-check';
+            check.style.cssText = 'position:absolute; top:50%; right:10px; transform:translateY(-50%); background:#2fb781; color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:bold; box-shadow:0 2px 6px rgba(47,183,129,0.4);';
+            check.textContent = '✓';
+            badge.style.position = 'relative';
+            badge.appendChild(check);
+        }
+    }
+
+    // Update counter
+    const counter = document.getElementById('ech-motif-count');
+    if (counter) counter.textContent = echMotifsViewed.size;
+    updateGlobalProgress();
+
+    // Unlock next button when all 7 viewed
+    if (echMotifsViewed.size >= ECH_MOTIFS_TOTAL) {
+        const locked = document.getElementById('ech-motif-locked');
+        const nextBtn = document.getElementById('ech-motif-next-btn');
+        if (locked) locked.style.display = 'none';
+        if (nextBtn) {
+            nextBtn.style.display = 'inline-flex';
+            nextBtn.style.animation = 'none';
+            nextBtn.offsetHeight;
+            nextBtn.style.animation = 'fadeIn 0.5s ease';
+        }
+    }
+}
+
+function resetEchMotifs() {
+    echMotifsViewed.clear();
+    document.querySelectorAll('.ech-bubble').forEach(b => b.style.display = 'none');
+    document.querySelectorAll('.ech-motif-badge').forEach(badge => {
+        badge.style.opacity = '1';
+        const check = badge.querySelector('.motif-check');
+        if (check) check.remove();
+    });
+    const counter = document.getElementById('ech-motif-count');
+    if (counter) counter.textContent = '0';
+    const locked = document.getElementById('ech-motif-locked');
+    if (locked) locked.style.display = 'block';
+    const nextBtn = document.getElementById('ech-motif-next-btn');
+    if (nextBtn) nextBtn.style.display = 'none';
+}
+
+// Reset sub-steps when navigating to sections
+const _origGoToStep = goToStep;
+goToStep = function(stepIndex) {
+    if (STEPS[stepIndex] === 'livraison') {
+        livCurrentSub = 0;
+        livMaxSub = 0;
+        document.querySelectorAll('.liv-sub').forEach(el => el.style.display = 'none');
+        const first = document.getElementById('liv-sub-0');
+        if (first) first.style.display = 'block';
+        updateLivStepper();
+    }
+    if (STEPS[stepIndex] === 'echecs') {
+        echCurrentSub = 0;
+        echMaxSub = 0;
+        document.querySelectorAll('.ech-sub').forEach(el => el.style.display = 'none');
+        const first = document.getElementById('ech-sub-0');
+        if (first) first.style.display = 'block';
+        updateEchStepper();
+        resetEchMotifs();
+        const motifBar = document.getElementById('ech-motif-bar');
+        if (motifBar) motifBar.style.display = 'block';
+    } else {
+        const motifBar = document.getElementById('ech-motif-bar');
+        if (motifBar) motifBar.style.display = 'none';
+    }
+
+    // QCM : afficher directement le sélecteur (nom déjà renseigné)
+    if (STEPS[stepIndex] === 'qcm') {
+        document.getElementById('qcm-selector').style.display = 'block';
+        document.getElementById('qcm-active').style.display = 'none';
+        document.getElementById('qcm-dashboard').style.display = 'none';
+        document.getElementById('display-nom').textContent = currentNom;
+    }
+
+    _origGoToStep(stepIndex);
+};
+
+function toggleCard(id) {
+    const allCards = ['card-hub','card-ordre','card-creneau','card-date','card-colis','card-barcode'];
+    allCards.forEach(c => { if (c !== id) document.getElementById(c).classList.remove('show'); });
+    const card = document.getElementById(id);
+    if (card) card.classList.toggle('show');
+}
+
+// Close tooltips when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.etiquette-badge-wrap')) {
+        document.querySelectorAll('.etiquette-tooltip-new').forEach(t => t.classList.remove('show'));
+    }
+});
+
+// Désactiver hover sur mobile (évite le double-tap)
+if ('ontouchstart' in window) {
+    document.querySelectorAll('.etiquette-badge').forEach(badge => {
+        badge.removeAttribute('onmouseenter');
+        badge.removeAttribute('onmouseleave');
+    });
+}
+
+// ========== 1. BARRE DE PROGRESSION GLOBALE ==========
+function updateGlobalProgress() {
+    const bar = document.getElementById('global-progress');
+    if (!bar || freeMode) return;
+    if (!formationStartTime) { bar.style.display = 'none'; return; }
+    bar.style.display = 'block';
+
+    // Calcul : 5 étapes principales (accueil=0, chargement=1, livraison=2, echecs=3, qcm=4)
+    // + sous-étapes livraison (5 sub) + sous-étapes échecs (4 sub) + motifs échecs (7)
+    // Total pondéré : accueil(5) + chargement(15) + livraison 5 sub(30) + echecs 4 sub + 7 motifs(30) + qcm(20) = 100
+    let progress = 0;
+    // Accueil validé = 5%
+    if (maxReached >= 1) progress += 5;
+    // Chargement validé = 15%
+    if (maxReached >= 2) progress += 15;
+    // Livraison sous-étapes = 30% (6% par sub)
+    if (currentStep >= 2 || maxReached >= 2) {
+        if (maxReached >= 3) progress += 30;
+        else progress += Math.min(30, livMaxSub * 6);
+    }
+    // Échecs sous-étapes + motifs = 30%
+    if (currentStep >= 3 || maxReached >= 3) {
+        if (maxReached >= 4) progress += 30;
+        else {
+            progress += Math.min(15, echMotifsViewed.size * 2.14);
+            progress += Math.min(15, echMaxSub * 5);
+        }
+    }
+    // QCM = 20%
+    if (maxReached >= 4 && currentQuestions.length > 0) {
+        progress += Math.min(20, Math.round((currentIndex / currentQuestions.length) * 20));
+    }
+    if (freeMode) progress = 100;
+
+    progress = Math.min(100, Math.round(progress));
+    document.getElementById('global-progress-pct').textContent = progress;
+    document.getElementById('global-progress-fill').style.width = progress + '%';
+    // Donut update
+    const donut = document.getElementById('donut-fill');
+    if (donut) {
+        const circumference = 2 * Math.PI * 16; // r=16
+        const offset = circumference - (progress / 100) * circumference;
+        donut.setAttribute('stroke-dashoffset', offset);
+    }
+}
+
+// ========== 3. EMPÊCHER DE QUITTER SANS FINIR ==========
+window.addEventListener('beforeunload', function(e) {
+    if (formationStartTime && !freeMode) {
+        e.preventDefault();
+        e.returnValue = 'Vous n\'avez pas terminé la formation. Êtes-vous sûr de vouloir quitter ?';
+        return e.returnValue;
+    }
+});
+
+// ========== 5. SAUVEGARDE DE PROGRESSION (localStorage) ==========
+function saveProgress() {
+    if (!currentNom) return;
+    const state = {
+        nom: currentNom,
+        currentStep: currentStep,
+        maxReached: maxReached,
+        livCurrentSub: livCurrentSub,
+        livMaxSub: livMaxSub,
+        echCurrentSub: echCurrentSub,
+        echMaxSub: echMaxSub,
+        echMotifsViewed: Array.from(echMotifsViewed),
+        formationStartTime: formationStartTime,
+        freeMode: freeMode
+    };
+    localStorage.setItem('paack_progress', JSON.stringify(state));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem('paack_progress');
+    if (!saved) return false;
+    try {
+        const state = JSON.parse(saved);
+        if (!state.nom || !state.formationStartTime) return false;
+        // Vérifier que ce n'est pas trop vieux (max 24h)
+        if (Date.now() - state.formationStartTime > 24 * 60 * 60 * 1000) {
+            localStorage.removeItem('paack_progress');
+            return false;
+        }
+        return state;
+    } catch(e) { return false; }
+}
+
+function restoreProgress(state) {
+    currentNom = state.nom;
+    formationStartTime = state.formationStartTime;
+    freeMode = state.freeMode;
+    maxReached = state.maxReached;
+    livMaxSub = state.livMaxSub;
+    echMaxSub = state.echMaxSub;
+
+    // Restaurer les motifs vus
+    if (state.echMotifsViewed) {
+        state.echMotifsViewed.forEach(m => {
+            echMotifsViewed.add(m);
+            const badge = document.querySelector('.ech-motif-badge[data-motif="' + m + '"]');
+            if (badge) badge.style.opacity = '0.5';
+        });
+        const counter = document.getElementById('ech-motif-count');
+        if (counter) counter.textContent = echMotifsViewed.size;
+        if (echMotifsViewed.size >= 7) {
+            const locked = document.getElementById('ech-motif-locked');
+            const nextBtn = document.getElementById('ech-motif-next-btn');
+            if (locked) locked.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'inline-flex';
+        }
+    }
+
+    // Masquer champ nom, afficher chrono
+    document.getElementById('accueil-name-screen').style.display = 'none';
+    document.getElementById('chrono-bar').style.display = 'block';
+    document.getElementById('display-nom').textContent = currentNom;
+
+    // Relancer le chrono
+    updateChrono();
+    chronoInterval = setInterval(updateChrono, 1000);
+
+    if (freeMode) {
+        activateFreeMode();
+    } else {
+        goToStep(state.currentStep);
+        // Restaurer la sous-étape si nécessaire
+        if (state.currentStep === 2 && state.livCurrentSub > 0) {
+            livMaxSub = state.livMaxSub;
+            goToLivSub(state.livCurrentSub);
+        }
+        if (state.currentStep === 3 && state.echCurrentSub > 0) {
+            echMaxSub = state.echMaxSub;
+            goToEchSub(state.echCurrentSub);
+        }
+    }
+    updateGlobalProgress();
+}
+
+// Vérifier au chargement s'il y a une progression sauvée
+window.addEventListener('load', function() {
+    const saved = loadProgress();
+    if (saved) {
+        if (confirm('👋 ' + saved.nom + ', vous avez une formation en cours. Voulez-vous reprendre où vous en étiez ?')) {
+            restoreProgress(saved);
+        } else {
+            localStorage.removeItem('paack_progress');
+        }
+    }
+});
+
+// Sauvegarder automatiquement toutes les 5 secondes
+setInterval(saveProgress, 5000);
+
+// ========== 8. RECAP DES ERREURS QCM ==========
+let wrongAnswers = [];
+
+// ========== 11. CONFETTIS ==========
+function launchConfetti() {
+    const container = document.createElement('div');
+    container.className = 'confetti-container';
+    document.body.appendChild(container);
+    const emojis = ['📦', '🚚', '✅', '🎉', '⭐', '🏆', '💚', '📮', '🎯', '🥳'];
+    for (let i = 0; i < 60; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.fontSize = (Math.random() * 16 + 14) + 'px';
+        confetti.style.animationDuration = (Math.random() * 2.5 + 2) + 's';
+        confetti.style.animationDelay = (Math.random() * 2) + 's';
+        container.appendChild(confetti);
+    }
+    setTimeout(() => container.remove(), 6000);
+}
+
+// Tracking vue automatique au chargement
+window.addEventListener('load', function() {
+    fetch('https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec', {
+        method: 'POST', mode: 'no-cors',
+        body: JSON.stringify({ type: 'vue', date: new Date().toLocaleString('fr-FR'), page: document.title, appareil: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop' })
+    });
+});
+
+// ========== SCROLL TO TOP BUTTON ==========
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('scrollTopBtn');
+    if (btn) {
+        if (window.scrollY > 400) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+    }
+});
+
+// ========== STAGGER ANIMATIONS ==========
+function triggerStaggerAnimations(container) {
+    const items = container.querySelectorAll('.numbered-step, .recap-card, .hero-step-chip');
+    items.forEach((item, i) => {
+        item.classList.add('stagger-animate');
+        item.classList.remove('visible');
+        setTimeout(() => item.classList.add('visible'), i * 100);
+    });
+}
+
+// Trigger stagger on initial load for accueil
+window.addEventListener('load', function() {
+    const accueil = document.getElementById('accueil');
+    if (accueil) setTimeout(() => triggerStaggerAnimations(accueil), 200);
+});
+
+// ========== 🌟 PARTICULES FLOTTANTES ==========
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    const colors = ['rgba(47,183,129,0.12)', 'rgba(26,92,122,0.1)', 'rgba(78,230,160,0.08)', 'rgba(244,196,64,0.06)'];
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 6 + 3;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDuration = (Math.random() * 15 + 12) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        container.appendChild(p);
+    }
+}
+createParticles();
+
+// ========== 🎯 PARALLAX HEADER ==========
+const parallaxHeader = document.getElementById('parallax-header');
+if (parallaxHeader) {
+    parallaxHeader.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const orb1 = document.getElementById('orb1');
+        const orb2 = document.getElementById('orb2');
+        const orb3 = document.getElementById('orb3');
+        if (orb1) orb1.style.transform = `translate(${x * 20}px, ${y * 15}px)`;
+        if (orb2) orb2.style.transform = `translate(${x * -15}px, ${y * -12}px)`;
+        if (orb3) orb3.style.transform = `translate(${x * 10}px, ${y * -8}px)`;
+    });
+    parallaxHeader.addEventListener('mouseleave', function() {
+        ['orb1','orb2','orb3'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.transform = 'translate(0,0)';
+        });
+    });
+}
+
+// ========== 🎯 BADGE PULSE - arrêter au clic ==========
+document.querySelectorAll('.etiquette-badge').forEach(badge => {
+    badge.addEventListener('click', function() {
+        this.classList.add('badge-clicked');
+    });
+});
+
+// ========== 🔊 FEEDBACK SONORE ==========
+let soundMuted = false;
+
+function playFeedbackSound(correct) {
+    if (soundMuted) return;
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.value = 0.12;
+
+        if (correct) {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523, ctx.currentTime); // Do
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1); // Mi
+            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2); // Sol
+        } else {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(200, ctx.currentTime);
+            osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+        }
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.stop(ctx.currentTime + 0.45);
+    } catch(e) {}
+}
+
+function toggleMute() {
+    soundMuted = !soundMuted;
+    const btn = document.getElementById('muteBtn');
+    if (btn) btn.textContent = soundMuted ? '🔇' : '🔊';
+}
+
+// ========== 📊 ADMIN DASHBOARD ==========
+function openAdmin() {
+    const pwd = prompt('🔒 Mot de passe admin :');
+    if (pwd !== 'AllezOM93') { alert('❌ Mot de passe incorrect'); return; }
+    // Masquer tout, afficher admin
+    document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('stepper').classList.add('hidden');
+    document.getElementById('navLibre').classList.remove('visible');
+    const adminPage = document.getElementById('admin-page');
+    adminPage.style.display = 'block';
+    adminPage.classList.add('active');
+    renderAdmin();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeAdmin() {
+    document.getElementById('admin-page').style.display = 'none';
+    document.getElementById('admin-page').classList.remove('active');
+    if (freeMode) {
+        document.getElementById('navLibre').classList.add('visible');
+        document.getElementById('recap').classList.add('active');
+    } else {
+        document.getElementById('stepper').classList.remove('hidden');
+        document.getElementById(STEPS[currentStep]).classList.add('active');
+        updateStepper();
+    }
+}
+
+const SHEET_API = 'https://script.google.com/macros/s/AKfycbwNt56FK4Hql5e0BDPWMnYIulocAMhOIqrXnDLyUsh_zOdXtIGczfgcKGKWPPoGtwmfPA/exec';
+
+function renderAdmin() {
+    const statsEl = document.getElementById('admin-stats');
+    const tableEl = document.getElementById('admin-table-wrap');
+    const evoEl = document.getElementById('admin-evolution');
+
+    statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">⏳ Chargement des données depuis Google Sheet...</p>';
+    tableEl.innerHTML = '';
+    evoEl.innerHTML = '';
+
+    fetch(SHEET_API)
+        .then(r => r.json())
+        .then(data => renderAdminData(data))
+        .catch(err => {
+            console.log('Fetch Sheet échoué, fallback localStorage:', err);
+            const local = JSON.parse(localStorage.getItem('paack_results') || '[]');
+            renderAdminData(local);
+        });
+}
+
+function renderAdminData(results) {
+    const statsEl = document.getElementById('admin-stats');
+    const tableEl = document.getElementById('admin-table-wrap');
+    const evoEl = document.getElementById('admin-evolution');
+
+    // Normaliser les clés (Google Sheet a des noms de colonnes différents du localStorage)
+    results = results.map(r => {
+        let pctVal = r.pct || r.Pct || r['%'] || 0;
+        // Le Sheet renvoie % en décimal (0.95), le localStorage en entier (95)
+        if (typeof pctVal === 'number' && pctVal > 0 && pctVal <= 1) pctVal = Math.round(pctVal * 100);
+        if (typeof pctVal === 'string') pctVal = parseInt(pctVal) || 0;
+        let dateVal = r.date || r.Date || '';
+        // Formater la date ISO du Sheet en format lisible
+        if (typeof dateVal === 'string' && dateVal.includes('T')) {
+            const d = new Date(dateVal);
+            dateVal = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+        }
+        return {
+            nom: r.nom || r.Nom || r['Prénom'] || '',
+            date: dateVal,
+            score: Number(r.score || r.Score || 0),
+            total: Number(r.total || r.Total || 20),
+            pct: pctVal,
+            duree: r.duree || r.Duree || r['Durée'] || r['Durée séssion'] || '—'
+        };
+    }).filter(r => r.nom);
+
+    if (results.length === 0) {
+        statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">Aucune donnée disponible.</p>';
+        tableEl.innerHTML = '';
+        evoEl.innerHTML = '';
+        return;
+    }
+
+    // Stats
+    const totalFormations = results.length;
+    const avgScore = Math.round(results.reduce((a, r) => a + r.pct, 0) / results.length);
+    const perfect = results.filter(r => r.pct === 100).length;
+    const uniqueNames = [...new Set(results.map(r => r.nom))].length;
+    const below60 = results.filter(r => r.pct < 60).length;
+
+    statsEl.innerHTML = `
+        <div class="admin-stat-card">
+            <div class="admin-stat-value" style="color:var(--paack-blue);">${totalFormations}</div>
+            <div class="admin-stat-label">QCM passés</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-value" style="color:var(--paack-accent);">${uniqueNames}</div>
+            <div class="admin-stat-label">Livreurs</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-value" style="color:${avgScore >= 80 ? 'var(--paack-accent)' : avgScore >= 60 ? '#f4c440' : '#d64545'};">${avgScore}%</div>
+            <div class="admin-stat-label">Score moyen</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-value" style="color:#f4c440;">${perfect}</div>
+            <div class="admin-stat-label">Score parfait</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-value" style="color:#d64545;">${below60}</div>
+            <div class="admin-stat-label">Échecs (<60%)</div>
+        </div>
+    `;
+
+    // Table paginée (20 par page)
+    const reversed = [...results].reverse();
+    const PAGE_SIZE = 20;
+    window._adminResults = reversed;
+    window._adminPage = 0;
+    renderAdminPage(tableEl, reversed, 0, PAGE_SIZE);
+
+    // Évolution par livreur
+    const byName = {};
+    results.forEach(r => {
+        if (!byName[r.nom]) byName[r.nom] = [];
+        byName[r.nom].push(r);
+    });
+    let evoHtml = '';
+    Object.keys(byName).forEach(nom => {
+        const attempts = byName[nom];
+        if (attempts.length < 2) return;
+        evoHtml += `<div style="margin-bottom:16px;">
+            <div style="font-weight:700; color:var(--paack-blue); margin-bottom:6px;">${nom} — ${attempts.length} tentatives</div>
+            <div style="display:flex; align-items:flex-end; gap:8px; height:80px; padding:0 10px;">`;
+        attempts.forEach(a => {
+            const h = Math.max(10, (a.pct / 100) * 70);
+            const color = a.pct >= 80 ? 'var(--paack-accent)' : a.pct >= 60 ? '#f4c440' : '#d64545';
+            evoHtml += `<div style="flex:1; text-align:center;">
+                <div style="background:${color}; height:${h}px; border-radius:6px 6px 0 0; margin:0 auto; max-width:40px;"></div>
+                <div style="font-size:0.7em; font-weight:700; color:${color}; margin-top:2px;">${a.pct}%</div>
+            </div>`;
+        });
+        evoHtml += '</div></div>';
+    });
+    evoEl.innerHTML = evoHtml || '<p style="color:#7a9aab; font-size:0.9em;">Les évolutions apparaîtront quand un livreur aura fait le QCM plusieurs fois.</p>';
+}
+
+function renderAdminPage(container, data, page, pageSize) {
+    const totalPages = Math.ceil(data.length / pageSize);
+    const start = page * pageSize;
+    const pageData = data.slice(start, start + pageSize);
+
+    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
+    pageData.forEach(r => {
+        const color = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
+        const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
+        html += `<tr>
+            <td style="font-weight:600; color:var(--paack-blue);">${r.nom}</td>
+            <td style="color:#4f6473; font-size:0.85em;">${r.date}</td>
+            <td style="color:#4f6473; font-size:0.85em;">${r.duree || '—'}</td>
+            <td style="font-weight:700;">${r.score}/${r.total}</td>
+            <td style="font-weight:700; color:${color};">${emoji} ${r.pct}%</td>
+        </tr>`;
+    });
+    html += '</tbody></table>';
+
+    // Pagination
+    if (totalPages > 1) {
+        html += '<div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap;">';
+        html += `<button onclick="adminGoToPage(${page - 1})" style="padding:6px 14px; font-size:0.85em; margin:0;${page === 0 ? ' opacity:0.3; pointer-events:none;' : ''}">← Précédent</button>`;
+        for (let i = 0; i < totalPages; i++) {
+            const active = i === page ? 'background:var(--paack-accent); color:white;' : 'background:rgba(26,92,122,0.08); color:var(--paack-blue);';
+            html += `<button onclick="adminGoToPage(${i})" style="padding:6px 12px; font-size:0.85em; margin:0; min-width:36px; ${active}">${i + 1}</button>`;
+        }
+        html += `<button onclick="adminGoToPage(${page + 1})" style="padding:6px 14px; font-size:0.85em; margin:0;${page >= totalPages - 1 ? ' opacity:0.3; pointer-events:none;' : ''}">Suivant →</button>`;
+        html += `</div><p style="text-align:center; color:#7a9aab; font-size:0.8em; margin-top:6px;">${start + 1}–${Math.min(start + pageSize, data.length)} sur ${data.length} résultats</p>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function adminGoToPage(page) {
+    const data = window._adminResults;
+    if (!data) return;
+    const totalPages = Math.ceil(data.length / 20);
+    if (page < 0 || page >= totalPages) return;
+    window._adminPage = page;
+    const container = document.getElementById('admin-table-wrap');
+    renderAdminPage(container, data, page, 20);
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Auto-ouvrir admin si ?admin dans l'URL
+if (window.location.search.includes('admin')) {
+    window.addEventListener('load', function() { setTimeout(openAdmin, 500); });
+}
+
+// ========== 📄 EXPORT PDF ATTESTATION ==========
+function downloadAttestation() {
+    try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
+        const last = results[results.length - 1];
+        if (!last) return;
+
+        // Fond
+        doc.setFillColor(11, 36, 54);
+        doc.rect(0, 0, 210, 45, 'F');
+
+        // Titre
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Formation Paack', 105, 22, { align: 'center' });
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Attestation de formation — Livraison', 105, 34, { align: 'center' });
+
+        // Corps
+        doc.setTextColor(30, 50, 68);
+        doc.setFontSize(14);
+        doc.text('Attestation de réussite', 105, 65, { align: 'center' });
+
+        doc.setDrawColor(47, 183, 129);
+        doc.setLineWidth(0.5);
+        doc.line(50, 70, 160, 70);
+
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Ce document certifie que :', 105, 85, { align: 'center' });
+
+        doc.setFontSize(20);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(26, 92, 122);
+        doc.text(last.nom, 105, 100, { align: 'center' });
+
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(80, 100, 115);
+        doc.text('a complété avec succès la formation Paack Livraison', 105, 112, { align: 'center' });
+
+        // Score
+        doc.setFontSize(40);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(47, 183, 129);
+        doc.text(last.pct + '%', 105, 140, { align: 'center' });
+
+        doc.setFontSize(14);
+        doc.setTextColor(80, 100, 115);
+        doc.text(last.score + '/' + last.total + ' bonnes réponses', 105, 150, { align: 'center' });
+
+        // Durée
+        if (last.duree) {
+            doc.setFontSize(10);
+            doc.text('Durée de formation : ' + last.duree, 105, 160, { align: 'center' });
+        }
+
+        // Date
+        doc.setFontSize(11);
+        doc.setTextColor(120, 140, 155);
+        doc.text('Date : ' + last.date, 105, 175, { align: 'center' });
+
+        // Badge
+        if (last.pct === 100) {
+            doc.setFillColor(47, 183, 129);
+            doc.roundedRect(65, 185, 80, 20, 4, 4, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('CERTIFIÉ PAACK', 105, 198, { align: 'center' });
+        } else if (last.pct >= 80) {
+            doc.setFillColor(26, 92, 122);
+            doc.roundedRect(72, 185, 66, 20, 4, 4, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('VALIDÉ', 105, 198, { align: 'center' });
+        }
+
+        // Footer
+        doc.setFillColor(240, 248, 252);
+        doc.rect(0, 270, 210, 27, 'F');
+        doc.setFontSize(8);
+        doc.setTextColor(120, 140, 155);
+        doc.text('Formation Paack · paacklys.github.io/formation · Document généré automatiquement', 105, 282, { align: 'center' });
+
+        doc.save('Attestation_Paack_' + last.nom.replace(/\s+/g, '_') + '.pdf');
+    } catch(e) {
+        alert('Erreur lors de la génération du PDF. Réessayez.');
+        console.error(e);
+    }
+}
+</script>
+</body>
+</html>
