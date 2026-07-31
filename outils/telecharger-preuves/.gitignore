@@ -1,0 +1,6 @@
+node_modules/
+profil-chrome/
+preuves/
+journal.csv
+package-lock.json
+# On garde commandes.txt comme modèle ; ne pas versionner tes vraies commandes.

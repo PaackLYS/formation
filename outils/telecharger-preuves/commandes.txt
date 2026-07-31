@@ -1,0 +1,6 @@
+# Un numéro de commande par ligne.
+# Tu peux coller directement une colonne copiée depuis un Google Sheet,
+# le script extrait le numéro de chaque ligne.
+# Exemple :
+# 239350155
+# 239350156
