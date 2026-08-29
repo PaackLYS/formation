@@ -7,20 +7,82 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+/* ===== Jetons de couleur : une valeur, un role, un seul endroit ou la changer ===== */
+:root{
+  --bord:#e0e8f0;
+  --c-061521:#061521;
+  --c-0b1e30:#0b1e30;
+  --c-0e3549:#0e3549;
+  --c-0f2a3d:#0f2a3d;
+  --c-12232e:#12232e;
+  --c-1a6b42:#1a6b42;
+  --c-1a8a5c:#1a8a5c;
+  --c-1e4a32:#1e4a32;
+  --c-25a06e:#25a06e;
+  --c-4f4421:#4f4421;
+  --c-5a7a8a:#5a7a8a;
+  --c-5ba8c4:#5ba8c4;
+  --c-5c1a1a:#5c1a1a;
+  --c-7a5c00:#7a5c00;
+  --c-991b1b:#991b1b;
+  --c-c0d0d8:#c0d0d8;
+  --c-c8f0d5:#c8f0d5;
+  --c-d6f5e3:#d6f5e3;
+  --c-dc2626:#dc2626;
+  --c-e6a817:#e6a817;
+  --c-f0faf4:#f0faf4;
+  --c-fef08a:#fef08a;
+  --c-ffd4d8:#ffd4d8;
+  --c-ffe08a:#ffe08a;
+  --c-ffe0e0:#ffe0e0;
+  --c-fff0f0:#fff0f0;
+  --c-fff5f5:#fff5f5;
+  --c-fffbf0:#fffbf0;
+  --ko:#d64545;
+  --ko-bord:#f4c0c4;
+  --ko-fond:#ffe8ea;
+  --ko-fort:#a32d2d;
+  --ko-texte:#7c1f28;
+  --marque:#1a5c7a;
+  --marque-clair:#2d7f9f;
+  --marque-fond:#e8f4f8;
+  --marque-pale:#d0e8f2;
+  --nuit-1:#060e18;
+  --nuit-2:#0b2436;
+  --nuit-3:#173750;
+  --nuit-4:#1b3444;
+  --nuit-5:#324754;
+  --ok:#2fb781;
+  --ok-bord:#b9e5c5;
+  --ok-fond:#e2f6ea;
+  --ok-texte:#1e6b3a;
+  --ok-vif:#4ee6a0;
+  --or:#f4c440;
+  --or-fond:#fff9e6;
+  --or-sombre:#4a3a0a;
+  --or-texte:#b8941f;
+  --surface:#ffffff;
+  --surface-douce:#f5f9fc;
+  --texte:#1b3444;
+  --texte-doux:#4f6473;
+  --texte-faible:#7a9aab;
+  --violet:#6c3483;
+}
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --paack-dark: #0b2436;
-            --paack-blue: #1a5c7a;
-            --paack-light-blue: #2d7f9f;
-            --paack-bg-card: #e8f4f8;
-            --paack-accent: #2fb781;
+            --paack-dark: var(--nuit-2);
+            --paack-blue: var(--marque);
+            --paack-light-blue: var(--marque-clair);
+            --paack-bg-card: var(--marque-fond);
+            --paack-accent: var(--ok);
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top left, #173750 0%, #0b2436 45%, #061521 100%);
+            background: radial-gradient(circle at top left, var(--nuit-3) 0%, var(--nuit-2) 45%, var(--c-061521) 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #12232e;
+            color: var(--c-12232e);
             overflow-x: hidden;
         }
         .container { max-width: 1000px; margin: 0 auto; }
@@ -36,7 +98,7 @@
         }
         .global-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--paack-accent), #4ee6a0, var(--paack-accent));
+            background: linear-gradient(90deg, var(--paack-accent), var(--ok-vif), var(--paack-accent));
             background-size: 200% 100%;
             border-radius: 99px;
             transition: width 0.6s ease;
@@ -80,7 +142,7 @@
             gap: 0;
             margin-bottom: 14px;
             padding: 14px 16px 28px;
-            background: linear-gradient(135deg, #0b2436, #173750);
+            background: linear-gradient(135deg, var(--nuit-2), var(--nuit-3));
             border-radius: 16px;
             box-shadow: 0 12px 35px rgba(0,0,0,0.45);
             border: 1px solid rgba(255,255,255,0.06);
@@ -151,7 +213,7 @@
             margin-bottom: 12px;
             flex-wrap: wrap;
             justify-content: stretch;
-            background: linear-gradient(135deg,#0b2436,#173750);
+            background: linear-gradient(135deg,var(--nuit-2),var(--nuit-3));
             padding: 5px 10px;
             border-radius: 16px;
             box-shadow: 0 12px 35px rgba(0,0,0,0.45);
@@ -187,7 +249,7 @@
             color: white;
         }
         .nav-btn.active {
-            background: linear-gradient(135deg, #1a5c7a, #2d7f9f);
+            background: linear-gradient(135deg, var(--marque), var(--marque-clair));
             color: white;
             border-color: transparent;
             box-shadow: 0 4px 14px rgba(0,0,0,0.4);
@@ -237,7 +299,7 @@
             padding: 20px;
             font-size: 1.2em;
             border-radius: 16px;
-            background: linear-gradient(135deg, var(--paack-accent) 0%, #25a06e 50%, #1a8a5c 100%);
+            background: linear-gradient(135deg, var(--paack-accent) 0%, var(--c-25a06e) 50%, var(--c-1a8a5c) 100%);
             color: white;
             border: none;
             cursor: pointer;
@@ -280,7 +342,7 @@
         }
         .hero-start .hero-emoji { font-size: 3.5em; margin-bottom: 16px; display: block; }
         .hero-start h2 { justify-content: center; border: none; font-size: 2em; margin-bottom: 10px; }
-        .hero-start p { font-size: 1.05em; color: #4b616e; line-height: 1.7; max-width: 600px; margin: 0 auto 10px; }
+        .hero-start p { font-size: 1.05em; color: var(--texte-doux); line-height: 1.7; max-width: 600px; margin: 0 auto 10px; }
         .hero-steps-preview {
             display: flex;
             justify-content: center;
@@ -317,7 +379,7 @@
             margin: 20px 0;
         }
         .recap-card {
-            background: linear-gradient(145deg, var(--paack-bg-card) 0%, #d0e8f2 100%);
+            background: linear-gradient(145deg, var(--paack-bg-card) 0%, var(--marque-pale) 100%);
             border-radius: 14px;
             padding: 22px 18px;
             box-shadow: 0 6px 18px rgba(1,12,20,0.35);
@@ -339,7 +401,7 @@
         .recap-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.55); border-left-color: var(--paack-accent); }
         .recap-card h4 { color: var(--paack-blue); margin-bottom: 6px; font-size: 1.1em; transition: color 0.2s; }
         .recap-card:hover h4 { color: var(--paack-accent); }
-        .recap-card p { color: #1b3444; font-size: 0.9em; line-height: 1.5; }
+        .recap-card p { color: var(--nuit-4); font-size: 0.9em; line-height: 1.5; }
         .recap-card .card-arrow {
             position: absolute; bottom: 12px; right: 14px;
             font-size: 1.1em; opacity: 0; transform: translateX(-4px);
@@ -376,7 +438,7 @@
             background: linear-gradient(180deg, var(--paack-blue), var(--paack-accent));
         }
         .card {
-            background: linear-gradient(145deg, var(--paack-bg-card) 0%, #d0e8f2 100%);
+            background: linear-gradient(145deg, var(--paack-bg-card) 0%, var(--marque-pale) 100%);
             border-radius: 14px;
             padding: 20px 18px;
             box-shadow: 0 6px 18px rgba(1,12,20,0.35);
@@ -393,7 +455,7 @@
             pointer-events: none;
         }
         .card h4 { color: var(--paack-blue); margin-bottom: 8px; font-size: 1.1em; }
-        .card p { color: #1b3444; line-height: 1.55; font-size: 0.97em; }
+        .card p { color: var(--nuit-4); line-height: 1.55; font-size: 0.97em; }
         .card.clickable { cursor: pointer; }
         .card.clickable:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.55); border-left-color: var(--paack-accent); }
         .card.clickable:hover h4 { color: var(--paack-accent); }
@@ -405,7 +467,7 @@
         .card.clickable:hover .card-arrow { opacity: 1; transform: translateX(0); }
 
         ul { margin-left: 24px; margin-top: 10px; }
-        ul li { margin-bottom: 9px; color: #233744; line-height: 1.6; font-size: 0.98em; }
+        ul li { margin-bottom: 9px; color: var(--nuit-4); line-height: 1.6; font-size: 0.98em; }
         .highlight, .danger, .info {
             padding: 16px 18px;
             margin: 16px 0;
@@ -417,18 +479,18 @@
             border: none;
         }
         .danger {
-            background: linear-gradient(135deg, #fff0f0 0%, #fde8e8 100%);
-            color: #5c1a1a;
+            background: linear-gradient(135deg, var(--c-fff0f0) 0%, var(--ko-fond) 100%);
+            color: var(--c-5c1a1a);
             box-shadow: 0 2px 12px rgba(214,69,69,0.08), inset 0 0 0 1px rgba(214,69,69,0.12);
         }
         .highlight {
-            background: linear-gradient(135deg, #fffbf0 0%, #fff5de 100%);
-            color: #4a3a0a;
+            background: linear-gradient(135deg, var(--c-fffbf0) 0%, var(--or-fond) 100%);
+            color: var(--or-sombre);
             box-shadow: 0 2px 12px rgba(212,160,23,0.08), inset 0 0 0 1px rgba(212,160,23,0.15);
         }
         .info {
-            background: linear-gradient(135deg, #f0f8fc 0%, #e4f1f8 100%);
-            color: #0e3549;
+            background: linear-gradient(135deg, var(--surface-douce) 0%, var(--marque-fond) 100%);
+            color: var(--c-0e3549);
             box-shadow: 0 2px 12px rgba(26,92,122,0.06), inset 0 0 0 1px rgba(26,92,122,0.1);
         }
         button {
@@ -443,7 +505,7 @@
 
         /* QCM styles */
         .question {
-            background: #f5f9fc; border-left: 4px solid var(--paack-blue);
+            background: var(--surface-douce); border-left: 4px solid var(--paack-blue);
             padding: 18px; margin-bottom: 18px; border-radius: 10px;
             box-shadow: 0 4px 14px rgba(4,22,35,0.2);
         }
@@ -452,7 +514,7 @@
         .option { display: flex; align-items: center; }
         input[type="radio"] { margin-right: 10px; cursor: pointer; width: 18px; height: 18px; accent-color: var(--paack-blue); }
         .option label { cursor: pointer; flex: 1; padding: 8px 10px; border-radius: 6px; transition: background 0.18s ease; }
-        .option:hover label { background: #e6f2f8; }
+        .option:hover label { background: var(--marque-fond); }
         .score-card {
             background: linear-gradient(135deg, var(--paack-blue) 0%, var(--paack-light-blue) 60%);
             color: white; padding: 24px 22px 26px; border-radius: 14px;
@@ -460,17 +522,17 @@
             box-shadow: 0 12px 34px rgba(0,0,0,0.7);
             position: relative; overflow: hidden;
         }
-        .score-card h3 { color: #f6feff; font-size: 1.6em; margin-bottom: 6px; position: relative; z-index: 1; }
+        .score-card h3 { color: var(--surface-douce); font-size: 1.6em; margin-bottom: 6px; position: relative; z-index: 1; }
         .score-card h3::before { display: none; }
         .score-number { font-size: 2.6em; font-weight: bold; margin: 10px 0 6px; position: relative; z-index: 1; }
-        .progress-bar { background: #dde7ef; border-radius: 999px; height: 18px; margin: 18px 0 10px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.25); }
+        .progress-bar { background: var(--bord); border-radius: 999px; height: 18px; margin: 18px 0 10px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.25); }
         .progress-fill { background: linear-gradient(90deg, var(--paack-accent) 0%, var(--paack-light-blue) 70%); height: 100%; transition: width 0.25s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8em; font-weight: bold; }
-        .red-chip { background-color: #ffe0e0; padding: 2px 8px; border-radius: 5px; }
+        .red-chip { background-color: var(--c-ffe0e0); padding: 2px 8px; border-radius: 5px; }
 
         /* Étiquette badges */
         .etiquette-badge { font-size: 0.75em; font-weight: 700; padding: 5px 10px; border-radius: 20px; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; user-select: none; }
         .etiquette-badge:hover, .etiquette-badge:active { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
-        .etiquette-tooltip { display: none; position: absolute; z-index: 100; background: white; border-radius: 8px; padding: 8px 12px; margin-top: 4px; font-size: 0.8em; color: #1b3444; box-shadow: 0 4px 14px rgba(0,0,0,0.3); line-height: 1.5; }
+        .etiquette-tooltip { display: none; position: absolute; z-index: 100; background: white; border-radius: 8px; padding: 8px 12px; margin-top: 4px; font-size: 0.8em; color: var(--nuit-4); box-shadow: 0 4px 14px rgba(0,0,0,0.3); line-height: 1.5; }
         .etiquette-tooltip.show { display: block; }
 
         /* Photo grids */
@@ -484,39 +546,39 @@
         /* Steps flow */
         .steps-flow { display: flex; align-items: stretch; justify-content: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
         .step-card { flex: 1; min-width: 150px; max-width: 220px; border-radius: 16px; padding: 24px 18px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-        .step-arrow { display: flex; align-items: center; justify-content: center; padding: 0 6px; flex-shrink: 0; color: #2d7f9f; font-size: 1.6em; }
+        .step-arrow { display: flex; align-items: center; justify-content: center; padding: 0 6px; flex-shrink: 0; color: var(--marque-clair); font-size: 1.6em; }
 
         /* Encadré À retenir */
         .retenir {
-            background: linear-gradient(135deg, #f0faf4 0%, #e2f5eb 100%);
+            background: linear-gradient(135deg, var(--c-f0faf4) 0%, var(--ok-fond) 100%);
             padding: 20px 22px;
             margin: 24px 0 10px;
             border-radius: 14px;
             box-shadow: 0 2px 12px rgba(47,183,129,0.08), inset 0 0 0 1px rgba(47,183,129,0.12);
         }
-        .retenir-title { display: flex; align-items: center; gap: 8px; font-weight: 800; color: #1a6b42; font-size: 1.05em; margin-bottom: 10px; }
+        .retenir-title { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--c-1a6b42); font-size: 1.05em; margin-bottom: 10px; }
         .retenir ul { margin-left: 20px; margin-top: 6px; }
-        .retenir li { color: #1e4a32; font-weight: 600; margin-bottom: 6px; }
+        .retenir li { color: var(--c-1e4a32); font-weight: 600; margin-bottom: 6px; }
 
         /* Étapes numérotées */
         .numbered-steps { display: flex; flex-direction: column; gap: 14px; margin: 16px 0 20px; }
-        .numbered-step { display: flex; align-items: flex-start; gap: 14px; background: #f5f9fc; border-radius: 12px; padding: 16px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); border: 1px solid rgba(26,92,122,0.1); transition: transform 0.2s ease; }
+        .numbered-step { display: flex; align-items: flex-start; gap: 14px; background: var(--surface-douce); border-radius: 12px; padding: 16px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); border: 1px solid rgba(26,92,122,0.1); transition: transform 0.2s ease; }
         .numbered-step:hover { transform: translateX(4px); }
         .step-number { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--paack-blue), var(--paack-accent)); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1em; box-shadow: 0 3px 10px rgba(26,92,122,0.3); }
-        .step-text { flex: 1; color: #1b3444; line-height: 1.5; font-size: 0.97em; }
+        .step-text { flex: 1; color: var(--nuit-4); line-height: 1.5; font-size: 0.97em; }
         .step-text strong { color: var(--paack-blue); }
 
         /* Bandeau photos */
         .photo-section-header { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 10px; font-weight: 800; font-size: 0.9em; margin-bottom: 12px; letter-spacing: 0.3px; }
-        .photo-section-header.do { background: linear-gradient(135deg, #e2f6ea, #c8f0d5); color: #1a6b42; border: 2px solid #2fb781; }
-        .photo-section-header.dont { background: linear-gradient(135deg, #ffe8ea, #ffd4d8); color: #7c1f28; border: 2px solid #d64545; }
-        .photo-item img.valid-photo { border: 3px solid #2fb781; box-shadow: 0 4px 16px rgba(47,183,129,0.25); }
-        .photo-item img.invalid-photo { border: 3px solid #d64545; box-shadow: 0 4px 16px rgba(214,69,69,0.25); }
+        .photo-section-header.do { background: linear-gradient(135deg, var(--ok-fond), var(--c-c8f0d5)); color: var(--c-1a6b42); border: 2px solid var(--ok); }
+        .photo-section-header.dont { background: linear-gradient(135deg, var(--ko-fond), var(--c-ffd4d8)); color: var(--ko-texte); border: 2px solid var(--ko); }
+        .photo-item img.valid-photo { border: 3px solid var(--ok); box-shadow: 0 4px 16px rgba(47,183,129,0.25); }
+        .photo-item img.invalid-photo { border: 3px solid var(--ko); box-shadow: 0 4px 16px rgba(214,69,69,0.25); }
 
         /* Sections pliables (collapsible) — toutes ouvertes par défaut en mode guidé */
         details.collapsible {
             margin: 16px 0; border-radius: 14px;
-            background: linear-gradient(145deg, #f8fbfd 0%, #eef5f9 100%);
+            background: linear-gradient(145deg, var(--surface-douce) 0%, var(--marque-fond) 100%);
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             border: 1px solid rgba(26,92,122,0.12);
             overflow: hidden; transition: all 0.3s ease;
@@ -565,14 +627,14 @@
             position: absolute;
             left: 15px; top: 0; bottom: 0;
             width: 3px;
-            background: linear-gradient(180deg, var(--paack-blue), var(--paack-accent), #f4c440);
+            background: linear-gradient(180deg, var(--paack-blue), var(--paack-accent), var(--or));
             border-radius: 99px;
         }
         .timeline-item {
             position: relative;
             padding: 16px 20px;
             margin-bottom: 16px;
-            background: #f5f9fc;
+            background: var(--surface-douce);
             border-radius: 12px;
             box-shadow: 0 3px 12px rgba(0,0,0,0.06);
             border: 1px solid rgba(26,92,122,0.1);
@@ -597,14 +659,14 @@
             z-index: 1;
         }
         .timeline-dot.green { border-color: var(--paack-accent); }
-        .timeline-dot.yellow { border-color: #f4c440; }
+        .timeline-dot.yellow { border-color: var(--or); }
         .timeline-item strong { color: var(--paack-blue); }
 
         /* ========== TABS HORIZONTAUX ========== */
         .tabs-container {
             display: flex;
             gap: 0;
-            background: linear-gradient(135deg, #f0f4f7, #e8eff4);
+            background: linear-gradient(135deg, var(--marque-fond), var(--marque-fond));
             border-radius: 14px;
             padding: 4px;
             margin-bottom: 20px;
@@ -619,7 +681,7 @@
             cursor: pointer;
             font-weight: 700;
             font-size: 0.82em;
-            color: #7a9aab;
+            color: var(--texte-faible);
             transition: all 0.3s ease;
             white-space: nowrap;
             display: flex;
@@ -734,22 +796,22 @@
         .qcm-option-enhanced:hover::before { opacity: 1; }
         .qcm-option-enhanced.selected {
             border-color: var(--paack-accent);
-            background: linear-gradient(135deg, #f0faf4, #e6f7ed);
+            background: linear-gradient(135deg, var(--c-f0faf4), var(--ok-fond));
             transform: translateX(4px);
             box-shadow: 0 4px 14px rgba(47,183,129,0.15);
         }
         .qcm-option-enhanced.correct-answer {
-            border-color: #2fb781;
-            background: #e2f6ea;
+            border-color: var(--ok);
+            background: var(--ok-fond);
         }
         .qcm-option-enhanced.wrong-answer {
-            border-color: #d64545;
-            background: #ffe8ea;
+            border-color: var(--ko);
+            background: var(--ko-fond);
         }
         .qcm-radio-custom {
             width: 22px; height: 22px;
             border-radius: 50%;
-            border: 2px solid #c0d0d8;
+            border: 2px solid var(--c-c0d0d8);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -773,13 +835,13 @@
         .qcm-option-enhanced.selected .qcm-radio-dot { transform: scale(1); }
         .qcm-option-text {
             font-size: 0.95em;
-            color: #324754;
+            color: var(--nuit-5);
             font-weight: 500;
             position: relative;
             z-index: 1;
             transition: color 0.3s ease;
         }
-        .qcm-option-enhanced.selected .qcm-option-text { color: #1a6b42; font-weight: 600; }
+        .qcm-option-enhanced.selected .qcm-option-text { color: var(--c-1a6b42); font-weight: 600; }
         @keyframes radioSelect {
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
@@ -809,7 +871,7 @@
             border-radius: 12px;
             padding: 12px 16px;
             font-size: 0.82em;
-            color: #1b3444;
+            color: var(--nuit-4);
             box-shadow: 0 8px 30px rgba(0,0,0,0.18);
             line-height: 1.5;
             min-width: 200px;
@@ -940,7 +1002,7 @@
 
         /* ========== DANGER FLASH ========== */
         .danger-flash {
-            background: linear-gradient(135deg, #dc2626, #991b1b) !important;
+            background: linear-gradient(135deg, var(--c-dc2626), var(--c-991b1b)) !important;
             color: white !important;
             font-size: 1em !important;
             font-weight: 700 !important;
@@ -951,7 +1013,7 @@
             animation: dangerPulse 1.8s ease-in-out infinite;
         }
         .danger-flash strong {
-            color: #fef08a !important;
+            color: var(--c-fef08a) !important;
         }
         @keyframes dangerPulse {
             0%, 100% { box-shadow: 0 4px 20px rgba(220,38,38,0.35), inset 0 0 0 2px rgba(255,255,255,0.15); transform: scale(1); }
@@ -1129,7 +1191,7 @@
             margin: 16px 0;
         }
         .admin-stat-card {
-            background: linear-gradient(145deg, var(--paack-bg-card), #d0e8f2);
+            background: linear-gradient(145deg, var(--paack-bg-card), var(--marque-pale));
             border-radius: 14px;
             padding: 18px 14px;
             text-align: center;
@@ -1144,7 +1206,7 @@
         }
         .admin-stat-label {
             font-size: 0.78em;
-            color: #7a9aab;
+            color: var(--texte-faible);
             font-weight: 600;
         }
         .admin-table {
@@ -1163,15 +1225,15 @@
         .admin-table th:last-child { border-radius: 0 8px 0 0; }
         .admin-table td {
             padding: 9px 12px;
-            border-bottom: 1px solid #e8f0f4;
+            border-bottom: 1px solid var(--marque-fond);
         }
-        .admin-table tr:nth-child(even) { background: #f5f9fc; }
+        .admin-table tr:nth-child(even) { background: var(--surface-douce); }
     </style>
 </head><body>
 <!-- Particules flottantes -->
 <div class="particles-container" id="particles"></div>
 <div class="container" style="position:relative; z-index:1;">
-    <header id="parallax-header" style="background:linear-gradient(135deg,#060e18 0%,#0b1e30 50%,#0f2a3d 100%); border-radius:18px; padding:22px 24px 18px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.5), 0 0 30px rgba(47,183,129,0.1); position:relative; overflow:hidden; border:1px solid rgba(47,183,129,0.15);">
+    <header id="parallax-header" style="background:linear-gradient(135deg,var(--nuit-1) 0%,var(--c-0b1e30) 50%,var(--c-0f2a3d) 100%); border-radius:18px; padding:22px 24px 18px; margin-bottom:8px; box-shadow:0 14px 40px rgba(0,0,0,0.5), 0 0 30px rgba(47,183,129,0.1); position:relative; overflow:hidden; border:1px solid rgba(47,183,129,0.15);">
         <div class="header-orb header-orb-1" id="orb1" style="background:radial-gradient(circle, rgba(47,183,129,0.15), transparent 70%);"></div>
         <div class="header-orb header-orb-2" id="orb2" style="background:radial-gradient(circle, rgba(26,92,122,0.2), transparent 70%);"></div>
         <div class="header-orb header-orb-3" id="orb3" style="background:radial-gradient(circle, rgba(47,183,129,0.1), transparent 70%);"></div>
@@ -1183,32 +1245,32 @@
                         <filter id="neon-soft"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                     </defs>
                     <!-- Lignes néon -->
-                    <line x1="18" y1="52" x2="48" y2="52" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.5" filter="url(#neon-soft)"/>
-                    <line x1="25" y1="63" x2="52" y2="63" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.7" filter="url(#neon-soft)"/>
-                    <line x1="20" y1="74" x2="46" y2="74" stroke="#2fb781" stroke-width="2" stroke-linecap="round" opacity="0.4" filter="url(#neon-soft)"/>
+                    <line x1="18" y1="52" x2="48" y2="52" stroke="var(--ok)" stroke-width="2" stroke-linecap="round" opacity="0.5" filter="url(#neon-soft)"/>
+                    <line x1="25" y1="63" x2="52" y2="63" stroke="var(--ok)" stroke-width="2" stroke-linecap="round" opacity="0.7" filter="url(#neon-soft)"/>
+                    <line x1="20" y1="74" x2="46" y2="74" stroke="var(--ok)" stroke-width="2" stroke-linecap="round" opacity="0.4" filter="url(#neon-soft)"/>
                     <!-- Camion néon outline -->
-                    <rect x="55" y="38" width="75" height="48" rx="7" fill="none" stroke="#1a5c7a" stroke-width="2.5" filter="url(#neon-glow)"/>
-                    <path d="M130 45 L158 45 C164 45, 170 51, 170 57 L170 86 L130 86 Z" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <rect x="55" y="38" width="75" height="48" rx="7" fill="none" stroke="var(--marque)" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <path d="M130 45 L158 45 C164 45, 170 51, 170 57 L170 86 L130 86 Z" fill="none" stroke="var(--ok)" stroke-width="2.5" filter="url(#neon-glow)"/>
                     <!-- Pare-brise néon -->
                     <path d="M136 50 L155 50 C159 50, 163 54, 163 58 L163 70 L136 70 Z" fill="none" stroke="rgba(47,183,129,0.5)" stroke-width="1.5"/>
                     <!-- Colis néon -->
-                    <rect x="68" y="50" width="18" height="15" rx="2" fill="none" stroke="#2fb781" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.6"/>
-                    <rect x="94" y="50" width="18" height="15" rx="2" fill="none" stroke="#2fb781" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.4"/>
+                    <rect x="68" y="50" width="18" height="15" rx="2" fill="none" stroke="var(--ok)" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.6"/>
+                    <rect x="94" y="50" width="18" height="15" rx="2" fill="none" stroke="var(--ok)" stroke-width="1.5" filter="url(#neon-soft)" opacity="0.4"/>
                     <!-- Roues néon -->
-                    <circle cx="82" cy="92" r="11" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
-                    <circle cx="82" cy="92" r="4" fill="#2fb781" filter="url(#neon-soft)"/>
-                    <circle cx="155" cy="92" r="11" fill="none" stroke="#2fb781" stroke-width="2.5" filter="url(#neon-glow)"/>
-                    <circle cx="155" cy="92" r="4" fill="#2fb781" filter="url(#neon-soft)"/>
+                    <circle cx="82" cy="92" r="11" fill="none" stroke="var(--ok)" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <circle cx="82" cy="92" r="4" fill="var(--ok)" filter="url(#neon-soft)"/>
+                    <circle cx="155" cy="92" r="11" fill="none" stroke="var(--ok)" stroke-width="2.5" filter="url(#neon-glow)"/>
+                    <circle cx="155" cy="92" r="4" fill="var(--ok)" filter="url(#neon-soft)"/>
                     <!-- Route néon -->
-                    <line x1="35" y1="104" x2="210" y2="104" stroke="#2fb781" stroke-width="1" stroke-dasharray="8 5" opacity="0.3" filter="url(#neon-soft)"/>
+                    <line x1="35" y1="104" x2="210" y2="104" stroke="var(--ok)" stroke-width="1" stroke-dasharray="8 5" opacity="0.3" filter="url(#neon-soft)"/>
                 </svg>
             </div>
             <div>
                 <h1 style="margin:0; font-size:1.7em; font-weight:900; letter-spacing:-0.5px; line-height:1.1;">
-                    <span style="color:#2fb781; filter:drop-shadow(0 0 8px rgba(47,183,129,0.4));">PAACK</span> <span style="color:#e0e8f0;">DRIVER</span>
+                    <span style="color:var(--ok); filter:drop-shadow(0 0 8px rgba(47,183,129,0.4));">PAACK</span> <span style="color:var(--bord);">DRIVER</span>
                 </h1>
-                <p style="margin:6px 0 0; color:#4ee6a0; font-size:0.85em; letter-spacing:3px; font-weight:600; filter:drop-shadow(0 0 6px rgba(78,230,160,0.3));">FORMATION</p>
-                <p style="margin:5px 0 0; color:#5a7a8a; font-size:0.82em;">Formation interactive · Maîtrisez les processus en quelques minutes</p>
+                <p style="margin:6px 0 0; color:var(--ok-vif); font-size:0.85em; letter-spacing:3px; font-weight:600; filter:drop-shadow(0 0 6px rgba(78,230,160,0.3));">FORMATION</p>
+                <p style="margin:5px 0 0; color:var(--c-5a7a8a); font-size:0.82em;">Formation interactive · Maîtrisez les processus en quelques minutes</p>
             </div>
         </div>
         <!-- Silhouette panoramique Lyon -->
@@ -1245,10 +1307,10 @@
                 L548 112 L548 95 L554 95 L554 88 L562 88 L562 95 L568 95 L568 112
                 L578 115 L578 100 L584 100 L584 95 L590 95 L590 100 L596 100 L596 115
                 L600 118 L600 150 Z
-            " fill="#2fb781"/>
+            " fill="var(--ok)"/>
             <!-- Reflet rivière -->
-            <path d="M0 140 Q50 135, 100 140 Q150 145, 200 140 Q250 135, 300 140 Q350 145, 400 140 Q450 135, 500 140 Q550 145, 600 140" stroke="#2fb781" stroke-width="0.8" fill="none" opacity="0.3"/>
-            <path d="M0 145 Q60 142, 120 145 Q180 148, 240 145 Q300 142, 360 145 Q420 148, 480 145 Q540 142, 600 145" stroke="#2fb781" stroke-width="0.5" fill="none" opacity="0.15"/>
+            <path d="M0 140 Q50 135, 100 140 Q150 145, 200 140 Q250 135, 300 140 Q350 145, 400 140 Q450 135, 500 140 Q550 145, 600 140" stroke="var(--ok)" stroke-width="0.8" fill="none" opacity="0.3"/>
+            <path d="M0 145 Q60 142, 120 145 Q180 148, 240 145 Q300 142, 360 145 Q420 148, 480 145 Q540 142, 600 145" stroke="var(--ok)" stroke-width="0.5" fill="none" opacity="0.15"/>
         </svg>
     </header>
 
@@ -1259,7 +1321,7 @@
                 <defs>
                     <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" style="stop-color:var(--paack-accent)"/>
-                        <stop offset="100%" style="stop-color:#4ee6a0"/>
+                        <stop offset="100%" style="stop-color:var(--ok-vif)"/>
                     </linearGradient>
                 </defs>
                 <circle class="donut-bg" cx="20" cy="20" r="16"/>
@@ -1317,13 +1379,13 @@
 
         <!-- Champ nom sur l'accueil -->
         <div id="accueil-name-screen" style="max-width:500px; margin:20px auto 0; text-align:center;">
-            <p style="margin-bottom:12px; color:#324754; font-size:1.05em;">Entrez votre <strong>prénom et nom</strong>, puis votre <strong>entrepôt</strong> :</p>
+            <p style="margin-bottom:12px; color:var(--nuit-5); font-size:1.05em;">Entrez votre <strong>prénom et nom</strong>, puis votre <strong>entrepôt</strong> :</p>
             <div style="display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
-                <input type="text" id="input-nom-accueil" placeholder="Prénom Nom..." style="padding:14px 18px; border-radius:12px; border:2px solid #2d7f9f; font-size:1.1em; flex:1; min-width:200px; outline:none; color:#12232e; text-align:center;">
+                <input type="text" id="input-nom-accueil" placeholder="Prénom Nom..." style="padding:14px 18px; border-radius:12px; border:2px solid var(--marque-clair); font-size:1.1em; flex:1; min-width:200px; outline:none; color:var(--c-12232e); text-align:center;">
             </div>
-            <p id="nom-error-accueil" style="color:#d64545; font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre nom.</p>
+            <p id="nom-error-accueil" style="color:var(--ko); font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre nom.</p>
             <div style="display:flex; justify-content:center; margin-top:14px;">
-                <select id="input-entrepot-accueil" style="padding:14px 18px; border-radius:12px; border:2px solid #2d7f9f; font-size:1.1em; flex:1; min-width:200px; max-width:340px; outline:none; color:#12232e; text-align:center; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d7f9f' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 16px center/18px 18px; appearance:none; -webkit-appearance:none; padding-right:44px; cursor:pointer;">
+                <select id="input-entrepot-accueil" style="padding:14px 18px; border-radius:12px; border:2px solid var(--marque-clair); font-size:1.1em; flex:1; min-width:200px; max-width:340px; outline:none; color:var(--c-12232e); text-align:center; background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d7f9f' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 16px center/18px 18px; appearance:none; -webkit-appearance:none; padding-right:44px; cursor:pointer;">
                     <option value="">Votre entrepôt...</option>
                     <option value="ANGERS WH">ANGERS WH</option>
                     <option value="AVIGNON WH">AVIGNON WH</option>
@@ -1351,7 +1413,7 @@
                     <option value="TOURS WH">TOURS WH</option>
                 </select>
             </div>
-            <p id="entrepot-error-accueil" style="color:#d64545; font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez choisir votre entrepôt.</p>
+            <p id="entrepot-error-accueil" style="color:var(--ko); font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez choisir votre entrepôt.</p>
         </div>
 
         <button class="btn-next-step" onclick="startFormation()">
@@ -1371,55 +1433,55 @@
         <div class="etiquette-image-container" style="position:relative; display:block; width:100%; max-width:520px; margin:25px auto; overflow:visible;">
             <img src="../images/etiquette.jpg" alt="Étiquette Paack" style="width:100%; border-radius:12px; box-shadow:0 6px 22px rgba(0,0,0,0.25); display:block;" onerror="this.style.display='none'">
             <div class="etiquette-badge-wrap" style="position:absolute; top:12%; left:3%;">
-                <div class="etiquette-badge" style="background:#1a5c7a; color:white;" onclick="toggleCard('card-hub')" onmouseenter="document.getElementById('card-hub').classList.add('show')" onmouseleave="document.getElementById('card-hub').classList.remove('show')">
+                <div class="etiquette-badge" style="background:var(--marque); color:white;" onclick="toggleCard('card-hub')" onmouseenter="document.getElementById('card-hub').classList.add('show')" onmouseleave="document.getElementById('card-hub').classList.remove('show')">
                     🏢 Nom de tournée : LYS 013
                 </div>
                 <div id="card-hub" class="etiquette-tooltip-new">
-                    <strong style="color:#1a5c7a;">Nom de la tournée</strong><br>Identifie la route assignée au livreur.
+                    <strong style="color:var(--marque);">Nom de la tournée</strong><br>Identifie la route assignée au livreur.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; top:12%; right:3%;">
-                <div class="etiquette-badge" style="background:#2fb781; color:white;" onclick="toggleCard('card-ordre')" onmouseenter="document.getElementById('card-ordre').classList.add('show')" onmouseleave="document.getElementById('card-ordre').classList.remove('show')">
+                <div class="etiquette-badge" style="background:var(--ok); color:white;" onclick="toggleCard('card-ordre')" onmouseenter="document.getElementById('card-ordre').classList.add('show')" onmouseleave="document.getElementById('card-ordre').classList.remove('show')">
                     📍 Ordre livraison : 9
                 </div>
                 <div id="card-ordre" class="etiquette-tooltip-new">
-                    <strong style="color:#2fb781;">Position dans la tournée</strong><br>Ce colis est le 9e arrêt de la journée.
+                    <strong style="color:var(--ok);">Position dans la tournée</strong><br>Ce colis est le 9e arrêt de la journée.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; top:44%; left:-16%;">
-                <div class="etiquette-badge" style="background:#2d7f9f; color:white;" onclick="toggleCard('card-creneau')" onmouseenter="document.getElementById('card-creneau').classList.add('show')" onmouseleave="document.getElementById('card-creneau').classList.remove('show')">
+                <div class="etiquette-badge" style="background:var(--marque-clair); color:white;" onclick="toggleCard('card-creneau')" onmouseenter="document.getElementById('card-creneau').classList.add('show')" onmouseleave="document.getElementById('card-creneau').classList.remove('show')">
                     🕐 Créneau : 09h-22h
                 </div>
                 <div id="card-creneau" class="etiquette-tooltip-new">
-                    <strong style="color:#2d7f9f;">Créneau de livraison</strong><br>Plage horaire attendue par le client.
+                    <strong style="color:var(--marque-clair);">Créneau de livraison</strong><br>Plage horaire attendue par le client.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; top:44%; right:-7%;">
-                <div class="etiquette-badge" style="background:#f4c440; color:#4f4421;" onclick="toggleCard('card-date')" onmouseenter="document.getElementById('card-date').classList.add('show')" onmouseleave="document.getElementById('card-date').classList.remove('show')">
+                <div class="etiquette-badge" style="background:var(--or); color:var(--c-4f4421);" onclick="toggleCard('card-date')" onmouseenter="document.getElementById('card-date').classList.add('show')" onmouseleave="document.getElementById('card-date').classList.remove('show')">
                     📅 Date : 25/01
                 </div>
                 <div id="card-date" class="etiquette-tooltip-new">
-                    <strong style="color:#b8941f;">Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
+                    <strong style="color:var(--or-texte);">Date de livraison</strong><br>Le colis doit être livré le 25 janvier.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; bottom:22%; right:10%;">
-                <div class="etiquette-badge" style="background:#d64545; color:white;" onclick="toggleCard('card-colis')" onmouseenter="document.getElementById('card-colis').classList.add('show')" onmouseleave="document.getElementById('card-colis').classList.remove('show')">
+                <div class="etiquette-badge" style="background:var(--ko); color:white;" onclick="toggleCard('card-colis')" onmouseenter="document.getElementById('card-colis').classList.add('show')" onmouseleave="document.getElementById('card-colis').classList.remove('show')">
                     📦 1P = 1 colis
                 </div>
                 <div id="card-colis" class="etiquette-tooltip-new pos-bottom">
-                    <strong style="color:#d64545;">Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
+                    <strong style="color:var(--ko);">Nombre de colis</strong><br>1P = 1 colis. 2P = 2 colis pour ce client.
                 </div>
             </div>
             <div class="etiquette-badge-wrap" style="position:absolute; bottom:20%; left:3%;">
-                <div class="etiquette-badge" style="background:#6c3483; color:white;" onclick="toggleCard('card-barcode')" onmouseenter="document.getElementById('card-barcode').classList.add('show')" onmouseleave="document.getElementById('card-barcode').classList.remove('show')">
+                <div class="etiquette-badge" style="background:var(--violet); color:white;" onclick="toggleCard('card-barcode')" onmouseenter="document.getElementById('card-barcode').classList.add('show')" onmouseleave="document.getElementById('card-barcode').classList.remove('show')">
                     🔢 Code barre
                 </div>
                 <div id="card-barcode" class="etiquette-tooltip-new pos-bottom">
-                    <strong style="color:#6c3483;">Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
+                    <strong style="color:var(--violet);">Identifiant unique du colis</strong><br>Numéro scanné lors de la collecte du colis via l'application.
                 </div>
             </div>
         </div>
-        <p style="text-align:center; font-size:0.85em; color:#4f6473; margin-top:8px;">👆 Cliquez sur chaque badge pour en savoir plus</p>
+        <p style="text-align:center; font-size:0.85em; color:var(--texte-doux); margin-top:8px;">👆 Cliquez sur chaque badge pour en savoir plus</p>
 
         <h3>Conseils essentiels pour le tri</h3>
         <div class="highlight">
@@ -1431,17 +1493,17 @@
 
         <h3>Comment charger les colis?</h3>
         <div class="steps-flow">
-            <div class="step-card" style="background:linear-gradient(145deg,#0b2436,#1a5c7a);">
+            <div class="step-card" style="background:linear-gradient(145deg,var(--nuit-2),var(--marque));">
                 <div style="font-size:2.4em; margin-bottom:10px;">📋</div>
                 <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Par ordre<br>de livraison</div>
             </div>
             <div class="step-arrow">▶</div>
-            <div class="step-card" style="background:linear-gradient(145deg,#1a5c7a,#2d7f9f);">
+            <div class="step-card" style="background:linear-gradient(145deg,var(--marque),var(--marque-clair));">
                 <div style="font-size:2.4em; margin-bottom:10px;">🔙</div>
                 <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Derniers colis<br>au fond du camion</div>
             </div>
             <div class="step-arrow">▶</div>
-            <div class="step-card" style="background:linear-gradient(145deg,#2d7f9f,#5ba8c4);">
+            <div class="step-card" style="background:linear-gradient(145deg,var(--marque-clair),var(--c-5ba8c4));">
                 <div style="font-size:2.4em; margin-bottom:10px;">🚪</div>
                 <div style="color:white; font-weight:700; font-size:0.95em; line-height:1.4;">Premiers colis<br>à l'ouverture du camion</div>
             </div>
@@ -1482,8 +1544,8 @@
 
         <!-- SUB 0: Général -->
         <div id="liv-sub-0" class="liv-sub active" style="animation:fadeIn 0.45s ease;">
-            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">📋 Règles générales</div>
-            <p style="margin-bottom:15px;line-height:1.75;color:#324754;">
+            <div style="background:linear-gradient(135deg, var(--marque), var(--marque-clair)); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">📋 Règles générales</div>
+            <p style="margin-bottom:15px;line-height:1.75;color:var(--nuit-5);">
                 La <strong>remise en main propre</strong> est la méthode préférée car elle réduit drastiquement les réclamations clients. C'est pourquoi il est <strong>obligatoire</strong> d'essayer en priorité une livraison en main propre pour tous les colis standard.
             </p>
             <div class="danger">
@@ -1498,17 +1560,17 @@
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <strong>1. Remise en main propre</strong>
-                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Toujours essayer en premier — réduit les réclamations clients.</p>
+                        <p style="font-size:0.88em; margin-top:4px; color:var(--texte-doux);">Toujours essayer en premier — réduit les réclamations clients.</p>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot green"></div>
                         <strong style="color:var(--paack-accent);">2. Boîte aux lettres (BAL)</strong>
-                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Uniquement si la remise en main propre a échoué ou si le client le demande, et si le colis rentre.</p>
+                        <p style="font-size:0.88em; margin-top:4px; color:var(--texte-doux);">Uniquement si la remise en main propre a échoué ou si le client le demande, et si le colis rentre.</p>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot yellow"></div>
-                        <strong style="color:#b8941f;">3. Autres lieux</strong>
-                        <p style="font-size:0.88em; margin-top:4px; color:#4b616e;">Uniquement avec accord SMS du client.</p>
+                        <strong style="color:var(--or-texte);">3. Autres lieux</strong>
+                        <p style="font-size:0.88em; margin-top:4px; color:var(--texte-doux);">Uniquement avec accord SMS du client.</p>
                     </div>
                 </div>
             </div>
@@ -1520,7 +1582,7 @@
 
         <!-- SUB 1: Main propre -->
         <div id="liv-sub-1" class="liv-sub" style="display:none;">
-            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">🤝 La remise en main propre</div>
+            <div style="background:linear-gradient(135deg, var(--marque), var(--marque-clair)); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">🤝 La remise en main propre</div>
             <div class="numbered-steps">
                 <div class="numbered-step">
                     <div class="step-number">1</div>
@@ -1544,48 +1606,48 @@
                 <div class="photo-grid-3">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/MP1.jpg" alt="Exemple 1" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/MP1.jpg" alt="Exemple 1" style="border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Client + Etiquette</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Client + Etiquette</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/MP2.jpg" alt="Exemple 2" style="border:3px solid #2fb781; object-position:top;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/MP2.jpg" alt="Exemple 2" style="border:3px solid var(--ok); object-position:top;" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Client + Etiquette</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Client + Etiquette</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/MP3.jpg" alt="Exemple 3" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/MP3.jpg" alt="Exemple 3" style="border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Client + Etiquette</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Client + Etiquette</p>
                     </div>
                 </div>
                 <div class="photo-section-header dont" style="margin-top:20px;">❌ À NE PAS FAIRE</div>
                 <div class="photo-grid-3">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/MP_KO1.jpg" alt="Photo invalide 1" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                            <img src="../images/MP_KO1.jpg" alt="Photo invalide 1" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#a32d2d;">❌ Ni colis ni client visibles</p>
+                        <p class="photo-caption" style="color:var(--ko-fort);">❌ Ni colis ni client visibles</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/MP_KO2.jpg" alt="Photo invalide 2" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                            <img src="../images/MP_KO2.jpg" alt="Photo invalide 2" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#a32d2d;">❌ Colis abandonné dans l'ascenseur</p>
+                        <p class="photo-caption" style="color:var(--ko-fort);">❌ Colis abandonné dans l'ascenseur</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/MP_KO3.jpg" alt="Photo invalide 3" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                            <img src="../images/MP_KO3.jpg" alt="Photo invalide 3" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#a32d2d;">❌ Ni client ni porte ouverte</p>
+                        <p class="photo-caption" style="color:var(--ko-fort);">❌ Ni client ni porte ouverte</p>
                     </div>
                 </div>
             </div>
@@ -1597,7 +1659,7 @@
 
         <!-- SUB 2: BAL -->
         <div id="liv-sub-2" class="liv-sub" style="display:none;">
-            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:20px 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">📬 Boîte aux Lettres (BAL)</div>
+            <div style="background:linear-gradient(135deg, var(--marque), var(--marque-clair)); color:white; padding:14px 20px; border-radius:12px; margin:20px 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">📬 Boîte aux Lettres (BAL)</div>
             <p><strong>Uniquement si les dimensions du colis le permettent :</strong></p>
             <ul>
                 <ul style="margin-top:10px;">
@@ -1623,24 +1685,24 @@
                 <div class="photo-grid-3">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/BAL1.jpg" alt="BAL Exemple 1" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/BAL1.jpg" alt="BAL Exemple 1" style="border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Étiquette + Nom sur la BAL visible</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Étiquette + Nom sur la BAL visible</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/BAL2.jpg" alt="BAL Exemple 2" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/BAL2.jpg" alt="BAL Exemple 2" style="border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Étiquette + Nom sur la BAL visible</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Étiquette + Nom sur la BAL visible</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/BAL3.jpg" alt="BAL Exemple 3" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                            <img src="../images/BAL3.jpg" alt="BAL Exemple 3" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#7c1f28;">❌ Colis à l'intérieur de la BAL</p>
+                        <p class="photo-caption" style="color:var(--ko-texte);">❌ Colis à l'intérieur de la BAL</p>
                     </div>
                 </div>
             </div>
@@ -1652,7 +1714,7 @@
 
         <!-- SUB 3: Autres Lieux -->
         <div id="liv-sub-3" class="liv-sub" style="display:none;">
-            <div style="background:linear-gradient(135deg, #1a5c7a, #2d7f9f); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">🚨 Autres Lieux (Dernier Recours)</div>
+            <div style="background:linear-gradient(135deg, var(--marque), var(--marque-clair)); color:white; padding:14px 20px; border-radius:12px; margin:0 0 16px; font-size:1.3em; font-weight:700; box-shadow:0 4px 15px rgba(26,92,122,0.35); letter-spacing:0.3px;">🚨 Autres Lieux (Dernier Recours)</div>
             <div class="danger danger-flash">
                 <span class="shake-emoji">🚨</span> <strong>CONDITION STRICTE:</strong> UN MESSAGE D'AUTORISATION DU CLIENT EST OBLIGATOIRE avant toute dépose
             </div>
@@ -1676,17 +1738,17 @@
                 <div class="photo-grid-2">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/SMS1.jpg" alt="SMS Exemple 1" style="object-fit:contain; background:#f5f5f5; border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/SMS1.jpg" alt="SMS Exemple 1" style="object-fit:contain; background:var(--surface-douce); border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Accord écrit du client + photo envoyée</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Accord écrit du client + photo envoyée</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/SMS2.jpg" alt="SMS Exemple 2" style="object-fit:contain; background:#f5f5f5; border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/SMS2.jpg" alt="SMS Exemple 2" style="object-fit:contain; background:var(--surface-douce); border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Accord écrit du client + photo envoyée</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Accord écrit du client + photo envoyée</p>
                     </div>
                 </div>
             </div>
@@ -1710,8 +1772,8 @@
                     <li>Commande en <strong>plusieurs colis</strong> : livrez-les tous et prenez-les tous en photo, jamais un seul</li>
                 </ul>
                 <div style="max-width:280px; margin:16px auto 0;">
-                    <img src="../images/MP_2COLIS.jpg" alt="Les deux colis d'une même commande remis ensemble" style="width:100%; border-radius:12px; border:3px solid #2fb781; display:block;" onerror="this.style.display='none'">
-                    <p class="photo-caption" style="color:#1e6b3a; text-align:center;">✅ Les 2 colis de la commande remis ensemble</p>
+                    <img src="../images/MP_2COLIS.jpg" alt="Les deux colis d'une même commande remis ensemble" style="width:100%; border-radius:12px; border:3px solid var(--ok); display:block;" onerror="this.style.display='none'">
+                    <p class="photo-caption" style="color:var(--ok-texte); text-align:center;">✅ Les 2 colis de la commande remis ensemble</p>
                 </div>
             </div>
 
@@ -1752,10 +1814,10 @@
             </div>
 
             <h3 style="margin-top:28px;">📱 Cliquez sur chaque motif pour apprendre quand l'utiliser</h3>
-            <p style="color:#4b616e; margin-bottom:6px;">Vous devez <strong>tous les consulter</strong> pour passer à la suite.</p>
+            <p style="color:var(--texte-doux); margin-bottom:6px;">Vous devez <strong>tous les consulter</strong> pour passer à la suite.</p>
 
             <!-- Compteur -->
-            <div id="ech-motif-counter" style="display:inline-flex; align-items:center; gap:8px; background:#fff9e6; border:2px solid #f4c440; padding:8px 16px; border-radius:10px; font-weight:700; font-size:0.9em; color:#4f4421; margin-bottom:16px;">
+            <div id="ech-motif-counter" style="display:inline-flex; align-items:center; gap:8px; background:var(--or-fond); border:2px solid var(--or); padding:8px 16px; border-radius:10px; font-weight:700; font-size:0.9em; color:var(--c-4f4421); margin-bottom:16px;">
                 📖 Motifs consultés : <span id="ech-motif-count">0</span> / 7
             </div>
 
@@ -1785,55 +1847,55 @@
                     <div class="ech-motif-badge" data-motif="ferme" onclick="toggleEchMotif('ferme')" style="cursor:pointer; border-radius:10px; border:none; transition:all 0.3s; animation-delay:0.9s; overflow:hidden;">
                         <img src="../images/motif_ferme.jpg" alt="Entreprise fermée" style="width:100%; display:block; border-radius:7px;">
                     </div>
-                    <p style="text-align:center; font-size:0.8em; color:#4f6473; margin-top:4px;">👆 Cliquez sur chaque motif</p>
+                    <p style="text-align:center; font-size:0.8em; color:var(--texte-doux); margin-top:4px;">👆 Cliquez sur chaque motif</p>
                 </div>
 
                 <!-- Bulle d'explication (à droite) -->
                 <div id="ech-bubbles-container" style="flex:1; min-width:0;">
-                    <div id="ech-bubble-placeholder" style="padding:20px; border-radius:12px; background:rgba(26,92,122,0.04); border:2px dashed rgba(26,92,122,0.15); text-align:center; color:#7a9aab; font-size:0.9em; min-height:120px; display:flex; align-items:center; justify-content:center;">
+                    <div id="ech-bubble-placeholder" style="padding:20px; border-radius:12px; background:rgba(26,92,122,0.04); border:2px dashed rgba(26,92,122,0.15); text-align:center; color:var(--texte-faible); font-size:0.9em; min-height:120px; display:flex; align-items:center; justify-content:center;">
                         Cliquez sur un motif pour voir l'explication
                     </div>
-                    <div id="bubble-endommage" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
-                        <strong style="color:#d64545;">📦 Colis endommagé</strong> <span style="background:#ffe0e0; padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:#7c1f28;">⚠️ À éviter</span><br>
+                    <div id="bubble-endommage" class="ech-bubble" style="display:none; background:var(--c-fff5f5); border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--ko); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
+                        <strong style="color:var(--ko);">📦 Colis endommagé</strong> <span style="background:var(--c-ffe0e0); padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:var(--ko-texte);">⚠️ À éviter</span><br>
                         Uniquement si le colis est <strong>inutilisable</strong> (ouvert, écrasé, contenu détruit).<br>
                         Colis vérifié au départ → <strong>votre responsabilité peut être engagée</strong>.<br>
                         Dommage léger = livrez quand même.
                     </div>
-                    <div id="bubble-absent" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #1a5c7a; font-size:0.88em; color:#1b3444; line-height:1.6;">
-                        <strong style="color:#1a5c7a;">🚪 Client absent</strong><br>
+                    <div id="bubble-absent" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--marque); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
+                        <strong style="color:var(--marque);">🚪 Client absent</strong><br>
                         Personne ne répond après avoir sonné et contacté le client.<br>
                         → Photo du numéro de rue / interphone.<br>
                         💡 Vérifiez les consignes de dépose (BAL) avant.<br><br>
-                        <img src="../images/echec1.jpg" alt="Exemple client absent" style="width:100%; max-width:300px; border-radius:10px; border:2px solid #1a5c7a; margin-top:4px;">
+                        <img src="../images/echec1.jpg" alt="Exemple client absent" style="width:100%; max-width:300px; border-radius:10px; border:2px solid var(--marque); margin-top:4px;">
                     </div>
-                    <div id="bubble-adresse" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #2fb781; font-size:0.88em; color:#1b3444; line-height:1.6;">
-                        <strong style="color:#2fb781;">📍 Adresse incorrecte</strong><br>
+                    <div id="bubble-adresse" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--ok); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
+                        <strong style="color:var(--ok);">📍 Adresse incorrecte</strong><br>
                         L'adresse n'existe pas ou est introuvable.<br>
                         → Contactez le client, puis photo de la rue.<br>
                         Nouvelle adresse ? → Prévenez le responsable.
                     </div>
-                    <div id="bubble-refus" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
-                        <strong style="color:#d64545;">🚫 Refusée par le client</strong> <span style="background:#ffe0e0; padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:#7c1f28;">⛔ Encadré</span><br>
+                    <div id="bubble-refus" class="ech-bubble" style="display:none; background:var(--c-fff5f5); border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--ko); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
+                        <strong style="color:var(--ko);">🚫 Refusée par le client</strong> <span style="background:var(--c-ffe0e0); padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:var(--ko-texte);">⛔ Encadré</span><br>
                         Le client refuse → demandez un <strong>SMS de confirmation</strong>.<br>
                         Capture d'écran → envoyez-la à votre <strong>responsable</strong>.<br>
-                        <strong style="color:#d64545;">❌ Pas de SMS = pas de "Refus" !</strong>
+                        <strong style="color:var(--ko);">❌ Pas de SMS = pas de "Refus" !</strong>
                     </div>
-                    <div id="bubble-exigence" class="ech-bubble" style="display:none; background:#fff5f5; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #d64545; font-size:0.88em; color:#1b3444; line-height:1.6;">
-                        <strong style="color:#d64545;">⚠️ Exigence non remplie</strong> <span style="background:#ffe0e0; padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:#7c1f28;">❌ Ne jamais utiliser</span><br>
+                    <div id="bubble-exigence" class="ech-bubble" style="display:none; background:var(--c-fff5f5); border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--ko); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
+                        <strong style="color:var(--ko);">⚠️ Exigence non remplie</strong> <span style="background:var(--c-ffe0e0); padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:var(--ko-texte);">❌ Ne jamais utiliser</span><br>
                         Ce motif est réservé <strong>uniquement</strong> quand le client n'a pas le code OTP.<br>
-                        <strong style="color:#d64545;">Ne l'utilisez jamais pour un autre cas.</strong>
+                        <strong style="color:var(--ko);">Ne l'utilisez jamais pour un autre cas.</strong>
                     </div>
-                    <div id="bubble-meteo" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #f4c440; font-size:0.88em; color:#1b3444; line-height:1.6;">
-                        <strong style="color:#b8941f;">🌧️ Météo / perturbation / grève</strong><br>
+                    <div id="bubble-meteo" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--or); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
+                        <strong style="color:var(--or-texte);">🌧️ Météo / perturbation / grève</strong><br>
                         Uniquement si situation dangereuse (verglas, inondation, route bloquée).<br>
                         ❌ Simple pluie = pas ce motif.<br><br>
-                        <img src="../images/routebarree.jpeg" alt="Exemple route barrée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid #f4c440; margin-top:4px;">
+                        <img src="../images/routebarree.jpeg" alt="Exemple route barrée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid var(--or); margin-top:4px;">
                     </div>
-                    <div id="bubble-ferme" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid #0b2436; font-size:0.88em; color:#1b3444; line-height:1.6;">
-                        <strong style="color:#0b2436;">🏪 Entreprise/magasin fermé(e)</strong><br>
+                    <div id="bubble-ferme" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--nuit-2); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
+                        <strong style="color:var(--nuit-2);">🏪 Entreprise/magasin fermé(e)</strong><br>
                         L'entreprise ou le magasin est fermé(e) à votre passage.<br>
                         → Photo de la devanture fermée.<br><br>
-                        <img src="../images/entreprise.jpeg" alt="Exemple photo devanture fermée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid #0b2436; margin-top:4px;">
+                        <img src="../images/entreprise.jpeg" alt="Exemple photo devanture fermée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid var(--nuit-2); margin-top:4px;">
                     </div>
                 </div>
             </div>
@@ -1878,34 +1940,34 @@
                 <div class="photo-grid-2" style="margin-bottom:14px;">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/echec1.jpg" alt="Échec Exemple 1" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/echec1.jpg" alt="Échec Exemple 1" style="border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Adresse de livraison + colis visibles</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Adresse de livraison + colis visibles</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/echec3.jpg" alt="Échec Exemple 3" style="border:3px solid #2fb781;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#2fb781;">✅ VALIDE</div>
+                            <img src="../images/echec3.jpg" alt="Échec Exemple 3" style="border:3px solid var(--ok);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ok);">✅ VALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#1e6b3a;">✅ Obstacle à l'accès visible</p>
+                        <p class="photo-caption" style="color:var(--ok-texte);">✅ Obstacle à l'accès visible</p>
                     </div>
                 </div>
                 <div class="photo-section-header dont" style="margin-top:16px;">❌ PHOTOS INVALIDES</div>
                 <div class="photo-grid-2">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/echec4.jpg" alt="Échec Exemple 4" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                            <img src="../images/echec4.jpg" alt="Échec Exemple 4" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#7c1f28;">❌ Lieu de livraison non visible</p>
+                        <p class="photo-caption" style="color:var(--ko-texte);">❌ Lieu de livraison non visible</p>
                     </div>
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
-                            <img src="../images/echec5.jpg" alt="Échec Exemple 5" class="invalid-photo" style="border:3px solid #d64545;" onerror="this.style.display='none'">
-                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:#d64545;">❌ INVALIDE</div>
+                            <img src="../images/echec5.jpg" alt="Échec Exemple 5" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
-                        <p class="photo-caption" style="color:#7c1f28;">❌ Lieu de livraison non visible</p>
+                        <p class="photo-caption" style="color:var(--ko-texte);">❌ Lieu de livraison non visible</p>
                     </div>
                 </div>
             </div>
@@ -1937,7 +1999,7 @@
         <h2>❓ Testez Vos Connaissances</h2>
         <div id="qcm-selector">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-                <p style="margin:0; color:#324754;">👋 <strong id="display-nom"></strong>, prêt à vous tester ?</p>
+                <p style="margin:0; color:var(--nuit-5);">👋 <strong id="display-nom"></strong>, prêt à vous tester ?</p>
                 <div id="chrono-qcm" style="display:none;"><span id="chrono-display-qcm">00:00</span></div>
             </div>
             <div class="card clickable" onclick="startQCM()" style="max-width:100%;">
@@ -1945,7 +2007,7 @@
                 <p>20 questions mixtes tirées au hasard sur l'ensemble des thèmes.</p>
                 <span class="card-arrow">→</span>
             </div>
-            <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">
+            <button onclick="afficherDashboard()" style="width:100%; margin-top:18px; padding:12px; background:linear-gradient(135deg,var(--marque-clair),var(--marque));">
                 📊 Voir l'historique des résultats
             </button>
         </div>
@@ -1972,10 +2034,10 @@
     <!-- ========== RECAP (après parcours terminé) ========== -->
     <div id="recap" class="content-section">
         <h2>🎉 Formation terminée!</h2>
-        <p style="font-size:1.05em; color:#324754; margin-bottom:8px; line-height:1.7;">
+        <p style="font-size:1.05em; color:var(--nuit-5); margin-bottom:8px; line-height:1.7;">
             Bravo, vous avez parcouru toutes les étapes! Vous pouvez maintenant <strong>naviguer librement</strong> entre les sections pour revoir ce dont vous avez besoin.
         </p>
-        <button onclick="newSession()" style="margin-bottom:16px; padding:10px 20px; font-size:0.9em; background:linear-gradient(135deg,#4f6473,#324754);">🔄 Nouveau livreur ? Recommencer la formation</button>
+        <button onclick="newSession()" style="margin-bottom:16px; padding:10px 20px; font-size:0.9em; background:linear-gradient(135deg,var(--texte-doux),var(--nuit-5));">🔄 Nouveau livreur ? Recommencer la formation</button>
         <div class="recap-grid">
             <div class="recap-card" onclick="freeNavTo('chargement')">
                 <h4>📦 Chargement</h4>
@@ -2004,18 +2066,18 @@
     <div id="admin-page" class="content-section" style="display:none;">
         <h2>📊 Tableau de bord Admin</h2>
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-            <p style="color:#4f6473; font-size:0.85em; margin:0;">🌐 Données synchronisées depuis Google Sheet</p>
+            <p style="color:var(--texte-doux); font-size:0.85em; margin:0;">🌐 Données synchronisées depuis Google Sheet</p>
             <button onclick="renderAdmin()" style="margin:0; padding:8px 18px; font-size:0.85em;">🔄 Actualiser</button>
         </div>
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 14px;">
             <div id="admin-filtre-site-bloc" style="display:flex; align-items:center; gap:8px;">
-                <label for="admin-filtre-entrepot" style="font-size:0.9em; color:#4f6473; font-weight:700;">Entrepôt :</label>
-                <select id="admin-filtre-entrepot" onchange="renderAdminFiltre()" style="padding:8px 12px; border-radius:8px; border:2px solid #2d7f9f; font-size:0.95em; color:#12232e; background:#fff; cursor:pointer;">
+                <label for="admin-filtre-entrepot" style="font-size:0.9em; color:var(--texte-doux); font-weight:700;">Entrepôt :</label>
+                <select id="admin-filtre-entrepot" onchange="renderAdminFiltre()" style="padding:8px 12px; border-radius:8px; border:2px solid var(--marque-clair); font-size:0.95em; color:var(--c-12232e); background:var(--surface); cursor:pointer;">
                     <option value="">Tous les entrepôts</option>
                 </select>
             </div>
-            <input type="search" id="admin-recherche-nom" oninput="renderAdminFiltre()" placeholder="Rechercher un livreur..." style="padding:8px 12px; border-radius:8px; border:2px solid #2d7f9f; font-size:0.95em; color:#12232e; background:#fff; flex:1; min-width:180px; outline:none;">
-            <span id="admin-filtre-note" style="font-size:0.8em; color:#7a9aab; display:none; width:100%;"></span>
+            <input type="search" id="admin-recherche-nom" oninput="renderAdminFiltre()" placeholder="Rechercher un livreur..." style="padding:8px 12px; border-radius:8px; border:2px solid var(--marque-clair); font-size:0.95em; color:var(--c-12232e); background:var(--surface); flex:1; min-width:180px; outline:none;">
+            <span id="admin-filtre-note" style="font-size:0.8em; color:var(--texte-faible); display:none; width:100%;"></span>
         </div>
         <div class="admin-stats" id="admin-stats"></div>
         <h3>📋 Historique complet</h3>
@@ -2338,7 +2400,7 @@ function renderQuestion() {
         <div class="question">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <h4 style="margin:0;">Question ${currentIndex + 1} / ${currentQuestions.length}</h4>
-                <span style="background:#e8f4f8; color:#1a5c7a; font-size:0.75em; font-weight:700; padding:3px 10px; border-radius:20px;">${q.theme}</span>
+                <span style="background:var(--marque-fond); color:var(--marque); font-size:0.75em; font-weight:700; padding:3px 10px; border-radius:20px;">${q.theme}</span>
             </div>
             <p style="font-weight:600; margin:12px 0 14px;">${q.question}</p>
             <div class="options" id="options-list">
@@ -2381,10 +2443,10 @@ function validerReponse() {
     });
     const feedback = document.getElementById('feedback-box');
     if (isCorrect) {
-        feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:#e2f6ea; color:#1e6b3a; border:1px solid #b9e5c5;';
+        feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:var(--ok-fond); color:var(--ok-texte); border:1px solid var(--ok-bord);';
         feedback.innerHTML = '✅ <strong>Correct !</strong>';
     } else {
-        feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:#ffe8ea; color:#7c1f28; border:1px solid #f4c0c4;';
+        feedback.style.cssText = 'display:block; margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:500; font-size:0.95em; background:var(--ko-fond); color:var(--ko-texte); border:1px solid var(--ko-bord);';
         feedback.innerHTML = `❌ <strong>Incorrect.</strong> Bonne réponse : <em>${q.options[q.correct]}</em>`;
     }
     document.getElementById('btn-valider').style.display = 'none';
@@ -2459,10 +2521,10 @@ function afficherStatutEnvoi(ok) {
     if (!el) return;
     if (ok) {
         el.innerHTML = '\u2705 R\u00e9sultat enregistr\u00e9';
-        el.style.color = '#d6f5e3';
+        el.style.color = 'var(--c-d6f5e3)';
     } else {
         el.innerHTML = '\u26a0\ufe0f Pas de connexion. Le r\u00e9sultat est gard\u00e9 sur cet appareil et sera envoy\u00e9 automatiquement \u00e0 la prochaine ouverture du site.';
-        el.style.color = '#ffe08a';
+        el.style.color = 'var(--c-ffe08a)';
     }
 }
 
@@ -2502,12 +2564,12 @@ function showResults() {
     // Récap erreurs
     let errorsHtml = '';
     if (wrongAnswers.length > 0) {
-        errorsHtml = '<div style="margin-top:20px; text-align:left;"><h3 style="color:#d64545; margin-bottom:12px; font-size:1.1em;">❌ Questions ratées :</h3>';
+        errorsHtml = '<div style="margin-top:20px; text-align:left;"><h3 style="color:var(--ko); margin-bottom:12px; font-size:1.1em;">❌ Questions ratées :</h3>';
         wrongAnswers.forEach((w, i) => {
-            errorsHtml += `<div style="background:#fff5f5; border-radius:10px; padding:12px 14px; margin-bottom:8px; border-left:4px solid #d64545; font-size:0.88em; line-height:1.5;">
+            errorsHtml += `<div style="background:var(--c-fff5f5); border-radius:10px; padding:12px 14px; margin-bottom:8px; border-left:4px solid var(--ko); font-size:0.88em; line-height:1.5;">
                 <strong>${w.theme} Q${i+1}:</strong> ${w.question}<br>
-                <span style="color:#d64545;">Votre réponse : ${w.chosen}</span><br>
-                <span style="color:#1e6b3a;">✅ Bonne réponse : ${w.correct}</span>
+                <span style="color:var(--ko);">Votre réponse : ${w.chosen}</span><br>
+                <span style="color:var(--ok-texte);">✅ Bonne réponse : ${w.correct}</span>
             </div>`;
         });
         errorsHtml += '</div>';
@@ -2527,8 +2589,8 @@ function showResults() {
         <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
             <button onclick="startQCM()" style="flex:1; padding:12px; margin-top:0;">🔄 Recommencer</button>
         </div>
-        ${pct >= 80 ? '<button onclick="downloadAttestation()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,#f4c440,#e6a817); color:#4a3a0a;">📄 Télécharger mon attestation PDF</button>' : ''}
-        <button onclick="afficherDashboard()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,#2d7f9f,#1a5c7a);">📊 Voir l'historique</button>
+        ${pct >= 80 ? '<button onclick="downloadAttestation()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,var(--or),var(--c-e6a817)); color:var(--or-sombre);">📄 Télécharger mon attestation PDF</button>' : ''}
+        <button onclick="afficherDashboard()" style="width:100%; margin-top:10px; padding:12px; background:linear-gradient(135deg,var(--marque-clair),var(--marque));">📊 Voir l'historique</button>
         ${!freeMode ? '<button class="btn-next-step" onclick="activateFreeMode()" style="margin-top:16px;">Formation terminée — Accéder au menu libre <span class="arrow-icon">▶</span></button>' : ''}`;
     // Compteur animé
     animateCounter('animated-score', 0, score, 1200);
@@ -2561,11 +2623,11 @@ function afficherDashboard() {
 function renderDashboard(containerId) {
     const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
     const container = document.getElementById(containerId);
-    if (results.length === 0) { container.innerHTML = '<p style="color:#4f6473; font-style:italic;">Aucun résultat enregistré.</p>'; return; }
+    if (results.length === 0) { container.innerHTML = '<p style="color:var(--texte-doux); font-style:italic;">Aucun résultat enregistré.</p>'; return; }
     const reversed = [...results].reverse();
     let html = `<div style="overflow-x:auto;">
         <table style="width:100%; border-collapse:collapse; font-size:0.9em;">
-            <thead><tr style="background:#1a5c7a; color:white;">
+            <thead><tr style="background:var(--marque); color:white;">
                 <th style="padding:10px 12px; text-align:left; border-radius:8px 0 0 0;">Nom</th>
                 <th style="padding:10px 12px; text-align:left;">Date</th>
                 <th style="padding:10px 12px; text-align:left;">Durée</th>
@@ -2573,13 +2635,13 @@ function renderDashboard(containerId) {
                 <th style="padding:10px 12px; text-align:left; border-radius:0 8px 0 0;">Résultat</th>
             </tr></thead><tbody>`;
     reversed.forEach((r, i) => {
-        const bg = i % 2 === 0 ? '#f5f9fc' : '#ffffff';
-        const couleur = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
+        const bg = i % 2 === 0 ? 'var(--surface-douce)' : 'var(--surface)';
+        const couleur = r.pct >= 80 ? 'var(--ok-texte)' : r.pct >= 60 ? 'var(--c-7a5c00)' : 'var(--ko-texte)';
         const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
         html += `<tr style="background:${bg};">
-            <td style="padding:9px 12px; font-weight:600; color:#1a5c7a;">${r.nom}</td>
-            <td style="padding:9px 12px; color:#4f6473; font-size:0.85em;">${r.date}</td>
-            <td style="padding:9px 12px; color:#4f6473; font-size:0.85em;">${r.duree || '—'}</td>
+            <td style="padding:9px 12px; font-weight:600; color:var(--marque);">${r.nom}</td>
+            <td style="padding:9px 12px; color:var(--texte-doux); font-size:0.85em;">${r.date}</td>
+            <td style="padding:9px 12px; color:var(--texte-doux); font-size:0.85em;">${r.duree || '—'}</td>
             <td style="padding:9px 12px; font-weight:700;">${r.score}/${r.total}</td>
             <td style="padding:9px 12px; font-weight:700; color:${couleur};">${emoji} ${r.pct}%</td>
         </tr>`;
@@ -2706,7 +2768,7 @@ function showAllEchSubs() {
     document.querySelectorAll('.ech-motif-badge').forEach(badge => {
         const motif = badge.getAttribute('data-motif');
         if (motif) echMotifsViewed.add(motif);
-        badge.style.border = '3px solid #2fb781';
+        badge.style.border = '3px solid var(--ok)';
         badge.style.boxShadow = '0 0 12px rgba(47,183,129,0.5)';
         badge.style.animation = 'none';
     });
@@ -2768,7 +2830,7 @@ function toggleEchMotif(motifId) {
         if (!badge.querySelector('.motif-check')) {
             const check = document.createElement('span');
             check.className = 'motif-check';
-            check.style.cssText = 'position:absolute; top:50%; right:10px; transform:translateY(-50%); background:#2fb781; color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:bold; box-shadow:0 2px 6px rgba(47,183,129,0.4);';
+            check.style.cssText = 'position:absolute; top:50%; right:10px; transform:translateY(-50%); background:var(--ok); color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:bold; box-shadow:0 2px 6px rgba(47,183,129,0.4);';
             check.textContent = '✓';
             badge.style.position = 'relative';
             badge.appendChild(check);
@@ -3212,7 +3274,7 @@ function renderAdmin() {
     const tableEl = document.getElementById('admin-table-wrap');
     const evoEl = document.getElementById('admin-evolution');
 
-    statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">⏳ Chargement des données depuis Google Sheet...</p>';
+    statsEl.innerHTML = '<p style="color:var(--texte-faible); grid-column:1/-1;">⏳ Chargement des données depuis Google Sheet...</p>';
     tableEl.innerHTML = '';
     evoEl.innerHTML = '';
 
@@ -3300,7 +3362,7 @@ function renderAdminFiltre() {
 
     if (results.length === 0) {
         const filtreActif = filtre || recherche;
-        statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">' +
+        statsEl.innerHTML = '<p style="color:var(--texte-faible); grid-column:1/-1;">' +
             (filtreActif ? 'Aucun résultat pour cette recherche.' : 'Aucune donnée disponible.') + '</p>';
         tableEl.innerHTML = '';
         evoEl.innerHTML = '';
@@ -3323,15 +3385,15 @@ function renderAdminFiltre() {
             <div class="admin-stat-label">Livreurs</div>
         </div>
         <div class="admin-stat-card">
-            <div class="admin-stat-value" style="color:${avgScore >= 80 ? 'var(--paack-accent)' : avgScore >= 60 ? '#f4c440' : '#d64545'};">${avgScore}%</div>
+            <div class="admin-stat-value" style="color:${avgScore >= 80 ? 'var(--paack-accent)' : avgScore >= 60 ? 'var(--or)' : 'var(--ko)'};">${avgScore}%</div>
             <div class="admin-stat-label">Score moyen</div>
         </div>
         <div class="admin-stat-card">
-            <div class="admin-stat-value" style="color:#f4c440;">${perfect}</div>
+            <div class="admin-stat-value" style="color:var(--or);">${perfect}</div>
             <div class="admin-stat-label">Score parfait</div>
         </div>
         <div class="admin-stat-card">
-            <div class="admin-stat-value" style="color:#d64545;">${below60}</div>
+            <div class="admin-stat-value" style="color:var(--ko);">${below60}</div>
             <div class="admin-stat-label">Échecs (<60%)</div>
         </div>
     `;
@@ -3358,7 +3420,7 @@ function renderAdminFiltre() {
             <div style="display:flex; align-items:flex-end; gap:8px; height:80px; padding:0 10px;">`;
         attempts.forEach(a => {
             const h = Math.max(10, (a.pct / 100) * 70);
-            const color = a.pct >= 80 ? 'var(--paack-accent)' : a.pct >= 60 ? '#f4c440' : '#d64545';
+            const color = a.pct >= 80 ? 'var(--paack-accent)' : a.pct >= 60 ? 'var(--or)' : 'var(--ko)';
             evoHtml += `<div style="flex:1; text-align:center;">
                 <div style="background:${color}; height:${h}px; border-radius:6px 6px 0 0; margin:0 auto; max-width:40px;"></div>
                 <div style="font-size:0.7em; font-weight:700; color:${color}; margin-top:2px;">${a.pct}%</div>
@@ -3366,7 +3428,7 @@ function renderAdminFiltre() {
         });
         evoHtml += '</div></div>';
     });
-    evoEl.innerHTML = evoHtml || '<p style="color:#7a9aab; font-size:0.9em;">Les évolutions apparaîtront quand un livreur aura fait le QCM plusieurs fois.</p>';
+    evoEl.innerHTML = evoHtml || '<p style="color:var(--texte-faible); font-size:0.9em;">Les évolutions apparaîtront quand un livreur aura fait le QCM plusieurs fois.</p>';
 }
 
 function renderAdminPage(container, data, page, pageSize) {
@@ -3376,13 +3438,13 @@ function renderAdminPage(container, data, page, pageSize) {
 
     let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Entrepôt</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
     pageData.forEach(r => {
-        const color = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
+        const color = r.pct >= 80 ? 'var(--ok-texte)' : r.pct >= 60 ? 'var(--c-7a5c00)' : 'var(--ko-texte)';
         const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
         html += `<tr>
             <td style="font-weight:600; color:var(--paack-blue);">${r.nom}</td>
-            <td style="color:#4f6473; font-size:0.85em; white-space:nowrap;">${r.entrepot || '—'}</td>
-            <td style="color:#4f6473; font-size:0.85em;">${r.date}</td>
-            <td style="color:#4f6473; font-size:0.85em;">${r.duree || '—'}</td>
+            <td style="color:var(--texte-doux); font-size:0.85em; white-space:nowrap;">${r.entrepot || '—'}</td>
+            <td style="color:var(--texte-doux); font-size:0.85em;">${r.date}</td>
+            <td style="color:var(--texte-doux); font-size:0.85em;">${r.duree || '—'}</td>
             <td style="font-weight:700;">${r.score}/${r.total}</td>
             <td style="font-weight:700; color:${color};">${emoji} ${r.pct}%</td>
         </tr>`;
@@ -3398,7 +3460,7 @@ function renderAdminPage(container, data, page, pageSize) {
             html += `<button onclick="adminGoToPage(${i})" style="padding:6px 12px; font-size:0.85em; margin:0; min-width:36px; ${active}">${i + 1}</button>`;
         }
         html += `<button onclick="adminGoToPage(${page + 1})" style="padding:6px 14px; font-size:0.85em; margin:0;${page >= totalPages - 1 ? ' opacity:0.3; pointer-events:none;' : ''}">Suivant →</button>`;
-        html += `</div><p style="text-align:center; color:#7a9aab; font-size:0.8em; margin-top:6px;">${start + 1}–${Math.min(start + pageSize, data.length)} sur ${data.length} résultats</p>`;
+        html += `</div><p style="text-align:center; color:var(--texte-faible); font-size:0.8em; margin-top:6px;">${start + 1}–${Math.min(start + pageSize, data.length)} sur ${data.length} résultats</p>`;
     }
 
     container.innerHTML = html;
