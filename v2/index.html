@@ -1317,11 +1317,41 @@
 
         <!-- Champ nom sur l'accueil -->
         <div id="accueil-name-screen" style="max-width:500px; margin:20px auto 0; text-align:center;">
-            <p style="margin-bottom:12px; color:#324754; font-size:1.05em;">Entrez votre <strong>prénom et nom</strong> pour commencer :</p>
+            <p style="margin-bottom:12px; color:#324754; font-size:1.05em;">Entrez votre <strong>prénom et nom</strong>, puis votre <strong>entrepôt</strong> :</p>
             <div style="display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
                 <input type="text" id="input-nom-accueil" placeholder="Prénom Nom..." style="padding:14px 18px; border-radius:12px; border:2px solid #2d7f9f; font-size:1.1em; flex:1; min-width:200px; outline:none; color:#12232e; text-align:center;">
             </div>
             <p id="nom-error-accueil" style="color:#d64545; font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre nom.</p>
+            <div style="display:flex; justify-content:center; margin-top:14px;">
+                <select id="input-entrepot-accueil" style="padding:14px 18px; border-radius:12px; border:2px solid #2d7f9f; font-size:1.1em; flex:1; min-width:200px; max-width:340px; outline:none; color:#12232e; text-align:center; background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d7f9f' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 16px center/18px 18px; appearance:none; -webkit-appearance:none; padding-right:44px; cursor:pointer;">
+                    <option value="">Votre entrepôt...</option>
+                    <option value="ANGERS WH">ANGERS WH</option>
+                    <option value="AVIGNON WH">AVIGNON WH</option>
+                    <option value="BORDEAUX WH">BORDEAUX WH</option>
+                    <option value="CLERMONT-FERRAND WH">CLERMONT-FERRAND WH</option>
+                    <option value="GRENOBLE WH">GRENOBLE WH</option>
+                    <option value="LE MANS WH">LE MANS WH</option>
+                    <option value="LILLE WH">LILLE WH</option>
+                    <option value="LYON WH">LYON WH</option>
+                    <option value="MARSEILLE WH">MARSEILLE WH</option>
+                    <option value="METZ WH">METZ WH</option>
+                    <option value="MONTPELLIER WH">MONTPELLIER WH</option>
+                    <option value="NANTES WH">NANTES WH</option>
+                    <option value="NICE WH">NICE WH</option>
+                    <option value="NIMES WH">NIMES WH</option>
+                    <option value="ORNE WH">ORNE WH</option>
+                    <option value="PARIS WH">PARIS WH</option>
+                    <option value="REIMS WH">REIMS WH</option>
+                    <option value="RENNES WH">RENNES WH</option>
+                    <option value="ROUEN WH">ROUEN WH</option>
+                    <option value="SAINT-ETIENNE WH">SAINT-ETIENNE WH</option>
+                    <option value="STRASBOURG WH">STRASBOURG WH</option>
+                    <option value="TOULON WH">TOULON WH</option>
+                    <option value="TOULOUSE WH">TOULOUSE WH</option>
+                    <option value="TOURS WH">TOURS WH</option>
+                </select>
+            </div>
+            <p id="entrepot-error-accueil" style="color:#d64545; font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez choisir votre entrepôt.</p>
         </div>
 
         <button class="btn-next-step" onclick="startFormation()">
@@ -2009,15 +2039,17 @@ let freeMode = false;
 let formationStartTime = null;
 let chronoInterval = null;
 let currentNom = '';
+let currentEntrepot = '';
 
 function startFormation() {
     const val = document.getElementById('input-nom-accueil').value.trim();
-    if (!val) {
-        document.getElementById('nom-error-accueil').style.display = 'block';
-        return;
-    }
-    document.getElementById('nom-error-accueil').style.display = 'none';
+    const site = document.getElementById('input-entrepot-accueil').value;
+    document.getElementById('nom-error-accueil').style.display = val ? 'none' : 'block';
+    document.getElementById('entrepot-error-accueil').style.display = site ? 'none' : 'block';
+    if (!val || !site) return;
     currentNom = val;
+    currentEntrepot = site;
+    try { localStorage.setItem('paack_entrepot', site); } catch (e) {}
     document.getElementById('display-nom').textContent = currentNom;
 
     // Démarrer le chrono
@@ -2164,6 +2196,7 @@ function newSession() {
     document.getElementById('accueil-name-screen').style.display = 'block';
     document.getElementById('chrono-bar').style.display = 'none';
     document.getElementById('input-nom-accueil').value = '';
+    currentEntrepot = '';
 
     // Retourner à l'accueil
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
@@ -2425,6 +2458,15 @@ function afficherStatutEnvoi(ok) {
 
 window.addEventListener('load', function () { setTimeout(viderFileAttente, 2000); });
 
+// Repropose l'entrepot deja choisi sur cet appareil
+window.addEventListener('load', function () {
+    try {
+        const site = localStorage.getItem('paack_entrepot');
+        const champ = document.getElementById('input-entrepot-accueil');
+        if (site && champ && [...champ.options].some(function (o) { return o.value === site; })) champ.value = site;
+    } catch (e) {}
+});
+
 function showResults() {
     const pct = Math.round(score / currentQuestions.length * 100);
     const fill = document.getElementById('progressFill');
@@ -2438,7 +2480,7 @@ function showResults() {
     const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
     results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree });
     localStorage.setItem('paack_results', JSON.stringify(results));
-    envoyerResultat({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
+    envoyerResultat({ nom: currentNom, entrepot: currentEntrepot, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
         .then(function (ok) { afficherStatutEnvoi(ok); });
     let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
     // Confettis si 100% !
@@ -2877,6 +2919,7 @@ function saveProgress() {
     if (!currentNom) return;
     const state = {
         nom: currentNom,
+        entrepot: currentEntrepot,
         currentStep: currentStep,
         maxReached: maxReached,
         livCurrentSub: livCurrentSub,
@@ -2907,6 +2950,7 @@ function loadProgress() {
 
 function restoreProgress(state) {
     currentNom = state.nom;
+    currentEntrepot = state.entrepot || '';
     formationStartTime = state.formationStartTime;
     freeMode = state.freeMode;
     maxReached = state.maxReached;
