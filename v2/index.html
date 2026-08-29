@@ -2312,6 +2312,76 @@ function nextQuestion() {
     else { showResults(); }
 }
 
+// ========== SYNCHRO DES RESULTATS (file d'attente + confirmation) ==========
+const PAACK_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec';
+
+function pendingGet() {
+    try { return JSON.parse(localStorage.getItem('paack_pending') || '[]'); }
+    catch (e) { return []; }
+}
+function pendingSet(list) {
+    try { localStorage.setItem('paack_pending', JSON.stringify(list)); } catch (e) {}
+}
+function pendingAdd(payload) {
+    const list = pendingGet();
+    list.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2, 8), payload: payload });
+    pendingSet(list);
+}
+function pendingRemove(id) {
+    pendingSet(pendingGet().filter(function (item) { return item.id !== id; }));
+}
+
+// Envoi unitaire. Renvoie true seulement si le serveur a confirme la reception.
+async function envoyerAuServeur(payload) {
+    try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(function () { ctrl.abort(); }, 15000);
+        const rep = await fetch(PAACK_ENDPOINT, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            signal: ctrl.signal
+        });
+        clearTimeout(timer);
+        console.log('Envoi resultat : HTTP ' + rep.status);
+        return rep.ok;
+    } catch (e) {
+        console.log('Envoi resultat echoue :', e);
+        return false;
+    }
+}
+
+// Envoie le resultat, le garde en file d'attente si l'envoi echoue.
+async function envoyerResultat(payload) {
+    const ok = await envoyerAuServeur(payload);
+    if (!ok) pendingAdd(payload);
+    return ok;
+}
+
+// Rejoue les resultats en attente, au chargement de la page.
+async function viderFileAttente() {
+    const list = pendingGet();
+    if (!list.length) return;
+    console.log('Resultats en attente a renvoyer : ' + list.length);
+    for (const item of list) {
+        const ok = await envoyerAuServeur(item.payload);
+        if (ok) pendingRemove(item.id);
+    }
+}
+
+function afficherStatutEnvoi(ok) {
+    const el = document.getElementById('statut-envoi');
+    if (!el) return;
+    if (ok) {
+        el.innerHTML = '\u2705 R\u00e9sultat enregistr\u00e9';
+        el.style.color = '#d6f5e3';
+    } else {
+        el.innerHTML = '\u26a0\ufe0f Pas de connexion. Le r\u00e9sultat est gard\u00e9 sur cet appareil et sera envoy\u00e9 automatiquement \u00e0 la prochaine ouverture du site.';
+        el.style.color = '#ffe08a';
+    }
+}
+
+window.addEventListener('load', function () { setTimeout(viderFileAttente, 2000); });
+
 function showResults() {
     const pct = Math.round(score / currentQuestions.length * 100);
     const fill = document.getElementById('progressFill');
@@ -2325,10 +2395,8 @@ function showResults() {
     const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
     results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree });
     localStorage.setItem('paack_results', JSON.stringify(results));
-    fetch('https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec', {
-        method: 'POST', mode: 'no-cors',
-        body: JSON.stringify({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
-    }).catch(err => console.log('Erreur envoi:', err));
+    envoyerResultat({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
+        .then(function (ok) { afficherStatutEnvoi(ok); });
     let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
     // Confettis si 100% !
     if (pct === 100) launchConfetti();
@@ -2358,6 +2426,7 @@ function showResults() {
             <p style="font-size:1.1em;"><span id="animated-pct">0</span>%</p>
             <p style="margin-top:8px;" id="animated-msg"></p>
             <span id="hidden-duree" style="display:none;">${duree}</span>
+            <div id="statut-envoi" style="margin-top:12px; font-size:0.85em; line-height:1.4;">\u23f3 Enregistrement en cours...</div>
         </div>
         ${errorsHtml}
         <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
