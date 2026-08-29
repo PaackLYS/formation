@@ -1561,6 +1561,9 @@
                     <li>✅ Nom du client visible sur la boîte aux lettres</li>
                 </ul>
             </div>
+            <div class="danger" style="margin:15px 0;">
+                <strong>⛔ Nom du client non visible sur la boîte aux lettres ?</strong> Ne livrez pas en BAL. En cas de réclamation, la livraison ne pourra pas être justifiée.
+            </div>
             <div style="margin:16px 0 24px;">
                 <div class="photo-section-header do">✅ À FAIRE</div><span style="margin-left:10px;"></span><div class="photo-section-header dont" style="margin-left:10px;">❌ À NE PAS FAIRE</div>
                 <div class="photo-grid-3">
@@ -1648,6 +1651,7 @@
                     <li>Toujours vérifier que c'est le bon colis avant de livrer</li>
                     <li>Accord SMS obligatoire pour toute dépose hors main propre (sauf BAL)</li>
                     <li>Prévenir le client du lieu exact + envoyer une photo</li>
+                    <li>Nom du client non visible sur la BAL = pas de livraison en BAL</li>
                     <li>Envoyer les preuves SMS sur le groupe Slack</li>
                 </ul>
             </div>
@@ -2210,6 +2214,16 @@ const questionsPool = [
     { theme:'⚠️', question: "Que faire du colis en cas d'échec ?", options: ["Le garder pour le lendemain","Le retenter puis le retourner à l'entrepôt en fin de tournée","Le laisser devant la porte","L'apporter à un voisin"], correct: 1 },
     { theme:'⚠️', question: "Quelle photo prendre en cas d'échec ?", options: ["Aucune","Numéro de rue, lieu ou obstacle + colis","Photo du colis uniquement","Selfie devant l'adresse"], correct: 1 },
     { theme:'⚠️', question: "Pour le motif 'Refus du client', que faut-il obligatoirement ?", options: ["Rien de spécial","Un SMS du client prouvant son refus + envoi sur Slack","Un appel téléphonique","Une signature du client"], correct: 1 },
+    { theme:'📦', question: "Que signifie '2P' sur une étiquette Paack ?", options: ["2e position dans la tournée","2 colis pour ce client","2 personnes au domicile","Priorité 2"], correct: 1 },
+    { theme:'📦', question: "Vous avez un colis qui n'apparaît pas sur votre application. Que faire ?", options: ["Le livrer quand même","Le rapporter à votre responsable","Le laisser dans le camion","Le jeter"], correct: 1 },
+    { theme:'📮', question: "Le colis rentre dans la BAL mais en forçant un peu. Que faire ?", options: ["Forcer, l'essentiel est qu'il rentre","Ne pas forcer : ni emballage abîmé, ni porte bloquée","Le plier","Le laisser à moitié dedans"], correct: 1 },
+    { theme:'📮', question: "Sur une photo de livraison en BAL, le colis doit être :", options: ["À l'intérieur de la boîte","Devant la boîte aux lettres","Par terre devant l'immeuble","Dans les mains du livreur"], correct: 1 },
+    { theme:'⚠️', question: "Le motif 'Exigence non remplie' s'utilise :", options: ["Quand le client est absent","Uniquement quand le client n'a pas le code OTP","Quand l'adresse est fausse","Quand le colis est abîmé"], correct: 1 },
+    { theme:'⚠️', question: "Le client refuse le colis mais ne veut pas envoyer de SMS. Peut-on mettre 'Refus du client' ?", options: ["Oui, sa parole suffit","Non : pas de SMS, pas de refus","Oui si un voisin confirme","Oui en prenant une photo"], correct: 1 },
+    { theme:'⚠️', question: "Motif 'Client absent' : quelle photo faut-il prendre ?", options: ["Le colis seul","Le numéro de rue ou l'interphone, avec le colis visible","La rue entière","Aucune photo"], correct: 1 },
+    { theme:'⚠️', question: "Motif 'Entreprise / magasin fermé' : quelle photo prendre ?", options: ["Le colis dans le camion","La devanture fermée","Le parking","Aucune"], correct: 1 },
+    { theme:'⚠️', question: "Une photo d'échec où le lieu de livraison n'est pas visible est :", options: ["Valide si on voit le colis","Invalide","Valide si elle est nette","Valide en cas d'urgence"], correct: 1 },
+    { theme:'📮', question: "Le nom du client n'est pas visible sur la boîte aux lettres. Que faire ?", options: ["Livrer quand même, le colis rentre","Ne pas livrer en BAL : la livraison serait injustifiable en cas de réclamation","Livrer et prendre deux photos","Glisser le colis à l'intérieur de la boîte"], correct: 1 },
 ];
 let currentQCMNum = null;
 let currentQuestions = [];
@@ -3068,9 +3082,22 @@ function toggleMute() {
 }
 
 // ========== 📊 ADMIN DASHBOARD ==========
-function openAdmin() {
+// L'empreinte SHA-256 remplace le mot de passe en clair dans le code source.
+const ADMIN_HASH = 'aed42e93f47206884cda5bc784b0ae57f660ba16c5ea0a3f870baecbe739b05b';
+
+async function empreinteSHA256(texte) {
+    const donnees = new TextEncoder().encode(texte);
+    const buf = await crypto.subtle.digest('SHA-256', donnees);
+    return Array.from(new Uint8Array(buf)).map(function (o) { return o.toString(16).padStart(2, '0'); }).join('');
+}
+
+async function openAdmin() {
     const pwd = prompt('🔒 Mot de passe admin :');
-    if (pwd !== 'Driver26fr') { alert('❌ Mot de passe incorrect'); return; }
+    if (pwd === null) return;
+    let empreinte = '';
+    try { empreinte = await empreinteSHA256(pwd); }
+    catch (e) { alert("V\u00e9rification impossible sur ce navigateur."); return; }
+    if (empreinte !== ADMIN_HASH) { alert('❌ Mot de passe incorrect'); return; }
     // Masquer tout, afficher admin
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
     document.getElementById('stepper').classList.add('hidden');
