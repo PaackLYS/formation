@@ -1228,7 +1228,15 @@
             border-bottom: 1px solid var(--marque-fond);
         }
         .admin-table tr:nth-child(even) { background: var(--surface-douce); }
-    </style>
+    
+/* ===== Fond de page clair =====
+   Seule consequence : le pied de page etait ecrit en blanc pour le fond
+   sombre. On lui rend un contraste, sans toucher au reste. */
+body{ background:#e9eef2 !important; }
+.site-footer{ color:#5c6f7d !important; }
+.site-footer span:nth-of-type(2){ color:#8b9aa5 !important; }
+.site-footer span[onclick]{ color:#dbe2e7 !important; }
+</style>
 </head><body>
 <!-- Particules flottantes -->
 <div class="particles-container" id="particles"></div>
