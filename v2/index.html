@@ -2007,6 +2007,16 @@
             <p style="color:#4f6473; font-size:0.85em; margin:0;">🌐 Données synchronisées depuis Google Sheet</p>
             <button onclick="renderAdmin()" style="margin:0; padding:8px 18px; font-size:0.85em;">🔄 Actualiser</button>
         </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 14px;">
+            <div id="admin-filtre-site-bloc" style="display:flex; align-items:center; gap:8px;">
+                <label for="admin-filtre-entrepot" style="font-size:0.9em; color:#4f6473; font-weight:700;">Entrepôt :</label>
+                <select id="admin-filtre-entrepot" onchange="renderAdminFiltre()" style="padding:8px 12px; border-radius:8px; border:2px solid #2d7f9f; font-size:0.95em; color:#12232e; background:#fff; cursor:pointer;">
+                    <option value="">Tous les entrepôts</option>
+                </select>
+            </div>
+            <input type="search" id="admin-recherche-nom" oninput="renderAdminFiltre()" placeholder="Rechercher un livreur..." style="padding:8px 12px; border-radius:8px; border:2px solid #2d7f9f; font-size:0.95em; color:#12232e; background:#fff; flex:1; min-width:180px; outline:none;">
+            <span id="admin-filtre-note" style="font-size:0.8em; color:#7a9aab; display:none; width:100%;"></span>
+        </div>
         <div class="admin-stats" id="admin-stats"></div>
         <h3>📋 Historique complet</h3>
         <div style="overflow-x:auto;" id="admin-table-wrap"></div>
@@ -3239,17 +3249,63 @@ function renderAdminData(results) {
             score: Number(r.score || r.Score || 0),
             total: Number(r.total || r.Total || 20),
             pct: pctVal,
-            duree: r.duree || r.Duree || r['Durée'] || r['Durée séssion'] || '—'
+            duree: r.duree || r.Duree || r['Durée'] || r['Durée séssion'] || '—',
+            entrepot: r.entrepot || r.Entrepot || r['Entrepôt'] || ''
         };
     }).filter(r => r.nom);
 
+    window._adminTous = results;
+    construireFiltreEntrepot(results);
+    renderAdminFiltre();
+}
+
+// Minuscules sans accents, pour comparer des noms saisis a la main.
+function sansAccents(texte) {
+    return String(texte == null ? '' : texte).toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+// Alimente la liste deroulante avec les entrepots reellement presents dans les donnees.
+function construireFiltreEntrepot(results) {
+    const select = document.getElementById('admin-filtre-entrepot');
+    if (!select) return;
+    const sites = [...new Set(results.map(r => r.entrepot).filter(Boolean))].sort();
+    const choixCourant = select.value;
+    select.innerHTML = '<option value="">Tous les entrepôts</option>'
+        + sites.map(s => `<option value="${s}">${s}</option>`).join('');
+    if (choixCourant && sites.indexOf(choixCourant) !== -1) select.value = choixCourant;
+    // Inutile d'afficher un filtre quand il n'y a qu'un site, ou aucun.
+    const blocSite = document.getElementById('admin-filtre-site-bloc');
+    if (blocSite) blocSite.style.display = sites.length > 1 ? 'flex' : 'none';
+    const sansSite = results.filter(r => !r.entrepot).length;
+    const note = document.getElementById('admin-filtre-note');
+    if (note) {
+        note.textContent = sansSite ? sansSite + ' résultat' + (sansSite > 1 ? 's' : '') + ' sans entrepôt renseigné' : '';
+        note.style.display = sansSite ? '' : 'none';
+    }
+}
+
+// Applique le filtre courant puis redessine statistiques, tableau et evolutions.
+function renderAdminFiltre() {
+    const statsEl = document.getElementById('admin-stats');
+    const tableEl = document.getElementById('admin-table-wrap');
+    const evoEl = document.getElementById('admin-evolution');
+    const select = document.getElementById('admin-filtre-entrepot');
+    const filtre = select ? select.value : '';
+    const champNom = document.getElementById('admin-recherche-nom');
+    const recherche = sansAccents(champNom ? champNom.value : '');
+    let results = window._adminTous || [];
+    if (filtre) results = results.filter(r => r.entrepot === filtre);
+    if (recherche) results = results.filter(r => sansAccents(r.nom).indexOf(recherche) !== -1);
+
     if (results.length === 0) {
-        statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">Aucune donnée disponible.</p>';
+        const filtreActif = filtre || recherche;
+        statsEl.innerHTML = '<p style="color:#7a9aab; grid-column:1/-1;">' +
+            (filtreActif ? 'Aucun résultat pour cette recherche.' : 'Aucune donnée disponible.') + '</p>';
         tableEl.innerHTML = '';
         evoEl.innerHTML = '';
         return;
     }
-
     // Stats
     const totalFormations = results.length;
     const avgScore = Math.round(results.reduce((a, r) => a + r.pct, 0) / results.length);
@@ -3318,12 +3374,13 @@ function renderAdminPage(container, data, page, pageSize) {
     const start = page * pageSize;
     const pageData = data.slice(start, start + pageSize);
 
-    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
+    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Entrepôt</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
     pageData.forEach(r => {
         const color = r.pct >= 80 ? '#1e6b3a' : r.pct >= 60 ? '#7a5c00' : '#7c1f28';
         const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
         html += `<tr>
             <td style="font-weight:600; color:var(--paack-blue);">${r.nom}</td>
+            <td style="color:#4f6473; font-size:0.85em; white-space:nowrap;">${r.entrepot || '—'}</td>
             <td style="color:#4f6473; font-size:0.85em;">${r.date}</td>
             <td style="color:#4f6473; font-size:0.85em;">${r.duree || '—'}</td>
             <td style="font-weight:700;">${r.score}/${r.total}</td>
