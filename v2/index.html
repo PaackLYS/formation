@@ -1575,6 +1575,19 @@ body{ background:#e9eef2 !important; }
                 <strong>ℹ️ Si le client est injoignable ou en fait la demande :</strong> Vous pouvez explorer d'autres solutions dans les étapes suivantes.
             </div>
             <div style="margin-top:16px;">
+                <h3>📦 Standard ou Budget ?</h3>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
+                    <div style="flex:1; min-width:200px; background:var(--surface-douce); border:2px solid var(--marque-clair); border-radius:12px; padding:12px 14px;">
+                        <strong style="color:var(--marque);">📦 Standard</strong>
+                        <p style="font-size:0.9em; margin-top:4px; color:var(--texte-doux);">Ordre de priorité ci-dessous : <strong>remise en main propre d'abord</strong>.</p>
+                    </div>
+                    <div style="flex:1; min-width:200px; background:var(--surface-douce); border:2px solid var(--paack-accent); border-radius:12px; padding:12px 14px;">
+                        <strong style="color:var(--paack-accent);">💰 Budget</strong>
+                        <p style="font-size:0.9em; margin-top:4px; color:var(--texte-doux);">Livraison <strong>directe en boîte aux lettres</strong> autorisée.</p>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:16px;">
                 <h3>📌 Ordre de priorité</h3>
                 <div class="timeline">
                     <div class="timeline-item">
@@ -1647,7 +1660,7 @@ body{ background:#e9eef2 !important; }
                     </div>
                 </div>
                 <div class="photo-section-header dont" style="margin-top:20px;">❌ À NE PAS FAIRE</div>
-                <div class="photo-grid-3">
+                <div class="photo-grid-2">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
                             <img src="../images/MP_KO1.jpg" alt="Photo invalide 1" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
@@ -1668,6 +1681,13 @@ body{ background:#e9eef2 !important; }
                             <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
                         <p class="photo-caption" style="color:var(--ko-fort);">❌ Ni client ni porte ouverte</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="../images/PHOTO_NOIRE.jpg" alt="Photo noire" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:var(--ko-fort);">❌ Photo noire : rien n'est visible</p>
                     </div>
                 </div>
             </div>
@@ -1701,8 +1721,8 @@ body{ background:#e9eef2 !important; }
                 <strong>⛔ Nom du client non visible sur la boîte aux lettres ?</strong> Ne livrez pas en BAL. En cas de réclamation, la livraison ne pourra pas être justifiée.
             </div>
             <div style="margin:16px 0 24px;">
-                <div class="photo-section-header do">✅ À FAIRE</div><span style="margin-left:10px;"></span><div class="photo-section-header dont" style="margin-left:10px;">❌ À NE PAS FAIRE</div>
-                <div class="photo-grid-3">
+                <div class="photo-section-header do">✅ À FAIRE</div>
+                <div class="photo-grid-2">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
                             <img src="../images/BAL1.jpg" alt="BAL Exemple 1" style="border:3px solid var(--ok);" onerror="this.style.display='none'">
@@ -1717,12 +1737,22 @@ body{ background:#e9eef2 !important; }
                         </div>
                         <p class="photo-caption" style="color:var(--ok-texte);">✅ Étiquette + Nom sur la BAL visible</p>
                     </div>
+                </div>
+                <div class="photo-section-header dont" style="margin-top:20px;">❌ À NE PAS FAIRE</div>
+                <div class="photo-grid-2">
                     <div class="photo-item">
                         <div style="position:relative; display:inline-block; width:100%;">
                             <img src="../images/BAL3.jpg" alt="BAL Exemple 3" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
                             <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
                         </div>
                         <p class="photo-caption" style="color:var(--ko-texte);">❌ Colis à l'intérieur de la BAL</p>
+                    </div>
+                    <div class="photo-item">
+                        <div style="position:relative; display:inline-block; width:100%;">
+                            <img src="../images/PHOTO_NOIRE.jpg" alt="Photo noire" class="invalid-photo" style="border:3px solid var(--ko);" onerror="this.style.display='none'">
+                            <div class="photo-badge" style="position:absolute; top:8px; left:8px; background:var(--ko);">❌ INVALIDE</div>
+                        </div>
+                        <p class="photo-caption" style="color:var(--ko-texte);">❌ Photo noire : ni colis ni nom visibles</p>
                     </div>
                 </div>
             </div>
@@ -1825,7 +1855,7 @@ body{ background:#e9eef2 !important; }
                 </div>
                 <div class="numbered-step">
                     <div class="step-number">2</div>
-                    <div class="step-text"><strong>Prendre une photo</strong> du numéro de rue / lieu / obstacle</div>
+                    <div class="step-text"><strong>Prendre une photo</strong> du numéro de rue / lieu / obstacle <strong>AVEC LE COLIS VISIBLE</strong></div>
                 </div>
                 <div class="numbered-step">
                     <div class="step-number">3</div>
@@ -1908,7 +1938,8 @@ body{ background:#e9eef2 !important; }
                     <div id="bubble-meteo" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--or); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
                         <strong style="color:var(--or-texte);">🌧️ Météo / perturbation / grève</strong><br>
                         Uniquement si situation dangereuse (verglas, inondation, route bloquée).<br>
-                        ❌ Simple pluie = pas ce motif.<br><br>
+                        ❌ Simple pluie = pas ce motif.<br>
+                        📢 Remonter l'information à votre <strong>responsable</strong> si plus de 5 colis concernés.<br><br>
                         <img src="../images/routebarree.jpeg" alt="Exemple route barrée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid var(--or); margin-top:4px;">
                     </div>
                     <div id="bubble-ferme" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--nuit-2); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
@@ -2001,7 +2032,7 @@ body{ background:#e9eef2 !important; }
             <div class="retenir">
                 <div class="retenir-title">🧠 À retenir — Échecs</div>
                 <ul>
-                    <li>Toujours choisir le bon motif d'échec + prendre une photo</li>
+                    <li>Toujours choisir le bon motif d'échec + prendre une photo (POA)</li>
                     <li>Motif "Refus client" = SMS obligatoire + envoi à votre responsable</li>
                     <li>Si signature demandée lors d'un échec = mauvais clic, revenir en arrière</li>
                     <li>En cas d'erreur "Livré" : prévenir le responsable + le client immédiatement</li>
