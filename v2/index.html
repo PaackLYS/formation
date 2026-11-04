@@ -1393,11 +1393,16 @@ body{ background:#e9eef2 !important; }
 
         <!-- Champ nom sur l'accueil -->
         <div id="accueil-name-screen" style="max-width:500px; margin:20px auto 0; text-align:center;">
-            <p style="margin-bottom:12px; color:var(--nuit-5); font-size:1.05em;">Entrez votre <strong>prénom et nom</strong>, puis votre <strong>entrepôt</strong> :</p>
+            <p style="margin-bottom:12px; color:var(--nuit-5); font-size:1.05em;">Entrez votre <strong>prénom et nom</strong>, votre <strong>numéro de portable</strong> (06 ou 07), puis votre <strong>entrepôt</strong> :</p>
             <div style="display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
                 <input type="text" id="input-nom-accueil" placeholder="Prénom Nom..." style="padding:14px 18px; border-radius:12px; border:2px solid var(--marque-clair); font-size:1.1em; flex:1; min-width:200px; outline:none; color:var(--c-12232e); text-align:center;">
             </div>
             <p id="nom-error-accueil" style="color:var(--ko); font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre nom.</p>
+            <div style="display:flex; justify-content:center; margin-top:14px;">
+                <input type="tel" id="input-tel-accueil" placeholder="Votre numéro de téléphone" autocomplete="tel" maxlength="25" oninput="document.getElementById('tel-error-accueil').style.display='none'" style="padding:14px 18px; border-radius:12px; border:2px solid var(--marque-clair); font-size:1.1em; flex:1; min-width:200px; max-width:340px; outline:none; color:var(--c-12232e); text-align:center;">
+            </div>
+            <p id="tel-error-accueil" style="color:var(--ko); font-size:0.85em; margin-top:8px; display:none;"></p>
+            <p style="color:var(--texte-faible); font-size:0.8em; margin-top:6px;">Il sert uniquement à votre responsable de site pour retrouver votre formation.</p>
             <div style="display:flex; justify-content:center; margin-top:14px;">
                 <select id="input-entrepot-accueil" style="padding:14px 18px; border-radius:12px; border:2px solid var(--marque-clair); font-size:1.1em; flex:1; min-width:200px; max-width:340px; outline:none; color:var(--c-12232e); text-align:center; background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d7f9f' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 16px center/18px 18px; appearance:none; -webkit-appearance:none; padding-right:44px; cursor:pointer;">
                     <option value="">Votre entrepôt...</option>
@@ -2080,7 +2085,7 @@ body{ background:#e9eef2 !important; }
     <div id="admin-page" class="content-section" style="display:none;">
         <h2>📊 Tableau de bord Admin</h2>
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-            <p style="color:var(--texte-doux); font-size:0.85em; margin:0;">🌐 Données synchronisées depuis Google Sheet</p>
+            <p id="admin-source" style="color:var(--texte-doux); font-size:0.85em; margin:0;">🌐 Données synchronisées depuis Google Sheet</p>
             <button onclick="renderAdmin()" style="margin:0; padding:8px 18px; font-size:0.85em;">🔄 Actualiser</button>
         </div>
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 14px;">
@@ -2090,7 +2095,7 @@ body{ background:#e9eef2 !important; }
                     <option value="">Tous les entrepôts</option>
                 </select>
             </div>
-            <input type="search" id="admin-recherche-nom" oninput="renderAdminFiltre()" placeholder="Rechercher un livreur..." style="padding:8px 12px; border-radius:8px; border:2px solid var(--marque-clair); font-size:0.95em; color:var(--c-12232e); background:var(--surface); flex:1; min-width:180px; outline:none;">
+            <input type="search" id="admin-recherche-nom" oninput="renderAdminFiltre()" placeholder="Rechercher un nom ou un téléphone..." style="padding:8px 12px; border-radius:8px; border:2px solid var(--marque-clair); font-size:0.95em; color:var(--c-12232e); background:var(--surface); flex:1; min-width:180px; outline:none;">
             <span id="admin-filtre-note" style="font-size:0.8em; color:var(--texte-faible); display:none; width:100%;"></span>
         </div>
         <div class="admin-stats" id="admin-stats"></div>
@@ -2126,15 +2131,50 @@ let formationStartTime = null;
 let chronoInterval = null;
 let currentNom = '';
 let currentEntrepot = '';
+let currentTelephone = '';
+// Coupee une fois le QCM termine : sur un appareil partage, le livreur suivant ne doit pas reprendre cette session.
+let sauvegardeActive = false;
+
+// Ramene un portable saisi librement (espaces, points, +33...) au format 0612345678.
+// Renvoie une chaine vide si ce n'est pas un 06 ou un 07 valide.
+function normaliserTelephone(saisie) {
+    const brut = String(saisie == null ? '' : saisie)
+        .replace(/[\u00AD\u061C\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g, '') // marques invisibles des copier-coller (iPhone, WhatsApp)
+        .replace(/[\u0660-\u0669\u06F0-\u06F9\uFF10-\uFF19]/g, c => String(c.charCodeAt(0) & 15)) // chiffres arabes, persans, pleine chasse
+        .replace(/[\u2010-\u2015\u2212]/g, '-')
+        .trim();
+    if (/[^\d\s.()+\/'-]/.test(brut)) return '';
+    let chiffres = brut.replace(/\D/g, '');
+    // +33 et indicatifs d'outre-mer. Un 6xxxxxxxx seul n'est pas complete : c'est le format d'un portable espagnol.
+    const international = chiffres.match(/^(?:00)?(?:33|262|590|594|596)0?([67]\d{8})$/);
+    if (international) chiffres = '0' + international[1];
+    return /^0[67]\d{8}$/.test(chiffres) ? chiffres : '';
+}
 
 function startFormation() {
     const val = document.getElementById('input-nom-accueil').value.trim();
+    const telSaisi = document.getElementById('input-tel-accueil').value.trim();
+    const tel = normaliserTelephone(telSaisi);
     const site = document.getElementById('input-entrepot-accueil').value;
     document.getElementById('nom-error-accueil').style.display = val ? 'none' : 'block';
+    const telErreur = document.getElementById('tel-error-accueil');
+    telErreur.textContent = !telSaisi
+        ? '⚠️ Veuillez entrer votre numéro de téléphone.'
+        : /^(\+|00)(?!33|262|590|594|596)/.test(telSaisi.replace(/[^\d+]/g, ''))
+            ? '⚠️ Seuls les portables français (06 ou 07) sont acceptés. Numéro étranger : voyez votre responsable de site.'
+            : '⚠️ Numéro invalide : 10 chiffres commençant par 06 ou 07.';
+    telErreur.style.display = tel ? 'none' : 'block';
     document.getElementById('entrepot-error-accueil').style.display = site ? 'none' : 'block';
-    if (!val || !site) return;
+    if (!val || !tel || !site) return;
+    // Le numero sert a retrouver le livreur : une faute de frappe le rendrait introuvable.
+    if (!confirm('Votre numéro : ' + tel.replace(/(\d{2})(?=\d)/g, '$1 ') + '\nEst-ce bien le vôtre ?')) {
+        document.getElementById('input-tel-accueil').focus();
+        return;
+    }
     currentNom = val;
+    currentTelephone = tel;
     currentEntrepot = site;
+    sauvegardeActive = true;
     try { localStorage.setItem('paack_entrepot', site); } catch (e) {}
     document.getElementById('display-nom').textContent = currentNom;
 
@@ -2244,6 +2284,7 @@ function activateFreeMode() {
     if (gp) gp.style.display = 'none';
     // Effacer la sauvegarde
     localStorage.removeItem('paack_progress');
+    sauvegardeActive = false;
 
     // Afficher la page récap
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
@@ -2268,6 +2309,7 @@ function newSession() {
     echMotifsViewed.clear();
     wrongAnswers = [];
     localStorage.removeItem('paack_progress');
+    sauvegardeActive = false;
 
     // Réafficher le stepper, masquer nav libre
     document.getElementById('stepper').classList.remove('hidden');
@@ -2282,7 +2324,9 @@ function newSession() {
     document.getElementById('accueil-name-screen').style.display = 'block';
     document.getElementById('chrono-bar').style.display = 'none';
     document.getElementById('input-nom-accueil').value = '';
+    document.getElementById('input-tel-accueil').value = '';
     currentEntrepot = '';
+    currentTelephone = '';
 
     // Retourner à l'accueil
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
@@ -2503,9 +2547,11 @@ async function envoyerAuServeur(payload) {
             body: JSON.stringify(payload),
             signal: ctrl.signal
         });
+        // Le script repond « Erreur: ... » avec un code 200 quand il n'a pas pu ecrire la ligne.
+        const corps = rep.ok ? await rep.text() : '';
         clearTimeout(timer);
         console.log('Envoi resultat : HTTP ' + rep.status);
-        return rep.ok;
+        return rep.ok && corps.indexOf('Erreur') !== 0;
     } catch (e) {
         console.log('Envoi resultat echoue :', e);
         return false;
@@ -2566,13 +2612,14 @@ function showResults() {
     const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
     results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree });
     localStorage.setItem('paack_results', JSON.stringify(results));
-    envoyerResultat({ nom: currentNom, entrepot: currentEntrepot, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
+    envoyerResultat({ nom: currentNom, telephone: currentTelephone, entrepot: currentEntrepot, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
         .then(function (ok) { afficherStatutEnvoi(ok); });
     let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
     // Confettis si 100% !
     if (pct === 100) launchConfetti();
     // Effacer la sauvegarde de progression
     localStorage.removeItem('paack_progress');
+    sauvegardeActive = false;
     updateGlobalProgress();
 
     // Récap erreurs
@@ -3002,10 +3049,11 @@ window.addEventListener('beforeunload', function(e) {
 
 // ========== 5. SAUVEGARDE DE PROGRESSION (localStorage) ==========
 function saveProgress() {
-    if (!currentNom) return;
+    if (!currentNom || !sauvegardeActive) return;
     const state = {
         nom: currentNom,
         entrepot: currentEntrepot,
+        telephone: currentTelephone,
         currentStep: currentStep,
         maxReached: maxReached,
         livCurrentSub: livCurrentSub,
@@ -3037,6 +3085,8 @@ function loadProgress() {
 function restoreProgress(state) {
     currentNom = state.nom;
     currentEntrepot = state.entrepot || '';
+    currentTelephone = state.telephone || '';
+    sauvegardeActive = true;
     formationStartTime = state.formationStartTime;
     freeMode = state.freeMode;
     maxReached = state.maxReached;
@@ -3091,10 +3141,17 @@ window.addEventListener('load', function() {
     const saved = loadProgress();
     if (saved) {
         if (confirm('👋 ' + saved.nom + ', vous avez une formation en cours. Voulez-vous reprendre où vous en étiez ?')) {
-            restoreProgress(saved);
-        } else {
-            localStorage.removeItem('paack_progress');
+            // Sauvegarde faite avant l'ajout du telephone : on le demande avant de reprendre.
+            if (!normaliserTelephone(saved.telephone)) {
+                saved.telephone = normaliserTelephone(prompt('Pour reprendre, entrez votre numéro de portable (06 ou 07) :') || '');
+            }
+            if (saved.telephone) {
+                restoreProgress(saved);
+                return;
+            }
+            document.getElementById('input-nom-accueil').value = saved.nom;
         }
+        localStorage.removeItem('paack_progress');
     }
 });
 
@@ -3243,6 +3300,8 @@ function toggleMute() {
 // ========== 📊 ADMIN DASHBOARD ==========
 // L'empreinte SHA-256 remplace le mot de passe en clair dans le code source.
 const ADMIN_HASH = 'EMPREINTE_RETIREE';
+// Mot de passe saisi, envoye au script pour obtenir les numeros. Garde en memoire le temps de la session admin.
+let cleAdmin = '';
 
 async function empreinteSHA256(texte) {
     const donnees = new TextEncoder().encode(texte);
@@ -3257,6 +3316,7 @@ async function openAdmin() {
     try { empreinte = await empreinteSHA256(pwd); }
     catch (e) { alert("V\u00e9rification impossible sur ce navigateur."); return; }
     if (empreinte !== ADMIN_HASH) { alert('❌ Mot de passe incorrect'); return; }
+    cleAdmin = pwd;
     // Masquer tout, afficher admin
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
     document.getElementById('stepper').classList.add('hidden');
@@ -3269,6 +3329,11 @@ async function openAdmin() {
 }
 
 function closeAdmin() {
+    // Rien ne reste en memoire ni dans la page cachee (poste partage).
+    cleAdmin = '';
+    window._adminTous = null;
+    window._adminResults = null;
+    ['admin-stats', 'admin-table-wrap', 'admin-evolution'].forEach(id => { document.getElementById(id).innerHTML = ''; });
     document.getElementById('admin-page').style.display = 'none';
     document.getElementById('admin-page').classList.remove('active');
     if (freeMode) {
@@ -3291,14 +3356,22 @@ function renderAdmin() {
     statsEl.innerHTML = '<p style="color:var(--texte-faible); grid-column:1/-1;">⏳ Chargement des données depuis Google Sheet...</p>';
     tableEl.innerHTML = '';
     evoEl.innerHTML = '';
+    const source = document.getElementById('admin-source');
+    source.textContent = '🌐 Données synchronisées depuis Google Sheet';
+    source.style.color = 'var(--texte-doux)';
 
-    fetch(SHEET_API)
+    fetch(SHEET_API + '?cle=' + encodeURIComponent(cleAdmin))
         .then(r => r.json())
-        .then(data => renderAdminData(data))
+        .then(data => {
+            if (!Array.isArray(data)) throw new Error('Réponse inattendue du Google Sheet');
+            renderAdminData(data);
+        })
         .catch(err => {
             console.log('Fetch Sheet échoué, fallback localStorage:', err);
             const local = JSON.parse(localStorage.getItem('paack_results') || '[]');
             renderAdminData(local);
+            source.textContent = '⚠️ Google Sheet injoignable : seuls les résultats enregistrés sur cet appareil s\'affichent, sans numéros de téléphone.';
+            source.style.color = 'var(--ko)';
         });
 }
 
@@ -3326,7 +3399,8 @@ function renderAdminData(results) {
             total: Number(r.total || r.Total || 20),
             pct: pctVal,
             duree: r.duree || r.Duree || r['Durée'] || r['Durée séssion'] || '—',
-            entrepot: r.entrepot || r.Entrepot || r['Entrepôt'] || ''
+            entrepot: r.entrepot || r.Entrepot || r['Entrepôt'] || '',
+            telephone: telephoneDeLaLigne(r)
         };
     }).filter(r => r.nom);
 
@@ -3341,6 +3415,20 @@ function sansAccents(texte) {
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
+// Les valeurs du Sheet viennent de n'importe qui (doPost est public) : jamais inserees telles quelles dans le HTML.
+function echapperHtml(valeur) {
+    return String(valeur == null ? '' : valeur).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
+// Memes en-tetes que ceux reconnus par le script Google (Telephone, Tel, Portable...).
+const LIBELLES_TELEPHONE = ['telephone', 'tel', 'numero de telephone', 'portable'];
+function telephoneDeLaLigne(r) {
+    const cle = Object.keys(r).find(k => LIBELLES_TELEPHONE.indexOf(sansAccents(k).replace(/\s+/g, ' ')) !== -1);
+    const valeur = cle ? r[cle] : '';
+    // Une cellule retapee a la main peut etre relue comme nombre : le 0 du debut est alors perdu.
+    return normaliserTelephone(typeof valeur === 'number' ? '0' + valeur : valeur);
+}
+
 // Alimente la liste deroulante avec les entrepots reellement presents dans les donnees.
 function construireFiltreEntrepot(results) {
     const select = document.getElementById('admin-filtre-entrepot');
@@ -3348,7 +3436,7 @@ function construireFiltreEntrepot(results) {
     const sites = [...new Set(results.map(r => r.entrepot).filter(Boolean))].sort();
     const choixCourant = select.value;
     select.innerHTML = '<option value="">Tous les entrepôts</option>'
-        + sites.map(s => `<option value="${s}">${s}</option>`).join('');
+        + sites.map(s => `<option value="${echapperHtml(s)}">${echapperHtml(s)}</option>`).join('');
     if (choixCourant && sites.indexOf(choixCourant) !== -1) select.value = choixCourant;
     // Inutile d'afficher un filtre quand il n'y a qu'un site, ou aucun.
     const blocSite = document.getElementById('admin-filtre-site-bloc');
@@ -3369,15 +3457,31 @@ function renderAdminFiltre() {
     const select = document.getElementById('admin-filtre-entrepot');
     const filtre = select ? select.value : '';
     const champNom = document.getElementById('admin-recherche-nom');
-    const recherche = sansAccents(champNom ? champNom.value : '');
+    const saisie = champNom ? champNom.value : '';
+    const recherche = sansAccents(saisie);
+    // Un numero se cherche sur ses chiffres (06 12..., 0612..., +33 6..., 33612..., « Tél. +33 6... »).
+    // Une saisie avec des lettres et peu de chiffres (« karim 2 ») ne cherche que dans les noms.
+    const saisieTel = (!/[a-z]/.test(recherche) || saisie.replace(/\D/g, '').length >= 6) ? saisie.replace(/[^\d+]/g, '') : '';
+    const telComplet = normaliserTelephone(saisieTel);
+    let rechercheTel = telComplet || saisieTel.replace(/\D/g, '');
+    if (!telComplet && /^(\+|00)/.test(saisieTel)) rechercheTel = rechercheTel.replace(/^(00)?330?/, '0');
     let results = window._adminTous || [];
     if (filtre) results = results.filter(r => r.entrepot === filtre);
-    if (recherche) results = results.filter(r => sansAccents(r.nom).indexOf(recherche) !== -1);
+    if (recherche) results = results.filter(r => sansAccents(r.nom).indexOf(recherche) !== -1
+        || (rechercheTel && r.telephone.indexOf(rechercheTel) !== -1));
 
     if (results.length === 0) {
         const filtreActif = filtre || recherche;
-        statsEl.innerHTML = '<p style="color:var(--texte-faible); grid-column:1/-1;">' +
-            (filtreActif ? 'Aucun résultat pour cette recherche.' : 'Aucune donnée disponible.') + '</p>';
+        let message = filtreActif ? 'Aucun résultat pour cette recherche.' : 'Aucune donnée disponible.';
+        // Un numero introuvable ne prouve pas que le livreur n'a pas fait la formation.
+        if (rechercheTel.length >= 6) {
+            const tous = window._adminTous || [];
+            const ailleurs = tous.find(r => r.telephone && r.telephone.indexOf(rechercheTel) !== -1);
+            const sansTel = tous.filter(r => !r.telephone).length;
+            if (ailleurs) message = 'Ce numéro a fait la formation à ' + (ailleurs.entrepot ? echapperHtml(ailleurs.entrepot) : 'un autre entrepôt') + ' : choisissez « Tous les entrepôts ».';
+            else if (sansTel) message = 'Aucun livreur avec ce numéro. ' + sansTel + ' résultat' + (sansTel > 1 ? 's' : '') + ' sans numéro (formations faites avant l\'ajout du téléphone) : cherchez aussi par nom.';
+        }
+        statsEl.innerHTML = '<p style="color:var(--texte-faible); grid-column:1/-1;">' + message + '</p>';
         tableEl.innerHTML = '';
         evoEl.innerHTML = '';
         return;
@@ -3430,7 +3534,7 @@ function renderAdminFiltre() {
         const attempts = byName[nom];
         if (attempts.length < 2) return;
         evoHtml += `<div style="margin-bottom:16px;">
-            <div style="font-weight:700; color:var(--paack-blue); margin-bottom:6px;">${nom} — ${attempts.length} tentatives</div>
+            <div style="font-weight:700; color:var(--paack-blue); margin-bottom:6px;">${echapperHtml(nom)} — ${attempts.length} tentatives</div>
             <div style="display:flex; align-items:flex-end; gap:8px; height:80px; padding:0 10px;">`;
         attempts.forEach(a => {
             const h = Math.max(10, (a.pct / 100) * 70);
@@ -3450,15 +3554,16 @@ function renderAdminPage(container, data, page, pageSize) {
     const start = page * pageSize;
     const pageData = data.slice(start, start + pageSize);
 
-    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Entrepôt</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
+    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Téléphone</th><th>Entrepôt</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
     pageData.forEach(r => {
         const color = r.pct >= 80 ? 'var(--ok-texte)' : r.pct >= 60 ? 'var(--c-7a5c00)' : 'var(--ko-texte)';
         const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
         html += `<tr>
-            <td style="font-weight:600; color:var(--paack-blue);">${r.nom}</td>
-            <td style="color:var(--texte-doux); font-size:0.85em; white-space:nowrap;">${r.entrepot || '—'}</td>
-            <td style="color:var(--texte-doux); font-size:0.85em;">${r.date}</td>
-            <td style="color:var(--texte-doux); font-size:0.85em;">${r.duree || '—'}</td>
+            <td style="font-weight:600; color:var(--paack-blue);">${echapperHtml(r.nom)}</td>
+            <td style="color:var(--texte-doux); font-size:0.85em; white-space:nowrap;">${r.telephone ? r.telephone.replace(/(\d{2})(?=\d)/g, '$1 ') : '—'}</td>
+            <td style="color:var(--texte-doux); font-size:0.85em; white-space:nowrap;">${echapperHtml(r.entrepot || '—')}</td>
+            <td style="color:var(--texte-doux); font-size:0.85em;">${echapperHtml(r.date)}</td>
+            <td style="color:var(--texte-doux); font-size:0.85em;">${echapperHtml(r.duree || '—')}</td>
             <td style="font-weight:700;">${r.score}/${r.total}</td>
             <td style="font-weight:700; color:${color};">${emoji} ${r.pct}%</td>
         </tr>`;
