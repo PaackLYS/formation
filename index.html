@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
     <title>Guide Livraison Paack - Formation Interactive</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -3343,26 +3345,55 @@ function toggleMute() {
 }
 
 // ========== 📊 ADMIN DASHBOARD ==========
-// L'empreinte SHA-256 remplace le mot de passe en clair dans le code source.
-const ADMIN_HASH = 'EMPREINTE_RETIREE';
-// Mot de passe saisi, envoye au script pour obtenir les numeros. Garde en memoire le temps de la session admin.
+// Le mot de passe n'est verifie que par le script Google : la page ne contient pas son empreinte.
+// Il reste en memoire le temps de la session admin, pour le bouton Actualiser.
 let cleAdmin = '';
 // Change a chaque chargement et a la fermeture : une reponse du Sheet arrivee trop tard est ignoree.
 let generationAdmin = 0;
 
-async function empreinteSHA256(texte) {
-    const donnees = new TextEncoder().encode(texte);
-    const buf = await crypto.subtle.digest('SHA-256', donnees);
-    return Array.from(new Uint8Array(buf)).map(function (o) { return o.toString(16).padStart(2, '0'); }).join('');
+// Lecture sur le meme deploiement que l'envoi : un seul deploiement a tenir a jour.
+const SHEET_API = PAACK_ENDPOINT;
+
+// Le mot de passe voyage dans le corps de la requete, jamais dans l'adresse. Format formulaire et
+// non JSON : un ancien script le rejette sans rien ecrire dans le Sheet.
+async function lireResultatsAdmin(cle) {
+    let texte;
+    try {
+        const rep = await fetch(SHEET_API, { method: 'POST', body: new URLSearchParams({ action: 'admin', cle: cle }) });
+        texte = await rep.text();
+    } catch (e) {
+        return { erreur: '⚠️ Google Sheet injoignable : vérifiez la connexion et réessayez.' };
+    }
+    let data;
+    try { data = JSON.parse(texte); }
+    catch (e) { return { erreur: '⚠️ Le script Google n\'est pas à jour : il faut le redéployer.' }; }
+    if (Array.isArray(data)) return { lignes: data };
+    if (data && data.error === 'non autorise') return { erreur: '❌ Mot de passe incorrect' };
+    if (data && data.error === 'trop de tentatives') return { erreur: '⛔ Trop de tentatives : réessayez dans 10 minutes.' };
+    return { erreur: '⚠️ Réponse inattendue du Google Sheet.' };
+}
+
+function afficherAdmin(lignes) {
+    const source = document.getElementById('admin-source');
+    source.textContent = '🌐 Données synchronisées depuis Google Sheet';
+    source.style.color = 'var(--texte-doux)';
+    renderAdminData(lignes);
+    // Le script a jour renvoie toujours une colonne telephone avec le bon mot de passe.
+    if (lignes.length && !Object.keys(lignes[0]).some(estColonneTelephone)) {
+        source.textContent = '⚠️ Numéros masqués : le script Google n\'est pas à jour.';
+        source.style.color = 'var(--ko)';
+    }
 }
 
 async function openAdmin() {
     const pwd = prompt('🔒 Mot de passe admin :');
-    if (pwd === null) return;
-    let empreinte = '';
-    try { empreinte = await empreinteSHA256(pwd); }
-    catch (e) { alert("V\u00e9rification impossible sur ce navigateur."); return; }
-    if (empreinte !== ADMIN_HASH) { alert('❌ Mot de passe incorrect'); return; }
+    if (!pwd) return;
+    const generation = ++generationAdmin;
+    document.body.style.cursor = 'progress';
+    const reponse = await lireResultatsAdmin(pwd);
+    document.body.style.cursor = '';
+    if (generation !== generationAdmin) return;
+    if (reponse.erreur) { alert(reponse.erreur); return; }
     cleAdmin = pwd;
     // Masquer tout, afficher admin
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
@@ -3371,7 +3402,7 @@ async function openAdmin() {
     const adminPage = document.getElementById('admin-page');
     adminPage.style.display = 'block';
     adminPage.classList.add('active');
-    renderAdmin();
+    afficherAdmin(reponse.lignes);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -3394,42 +3425,20 @@ function closeAdmin() {
     }
 }
 
-// Lecture sur le meme deploiement que l'envoi : un seul deploiement a tenir a jour.
-const SHEET_API = PAACK_ENDPOINT;
-
-function renderAdmin() {
-    const statsEl = document.getElementById('admin-stats');
-    const tableEl = document.getElementById('admin-table-wrap');
-    const evoEl = document.getElementById('admin-evolution');
-
-    statsEl.innerHTML = '<p style="color:var(--texte-faible); grid-column:1/-1;">⏳ Chargement des données depuis Google Sheet...</p>';
-    tableEl.innerHTML = '';
-    evoEl.innerHTML = '';
+// Bouton Actualiser : en cas d'echec, les donnees deja affichees restent en place.
+async function renderAdmin() {
     const source = document.getElementById('admin-source');
-    source.textContent = '🌐 Données synchronisées depuis Google Sheet';
+    source.textContent = '⏳ Actualisation depuis Google Sheet...';
     source.style.color = 'var(--texte-doux)';
     const generation = ++generationAdmin;
-
-    fetch(SHEET_API + '?cle=' + encodeURIComponent(cleAdmin))
-        .then(r => r.json())
-        .then(data => {
-            if (generation !== generationAdmin) return;
-            if (!Array.isArray(data)) throw new Error('Réponse inattendue du Google Sheet');
-            renderAdminData(data);
-            // Le script a jour renvoie toujours une colonne telephone quand il accepte le mot de passe.
-            if (data.length && !Object.keys(data[0]).some(estColonneTelephone)) {
-                source.textContent = '⚠️ Numéros masqués : le script Google n\'a pas reconnu le mot de passe, ou il n\'est pas à jour.';
-                source.style.color = 'var(--ko)';
-            }
-        })
-        .catch(err => {
-            if (generation !== generationAdmin) return;
-            console.log('Fetch Sheet échoué, fallback localStorage:', err);
-            const local = JSON.parse(localStorage.getItem('paack_results') || '[]');
-            renderAdminData(local);
-            source.textContent = '⚠️ Google Sheet injoignable : seuls les résultats enregistrés sur cet appareil s\'affichent, sans numéros de téléphone.';
-            source.style.color = 'var(--ko)';
-        });
+    const reponse = await lireResultatsAdmin(cleAdmin);
+    if (generation !== generationAdmin) return;
+    if (reponse.erreur) {
+        source.textContent = reponse.erreur;
+        source.style.color = 'var(--ko)';
+        return;
+    }
+    afficherAdmin(reponse.lignes);
 }
 
 function renderAdminData(results) {
