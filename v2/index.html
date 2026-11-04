@@ -1399,7 +1399,7 @@ body{ background:#e9eef2 !important; }
             </div>
             <p id="nom-error-accueil" style="color:var(--ko); font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez entrer votre nom.</p>
             <div style="display:flex; justify-content:center; margin-top:14px;">
-                <input type="tel" id="input-tel-accueil" placeholder="Votre numéro de téléphone" autocomplete="tel" maxlength="25" oninput="document.getElementById('tel-error-accueil').style.display='none'" style="padding:14px 18px; border-radius:12px; border:2px solid var(--marque-clair); font-size:1.1em; flex:1; min-width:200px; max-width:340px; outline:none; color:var(--c-12232e); text-align:center;">
+                <input type="tel" id="input-tel-accueil" placeholder="Votre numéro de téléphone" autocomplete="tel" maxlength="25" oninput="document.getElementById('tel-error-accueil').style.display='none'; document.getElementById('tel-verif-accueil').style.display='none'" style="padding:14px 18px; border-radius:12px; border:2px solid var(--marque-clair); font-size:1.1em; flex:1; min-width:200px; max-width:340px; outline:none; color:var(--c-12232e); text-align:center;">
             </div>
             <p id="tel-error-accueil" style="color:var(--ko); font-size:0.85em; margin-top:8px; display:none;"></p>
             <p style="color:var(--texte-faible); font-size:0.8em; margin-top:6px;">Il sert uniquement à votre responsable de site pour retrouver votre formation.</p>
@@ -1433,6 +1433,7 @@ body{ background:#e9eef2 !important; }
                 </select>
             </div>
             <p id="entrepot-error-accueil" style="color:var(--ko); font-size:0.85em; margin-top:8px; display:none;">⚠️ Veuillez choisir votre entrepôt.</p>
+            <p id="tel-verif-accueil" style="display:none; margin-top:14px; padding:10px 12px; border-radius:10px; border:2px solid var(--marque-clair); background:var(--surface-douce); color:var(--c-12232e); font-weight:600; font-size:0.95em;"></p>
         </div>
 
         <button class="btn-next-step" onclick="startFormation()">
@@ -2134,6 +2135,8 @@ let currentEntrepot = '';
 let currentTelephone = '';
 // Coupee une fois le QCM termine : sur un appareil partage, le livreur suivant ne doit pas reprendre cette session.
 let sauvegardeActive = false;
+// Numero deja montre au livreur pour relecture : un second appui sur « Commencer » le valide.
+let telVerifie = '';
 
 // Ramene un portable saisi librement (espaces, points, +33...) au format 0612345678.
 // Renvoie une chaine vide si ce n'est pas un 06 ou un 07 valide.
@@ -2165,12 +2168,17 @@ function startFormation() {
             : '⚠️ Numéro invalide : 10 chiffres commençant par 06 ou 07.';
     telErreur.style.display = tel ? 'none' : 'block';
     document.getElementById('entrepot-error-accueil').style.display = site ? 'none' : 'block';
-    if (!val || !tel || !site) return;
-    // Le numero sert a retrouver le livreur : une faute de frappe le rendrait introuvable.
-    if (!confirm('Votre numéro : ' + tel.replace(/(\d{2})(?=\d)/g, '$1 ') + '\nEst-ce bien le vôtre ?')) {
-        document.getElementById('input-tel-accueil').focus();
+    const verif = document.getElementById('tel-verif-accueil');
+    if (!val || !tel || !site) { verif.style.display = 'none'; return; }
+    // Le numero sert a retrouver le livreur : une faute de frappe le rendrait introuvable. On le fait
+    // relire dans la page (confirm() est bloque sans rien afficher par certains navigateurs d'applis).
+    if (tel !== telVerifie) {
+        telVerifie = tel;
+        verif.textContent = 'Vérifiez votre numéro : ' + tel.replace(/(\d{2})(?=\d)/g, '$1 ') + '. S\'il est juste, appuyez à nouveau sur « Commencer la formation ».';
+        verif.style.display = 'block';
         return;
     }
+    verif.style.display = 'none';
     currentNom = val;
     currentTelephone = tel;
     currentEntrepot = site;
@@ -2325,6 +2333,8 @@ function newSession() {
     document.getElementById('chrono-bar').style.display = 'none';
     document.getElementById('input-nom-accueil').value = '';
     document.getElementById('input-tel-accueil').value = '';
+    document.getElementById('tel-verif-accueil').style.display = 'none';
+    telVerifie = '';
     currentEntrepot = '';
     currentTelephone = '';
 
@@ -2639,7 +2649,7 @@ function showResults() {
     document.getElementById('qcmContainer').innerHTML = '';
     document.getElementById('scoreResult').innerHTML = `
         <div class="score-card">
-            <h3>Résultats — ${currentNom}</h3>
+            <h3>Résultats — ${echapperHtml(currentNom)}</h3>
             <div class="score-number"><span id="animated-score">0</span>/${currentQuestions.length}</div>
             <p style="font-size:1.1em;"><span id="animated-pct">0</span>%</p>
             <p style="margin-top:8px;" id="animated-msg"></p>
@@ -2700,9 +2710,9 @@ function renderDashboard(containerId) {
         const couleur = r.pct >= 80 ? 'var(--ok-texte)' : r.pct >= 60 ? 'var(--c-7a5c00)' : 'var(--ko-texte)';
         const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
         html += `<tr style="background:${bg};">
-            <td style="padding:9px 12px; font-weight:600; color:var(--marque);">${r.nom}</td>
-            <td style="padding:9px 12px; color:var(--texte-doux); font-size:0.85em;">${r.date}</td>
-            <td style="padding:9px 12px; color:var(--texte-doux); font-size:0.85em;">${r.duree || '—'}</td>
+            <td style="padding:9px 12px; font-weight:600; color:var(--marque);">${echapperHtml(r.nom)}</td>
+            <td style="padding:9px 12px; color:var(--texte-doux); font-size:0.85em;">${echapperHtml(r.date)}</td>
+            <td style="padding:9px 12px; color:var(--texte-doux); font-size:0.85em;">${echapperHtml(r.duree || '—')}</td>
             <td style="padding:9px 12px; font-weight:700;">${r.score}/${r.total}</td>
             <td style="padding:9px 12px; font-weight:700; color:${couleur};">${emoji} ${r.pct}%</td>
         </tr>`;
@@ -3142,8 +3152,12 @@ window.addEventListener('load', function() {
     if (saved) {
         if (confirm('👋 ' + saved.nom + ', vous avez une formation en cours. Voulez-vous reprendre où vous en étiez ?')) {
             // Sauvegarde faite avant l'ajout du telephone : on le demande avant de reprendre.
-            if (!normaliserTelephone(saved.telephone)) {
-                saved.telephone = normaliserTelephone(prompt('Pour reprendre, entrez votre numéro de portable (06 ou 07) :') || '');
+            let question = 'Pour reprendre, entrez votre numéro de portable (06 ou 07) :';
+            for (let essai = 0; essai < 3 && !normaliserTelephone(saved.telephone); essai++) {
+                const saisie = prompt(question);
+                if (saisie === null) break;
+                saved.telephone = normaliserTelephone(saisie);
+                question = 'Numéro invalide : 10 chiffres commençant par 06 ou 07. Réessayez :';
             }
             if (saved.telephone) {
                 restoreProgress(saved);
@@ -3302,6 +3316,8 @@ function toggleMute() {
 const ADMIN_HASH = 'EMPREINTE_RETIREE';
 // Mot de passe saisi, envoye au script pour obtenir les numeros. Garde en memoire le temps de la session admin.
 let cleAdmin = '';
+// Change a chaque chargement et a la fermeture : une reponse du Sheet arrivee trop tard est ignoree.
+let generationAdmin = 0;
 
 async function empreinteSHA256(texte) {
     const donnees = new TextEncoder().encode(texte);
@@ -3330,6 +3346,7 @@ async function openAdmin() {
 
 function closeAdmin() {
     // Rien ne reste en memoire ni dans la page cachee (poste partage).
+    generationAdmin++;
     cleAdmin = '';
     window._adminTous = null;
     window._adminResults = null;
@@ -3359,14 +3376,22 @@ function renderAdmin() {
     const source = document.getElementById('admin-source');
     source.textContent = '🌐 Données synchronisées depuis Google Sheet';
     source.style.color = 'var(--texte-doux)';
+    const generation = ++generationAdmin;
 
     fetch(SHEET_API + '?cle=' + encodeURIComponent(cleAdmin))
         .then(r => r.json())
         .then(data => {
+            if (generation !== generationAdmin) return;
             if (!Array.isArray(data)) throw new Error('Réponse inattendue du Google Sheet');
             renderAdminData(data);
+            // Le script a jour renvoie toujours une colonne telephone quand il accepte le mot de passe.
+            if (data.length && !Object.keys(data[0]).some(estColonneTelephone)) {
+                source.textContent = '⚠️ Numéros masqués : le script Google n\'a pas reconnu le mot de passe, ou il n\'est pas à jour.';
+                source.style.color = 'var(--ko)';
+            }
         })
         .catch(err => {
+            if (generation !== generationAdmin) return;
             console.log('Fetch Sheet échoué, fallback localStorage:', err);
             const local = JSON.parse(localStorage.getItem('paack_results') || '[]');
             renderAdminData(local);
@@ -3422,8 +3447,11 @@ function echapperHtml(valeur) {
 
 // Memes en-tetes que ceux reconnus par le script Google (Telephone, Tel, Portable...).
 const LIBELLES_TELEPHONE = ['telephone', 'tel', 'numero de telephone', 'portable'];
+function estColonneTelephone(cle) {
+    return LIBELLES_TELEPHONE.indexOf(sansAccents(cle).replace(/\s+/g, ' ')) !== -1;
+}
 function telephoneDeLaLigne(r) {
-    const cle = Object.keys(r).find(k => LIBELLES_TELEPHONE.indexOf(sansAccents(k).replace(/\s+/g, ' ')) !== -1);
+    const cle = Object.keys(r).find(estColonneTelephone);
     const valeur = cle ? r[cle] : '';
     // Une cellule retapee a la main peut etre relue comme nombre : le 0 du debut est alors perdu.
     return normaliserTelephone(typeof valeur === 'number' ? '0' + valeur : valeur);
