@@ -3363,7 +3363,8 @@ function closeAdmin() {
     }
 }
 
-const SHEET_API = 'https://script.google.com/macros/s/AKfycbwNt56FK4Hql5e0BDPWMnYIulocAMhOIqrXnDLyUsh_zOdXtIGczfgcKGKWPPoGtwmfPA/exec';
+// Lecture sur le meme deploiement que l'envoi : un seul deploiement a tenir a jour.
+const SHEET_API = PAACK_ENDPOINT;
 
 function renderAdmin() {
     const statsEl = document.getElementById('admin-stats');
