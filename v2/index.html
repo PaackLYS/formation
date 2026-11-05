@@ -1621,7 +1621,7 @@ body{ background:#e9eef2 !important; }
                 </div>
                 <div class="numbered-step">
                     <div class="step-number">2</div>
-                    <div class="step-text"><strong>Prendre une photo</strong> respectant les critères pour confirmer la livraison en cas de litige</div>
+                    <div class="step-text"><strong>Prendre une photo (POD : proof of delivery)</strong> respectant les critères pour confirmer la livraison en cas de litige</div>
                 </div>
             </div>
             <div class="highlight">
@@ -1705,7 +1705,7 @@ body{ background:#e9eef2 !important; }
                     <li><span class="red-chip"><strong>SANS bloquer la porte</strong></span></li>
                 </ul>
                 <li>Choisissez le motif de livraison "Lieu sûr" puis cliquez sur "Boîte aux lettres"</li>
-                <li>Prendre une photo respectant les critères pour confirmer la livraison en cas de litige</li>
+                <li>Prendre une photo (POD) respectant les critères pour confirmer la livraison en cas de litige</li>
             </ul>
             <div class="highlight" style="margin:15px 0;">
                 <strong>📸 Critères de la photo valide:</strong>
@@ -1813,6 +1813,7 @@ body{ background:#e9eef2 !important; }
                 <ul>
                     <li>Prioriser la livraison en main propre pour minimiser le risque de réclamation</li>
                     <li>Toujours vérifier que c'est le bon colis avant de livrer</li>
+                    <li>Toujours prendre une photo de livraison conforme (POD : proof of delivery)</li>
                     <li>Accord SMS obligatoire pour toute dépose hors main propre (sauf BAL)</li>
                     <li>En cas de livraison en <strong>lieu sûr</strong> : prévenir le client du lieu exact + envoyer une photo</li>
                     <li>Nom du client non visible sur la BAL = pas de livraison en BAL</li>
@@ -2030,7 +2031,7 @@ body{ background:#e9eef2 !important; }
             <div class="retenir">
                 <div class="retenir-title">🧠 À retenir — Échecs</div>
                 <ul>
-                    <li>Toujours choisir le bon motif d'échec + prendre une photo (POA)</li>
+                    <li>Toujours choisir le bon motif d'échec + prendre une photo (POA : proof of attempt)</li>
                     <li>Motif "Refus client" = SMS obligatoire + envoi à votre responsable</li>
                     <li>Si signature demandée lors d'un échec = mauvais clic, revenir en arrière</li>
                     <li>En cas d'erreur "Livré" : prévenir le responsable + le client immédiatement</li>
@@ -2463,7 +2464,7 @@ const questionsPool = [
     { theme:'⚠️', question: "En cas d'échec, quelle photo devez-vous prendre ?", options: ["Le colis seul, en gros plan, avec l'étiquette lisible","Le lieu (numéro de rue, obstacle…), avec le colis visible","Le lieu (numéro de rue, obstacle…), sans le colis","Une capture d'écran du GPS montrant l'adresse"], correct: 1 },
     { theme:'⚠️', question: "Motif « Client absent » : quelle photo devez-vous prendre ?", options: ["La devanture fermée, avec le colis visible","Le numéro de rue ou l'interphone, avec le colis visible","Le numéro de rue ou l'interphone, sans le colis dans le cadre","Le colis seul, posé devant la porte, étiquette visible"], correct: 1 },
     { theme:'⚠️', question: "Motif « Entreprise/magasin fermé(e) » : quelle photo devez-vous prendre ?", options: ["Le numéro de rue ou l'interphone, avec le colis visible","La devanture fermée, avec le colis visible","La devanture fermée, sans le colis dans le cadre","Le colis seul, posé devant la porte du magasin"], correct: 1 },
-    { theme:'⚠️', question: "Que désigne le terme « POA » ?", options: ["La photo de preuve (proof of delivery)","La signature demandée par l'application","Le code OTP donné par le client","Le SMS de refus envoyé par le client"], correct: 0 },
+    { theme:'⚠️', question: "Que désigne le terme « POA » ?", options: ["La photo de preuve (proof of attempt)","La signature demandée par l'application","Le code OTP donné par le client","Le SMS de refus envoyé par le client"], correct: 0 },
     { theme:'⚠️', question: "Que faire d'un colis après un échec de livraison ?", options: ["Le retenter plus tard, puis le retourner à l'entrepôt en fin de tournée","Le retenter plus tard, puis le garder dans le camion pour demain","Le retourner tout de suite à l'entrepôt, sans le retenter","Le déposer au point relais le plus proche, avec une photo"], correct: 0 },
     { theme:'⚠️', question: "Quand pouvez-vous choisir le motif « Client absent » ?", options: ["Dès que personne n'ouvre au premier coup de sonnette, sans contacter le client","Après avoir sonné et contacté le client, sans réponse, et sans possibilité de livraison en boîte aux lettres","Après avoir sonné et contacté le client, sans réponse, même si la livraison en boîte aux lettres est possible","Quand l'adresse n'existe pas ou reste introuvable, même après avoir appelé le client"], correct: 1 },
     { theme:'⚠️', question: "L'adresse est introuvable. Que devez-vous faire avant de valider l'échec « Adresse incorrecte » ?", options: ["Photographier la rue avec le colis visible, sans contacter le client","Photographier le colis seul, puis passer au suivant","Prévenir le responsable, puis valider l'échec sans photo","Contacter le client, puis photographier la rue avec le colis visible"], correct: 3 },
