@@ -3444,7 +3444,7 @@ function fermerConnexionAdmin() {
 async function validerConnexionAdmin() {
     const champ = document.getElementById('admin-mdp');
     const message = document.getElementById('admin-connexion-message');
-    const pwd = champ.value;
+    const pwd = champ.value.trim(); // un copier-coller ramene souvent des espaces autour du mot de passe
     if (!pwd || connexionAdminEnCours) return;
     connexionAdminEnCours = true;
     message.style.color = 'var(--texte-doux)';
