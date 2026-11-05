@@ -1943,7 +1943,7 @@ body{ background:#e9eef2 !important; }
                     <div id="bubble-ferme" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--nuit-2); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
                         <strong style="color:var(--nuit-2);">🏪 Entreprise/magasin fermé(e)</strong><br>
                         L'entreprise ou le magasin est fermé(e) à votre passage.<br>
-                        → Photo de la devanture fermée.<br><br>
+                        → Photo de la devanture fermée, <strong>avec le colis visible</strong>.<br><br>
                         <img src="images/entreprise.jpeg" alt="Exemple photo devanture fermée" style="width:100%; max-width:300px; border-radius:10px; border:2px solid var(--nuit-2); margin-top:4px;">
                     </div>
                 </div>
@@ -2465,7 +2465,7 @@ const questionsPool = [
     { theme:'⚠️', question: "Le motif 'Exigence non remplie' s'utilise :", options: ["Quand le client est absent","Uniquement quand le client n'a pas le code OTP","Quand l'adresse est fausse","Quand le colis est abîmé"], correct: 1 },
     { theme:'⚠️', question: "Le client refuse le colis mais ne veut pas envoyer de SMS. Peut-on mettre 'Refus du client' ?", options: ["Oui, sa parole suffit","Non : pas de SMS, pas de refus","Oui si un voisin confirme","Oui en prenant une photo"], correct: 1 },
     { theme:'⚠️', question: "Motif 'Client absent' : quelle photo faut-il prendre ?", options: ["Le colis seul","Le numéro de rue ou l'interphone, avec le colis visible","La rue entière","Aucune photo"], correct: 1 },
-    { theme:'⚠️', question: "Motif 'Entreprise / magasin fermé' : quelle photo prendre ?", options: ["Le colis dans le camion","La devanture fermée","Le parking","Aucune"], correct: 1 },
+    { theme:'⚠️', question: "Motif 'Entreprise / magasin fermé' : quelle photo prendre ?", options: ["Le colis dans le camion","La devanture fermée, avec le colis visible","Le parking","Aucune"], correct: 1 },
     { theme:'⚠️', question: "Une photo d'échec où le lieu de livraison n'est pas visible est :", options: ["Valide si on voit le colis","Invalide","Valide si elle est nette","Valide en cas d'urgence"], correct: 1 },
     { theme:'📮', question: "Le nom du client n'est pas visible sur la boîte aux lettres. Que faire ?", options: ["Livrer quand même, le colis rentre","Ne pas livrer en BAL : la livraison serait injustifiable en cas de réclamation","Livrer et prendre deux photos","Glisser le colis à l'intérieur de la boîte"], correct: 1 },
 ];
