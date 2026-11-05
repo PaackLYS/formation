@@ -1526,7 +1526,7 @@ body{ background:#e9eef2 !important; }
                 <li>Toujours vérifier que tous les colis sont présents avant de partir</li>
                 <li>Charger par ordre de livraison : derniers au fond, premiers à l'ouverture</li>
                 <li>Ne jamais poser de colis lourd sur un colis fragile</li>
-                <li>Signaler immédiatement tout colis manquant ou en trop</li>
+                <li>Signaler immédiatement tout colis manquant, en trop ou endommagé</li>
             </ul>
         </div>
 
@@ -1629,7 +1629,7 @@ body{ background:#e9eef2 !important; }
                 <ul style="margin-top:10px;">
                     <li>✅ Le colis avec étiquette visible</li>
                     <li>✅ Une partie du client (chaussures, bras, mains) OU porte entrouverte</li>
-                    <li>❌ Photo floue, sans client ou porte ouverte = NON VALIDE</li>
+                    <li>❌ Photo floue ou noire, ou sans client ni porte entrouverte = NON VALIDE</li>
                 </ul>
             </div>
             <div style="margin:16px 0 24px;">
@@ -1857,7 +1857,7 @@ body{ background:#e9eef2 !important; }
                 </div>
                 <div class="numbered-step">
                     <div class="step-number">3</div>
-                    <div class="step-text"><strong>Retourner le colis</strong> à l'entrepôt en fin de tournée</div>
+                    <div class="step-text"><strong>Retenter la livraison</strong> plus tard dans la tournée, puis <strong>retourner le colis</strong> à l'entrepôt en fin de tournée</div>
                 </div>
             </div>
 
@@ -1911,7 +1911,7 @@ body{ background:#e9eef2 !important; }
                     </div>
                     <div id="bubble-absent" class="ech-bubble" style="display:none; background:white; border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--marque); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
                         <strong style="color:var(--marque);">🚪 Client absent</strong><br>
-                        Personne ne répond après avoir sonné et contacté le client.<br>
+                        Personne ne répond après avoir sonné et contacté le client, et la livraison en boîte aux lettres n'est pas possible.<br>
                         → Photo du numéro de rue / interphone, <strong>avec le colis visible</strong>.<br>
                         💡 Vérifiez les consignes de dépose (BAL) avant.<br><br>
                         <img src="../images/echec1.jpg" alt="Exemple client absent" style="width:100%; max-width:300px; border-radius:10px; border:2px solid var(--marque); margin-top:4px;">
@@ -1929,7 +1929,7 @@ body{ background:#e9eef2 !important; }
                         <strong style="color:var(--ko);">❌ Pas de SMS = pas de "Refus" !</strong>
                     </div>
                     <div id="bubble-exigence" class="ech-bubble" style="display:none; background:var(--c-fff5f5); border-radius:12px; padding:14px 16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); border-left:4px solid var(--ko); font-size:0.88em; color:var(--nuit-4); line-height:1.6;">
-                        <strong style="color:var(--ko);">⚠️ Exigence non remplie</strong> <span style="background:var(--c-ffe0e0); padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:var(--ko-texte);">❌ Ne jamais utiliser</span><br>
+                        <strong style="color:var(--ko);">⚠️ Exigence non remplie</strong> <span style="background:var(--c-ffe0e0); padding:2px 8px; border-radius:6px; font-size:0.8em; font-weight:700; color:var(--ko-texte);">⚠️ Uniquement si pas de code OTP</span><br>
                         Ce motif est réservé <strong>uniquement</strong> quand le client n'a pas le code OTP.<br>
                         <strong style="color:var(--ko);">Ne l'utilisez jamais pour un autre cas.</strong>
                     </div>
@@ -2034,7 +2034,7 @@ body{ background:#e9eef2 !important; }
                     <li>Motif "Refus client" = SMS obligatoire + envoi à votre responsable</li>
                     <li>Si signature demandée lors d'un échec = mauvais clic, revenir en arrière</li>
                     <li>En cas d'erreur "Livré" : prévenir le responsable + le client immédiatement</li>
-                    <li>Toujours retourner les colis non livrés à l'entrepôt</li>
+                    <li>Retenter la livraison, puis retourner les colis non livrés à l'entrepôt en fin de tournée</li>
                 </ul>
             </div>
             <button class="btn-next-step" onclick="goToStep(4)">
@@ -2432,42 +2432,48 @@ function freeNavTo(sectionId) {
 
 // ========== QCM ==========
 const questionsPool = [
-    { theme:'📦', question: "Que signifie '1P' sur une étiquette Paack ?", options: ["1ère Position","1 Paquet (1 colis)","1 Personne","Priorité 1"], correct: 1 },
-    { theme:'📦', question: "Comment doit-on charger les colis ?", options: ["N'importe comment","Derniers au fond, premiers à l'ouverture, par ordre de livraison","Les plus lourds devant","Au hasard"], correct: 1 },
-    { theme:'📦', question: "Où place-t-on un colis fragile dans le véhicule ?", options: ["Sous les colis lourds","Au-dessus, dans une zone protégée","N'importe où","En dernier"], correct: 1 },
-    { theme:'📦', question: "À quoi sert le numéro dans le carré noir sur l'étiquette ?", options: ["Le poids du colis","L'ordre de livraison","Le nombre de colis","Le code du hub"], correct: 1 },
-    { theme:'📦', question: "Que signifie 'LYS 013' sur l'étiquette ?", options: ["Le code postal","Le nom de la tournée / route","Le numéro de colis","L'adresse du client"], correct: 1 },
-    { theme:'📦', question: "Que faire si un colis est endommagé au chargement ?", options: ["Le charger quand même","Le signaler au responsable avant de partir","L'ignorer","Le laisser sans prévenir"], correct: 1 },
-    { theme:'📦', question: "Les premiers colis à livrer doivent être placés :", options: ["Au fond du véhicule","Au milieu","À l'ouverture du véhicule","N'importe où"], correct: 2 },
-    { theme:'📦', question: "Que faire si vous ne trouvez pas un colis à l'entrepôt ?", options: ["Partir sans","Vérifier une 2e fois puis signaler au responsable","Appeler le client","Attendre le lendemain"], correct: 1 },
-    { theme:'📦', question: "Le code barre sert à :", options: ["Identifier la couleur","Scanner le colis sur l'application lors de la collecte","Connaître le poids","Identifier le livreur"], correct: 1 },
-    { theme:'📦', question: "Peut-on empiler des colis lourds sur des colis fragiles ?", options: ["Oui si c'est rapide","Oui si la distance est courte","Non, jamais","Oui avec précaution"], correct: 2 },
-    { theme:'📦', question: "Que représente la date sur l'étiquette Paack ?", options: ["La date de fabrication","La date de livraison prévue","La date d'expédition","La date de retour"], correct: 1 },
-    { theme:'📮', question: "Quelle est la méthode de livraison prioritaire ?", options: ["Boîte aux lettres","Voisin","Remise en main propre","Dépose devant la porte"], correct: 2 },
-    { theme:'📮', question: "Quel critère est OBLIGATOIRE sur la photo en main propre ?", options: ["Le colis seul","Le client seul","Colis + partie du client OU porte entrouverte","Juste la rue"], correct: 2 },
-    { theme:'📮', question: "Pour une dépose en lieu sûr (jardin, palier, voisin, etc...), que faut-il OBLIGATOIREMENT ?", options: ["Rien de spécial","Un accord écrit du client par SMS","Un appel téléphonique","Une signature"], correct: 1 },
-    { theme:'📮', question: "Pour une livraison en BAL, quel critère photo est requis ?", options: ["Juste le colis","Colis + étiquette + nom client sur la BAL","Juste la boîte","La rue uniquement"], correct: 1 },
-    { theme:'📮', question: "Peut-on déposer un colis chez un voisin sans accord du client ?", options: ["Oui si le client ne répond pas","Oui, toujours","Non, accord client obligatoire","Oui si le voisin accepte"], correct: 2 },
-    { theme:'📮', question: "La capture d'écran de l'accord client doit être envoyée :", options: ["Gardée pour soi","À votre responsable","Envoyée au client uniquement","Supprimée après livraison"], correct: 1 },
-    { theme:'📮', question: "Une photo floue lors d'une livraison main propre est-elle valide ?", options: ["Oui si le colis est visible","Non, elle n'est pas valide","Oui si le client est visible","Oui toujours"], correct: 1 },
-    { theme:'📮', question: "Avant de livrer, que faut-il toujours vérifier ?", options: ["La météo","Que vous livrez le bon colis à la bonne adresse","Que le client est disponible","Le poids du colis"], correct: 1 },
-    { theme:'📮', question: "Que faire si le client demande une dépose chez le voisin ?", options: ["Refuser systématiquement","Obtenir son accord par SMS et l'envoyer à votre responsable","Déposer directement chez le voisin","Livrer le lendemain"], correct: 1 },
-    { theme:'⚠️', question: "En cas d'impossibilité de livrer le colis, que dois-je faire ?", options: ["Appeler le client","Choisir le bon motif d'échec sur l'application","Laisser le colis","Rentrer à l'entrepôt"], correct: 1 },
-    { theme:'⚠️', question: "L'application demande une signature pour un échec. C'est normal ?", options: ["Oui, toujours","Non, revenir en arrière (mauvais clic)","Signer quand même","Appeler le responsable"], correct: 1 },
-    { theme:'⚠️', question: "Que faire après avoir déclaré un colis 'Livré' par erreur ?", options: ["Continuer, c'est trop tard","Prévenir le responsable ET le client","Attendre que le client se plaigne","Retourner le chercher sans prévenir"], correct: 1 },
-    { theme:'⚠️', question: "Que faire du colis en cas d'échec ?", options: ["Le garder pour le lendemain","Le retenter puis le retourner à l'entrepôt en fin de tournée","Le laisser devant la porte","L'apporter à un voisin"], correct: 1 },
-    { theme:'⚠️', question: "Quelle photo prendre en cas d'échec ?", options: ["Aucune","Numéro de rue, lieu ou obstacle + colis","Photo du colis uniquement","Selfie devant l'adresse"], correct: 1 },
-    { theme:'⚠️', question: "Pour le motif 'Refus du client', que faut-il obligatoirement ?", options: ["Rien de spécial","Un SMS du client prouvant son refus + envoi à votre responsable","Un appel téléphonique","Une signature du client"], correct: 1 },
-    { theme:'📦', question: "Que signifie '2P' sur une étiquette Paack ?", options: ["2e position dans la tournée","2 colis pour ce client","2 personnes au domicile","Priorité 2"], correct: 1 },
-    { theme:'📦', question: "Vous avez un colis qui n'apparaît pas sur votre application. Que faire ?", options: ["Le livrer quand même","Le rapporter à votre responsable avant de partir en livraison","Le laisser dans le camion","Le jeter"], correct: 1 },
-    { theme:'📮', question: "Le colis rentre dans la BAL mais en forçant un peu. Que faire ?", options: ["Forcer, l'essentiel est qu'il rentre","Ne pas forcer : ni emballage abîmé, ni porte bloquée","Le plier","Le laisser à moitié dedans"], correct: 1 },
-    { theme:'📮', question: "Sur une photo de livraison en BAL, le colis doit être :", options: ["À l'intérieur de la boîte","Devant la boîte aux lettres","Par terre devant l'immeuble","Dans les mains du livreur"], correct: 1 },
-    { theme:'⚠️', question: "Le motif 'Exigence non remplie' s'utilise :", options: ["Quand le client est absent","Uniquement quand le client n'a pas le code OTP","Quand l'adresse est fausse","Quand le colis est abîmé"], correct: 1 },
-    { theme:'⚠️', question: "Le client refuse le colis mais ne veut pas envoyer de SMS. Peut-on mettre 'Refus du client' ?", options: ["Oui, sa parole suffit","Non : pas de SMS, pas de refus","Oui si un voisin confirme","Oui en prenant une photo"], correct: 1 },
-    { theme:'⚠️', question: "Motif 'Client absent' : quelle photo faut-il prendre ?", options: ["Le colis seul","Le numéro de rue ou l'interphone, avec le colis visible","La rue entière","Aucune photo"], correct: 1 },
-    { theme:'⚠️', question: "Motif 'Entreprise / magasin fermé' : quelle photo prendre ?", options: ["Le colis dans le camion","La devanture fermée, avec le colis visible","Le parking","Aucune"], correct: 1 },
-    { theme:'⚠️', question: "Une photo d'échec où le lieu de livraison n'est pas visible est :", options: ["Valide si on voit le colis","Invalide","Valide si elle est nette","Valide en cas d'urgence"], correct: 1 },
-    { theme:'📮', question: "Le nom du client n'est pas visible sur la boîte aux lettres. Que faire ?", options: ["Livrer quand même, le colis rentre","Ne pas livrer en BAL : la livraison serait injustifiable en cas de réclamation","Livrer et prendre deux photos","Glisser le colis à l'intérieur de la boîte"], correct: 1 },
+    { theme:'📦', question: "Que signifie « LYS 013 » sur l'étiquette ?", options: ["Le code postal du client","Le nom de la tournée","Le numéro du colis","Le numéro du livreur"], correct: 1 },
+    { theme:'📦', question: "Que représente le numéro dans le carré noir de l'étiquette ?", options: ["Le poids du colis","L'ordre de livraison","Le nombre de colis","Le code de l'entrepôt"], correct: 1 },
+    { theme:'📦', question: "Sur l'étiquette Paack, que signifie la mention « 09:00 – 22:00 » ?", options: ["Les horaires d'ouverture de l'entrepôt","La plage horaire attendue par le client","Départ à 9 h, retour à l'entrepôt avant 22 h","Les horaires de collecte chez l'expéditeur"], correct: 1 },
+    { theme:'📦', question: "Que représente la date sur l'étiquette Paack ?", options: ["La date de commande du client","La date de livraison prévue","La date d'expédition du colis","La date limite de retour du colis"], correct: 1 },
+    { theme:'📦', question: "Que signifie « 1P » sur une étiquette Paack ?", options: ["1re position dans la tournée","1 colis pour ce client","1 personne au domicile","Colis prioritaire (priorité 1)"], correct: 1 },
+    { theme:'📦', question: "À quoi sert le code-barres de l'étiquette ?", options: ["À indiquer le poids du colis","À identifier le colis lors du scan","À identifier le livreur de la tournée","À indiquer le créneau de livraison"], correct: 1 },
+    { theme:'📦', question: "Au chargement, un colis de votre tournée semble manquer. Que devez-vous faire en premier ?", options: ["Partir, puis le signaler au responsable à votre retour","Revérifier qu'il est bien manquant","Le déclarer en échec dans l'application","Appeler le client pour reporter sa livraison"], correct: 1 },
+    { theme:'📦', question: "Un colis manquait au chargement et vous avez quitté l'entrepôt sans le signaler. Qui en est responsable ?", options: ["L'entrepôt, puisqu'il manquait au chargement","Vous, depuis votre départ de l'entrepôt","Le responsable de site, pas le livreur","Personne, tant que le client ne réclame pas"], correct: 1 },
+    { theme:'📦', question: "Au chargement, un colis n'apparaît pas sur votre application. Que faire ?", options: ["Le livrer quand même : l'adresse est sur l'étiquette","Le rapporter à votre responsable avant de partir en livraison","Le livrer, puis le signaler à votre responsable en fin de tournée","Le laisser de côté à l'entrepôt sans prévenir"], correct: 1 },
+    { theme:'📦', question: "Dans quel ordre devez-vous charger les colis dans le camion ?", options: ["Par poids : les plus lourds au fond, les plus légers à l'ouverture","Par ordre de livraison : derniers au fond, premiers à l'ouverture","Par ordre de livraison : premiers au fond, derniers à l'ouverture","Par taille : les plus gros au fond, les plus petits à l'ouverture"], correct: 1 },
+    { theme:'📦', question: "Vous chargez un colis fragile. Quelle règle devez-vous respecter ?", options: ["Le caler sous les colis lourds pour qu'il ne bouge pas","Ne jamais poser de colis lourd dessus","Ne jamais le placer à l'ouverture du camion","Le charger en dernier, quel que soit l'ordre de livraison"], correct: 1 },
+    { theme:'📦', question: "Au chargement, vous remarquez qu'un colis est ouvert ou écrasé. Que faire ?", options: ["Le charger, puis prévenir le responsable en fin de tournée","Le signaler au responsable avant de partir","Le déclarer « Colis endommagé » au 1er arrêt","Le refermer avec du scotch, puis le charger"], correct: 1 },
+    { theme:'📮', question: "Pour un colis Standard, quelle livraison devez-vous obligatoirement tenter en premier ?", options: ["Boîte aux lettres (BAL)","Remise à un voisin","Remise en main propre","Dépose devant la porte"], correct: 2 },
+    { theme:'📮', question: "Quels colis sont des colis « Budget » ?", options: ["Evri et Mondial Relay uniquement","Evri, Mondial Relay et Ecommerce","Tous les colis qui rentrent en BAL","Les colis les plus légers de la tournée"], correct: 1 },
+    { theme:'📮', question: "Un colis Standard rentre dans la BAL et le nom du client est visible. Pouvez-vous l'y déposer directement, dès votre arrivée ?", options: ["Oui, s'il rentre sans abîmer l'emballage","Non, sauf si le client a demandé la BAL","Oui, puisque le nom du client est visible","Non, jamais : la BAL est interdite en Standard"], correct: 1 },
+    { theme:'📮', question: "Avant de livrer, que devez-vous toujours vérifier ?", options: ["Que le client a reçu un SMS de passage","Que c'est le bon colis pour cette adresse","Que le créneau horaire n'est pas dépassé","Que le poids correspond à l'étiquette"], correct: 1 },
+    { theme:'📮', question: "Remise en main propre : que doit montrer la photo ?", options: ["Le colis seul, étiquette visible, posé devant la porte","Le client de face, sans le colis, pour prouver sa présence","Le colis avec étiquette + une partie du client ou la porte entrouverte","Le colis avec étiquette + le numéro de rue ou le nom sur l'interphone"], correct: 2 },
+    { theme:'📮', question: "Remise en main propre : votre photo est floue. Est-elle valide ?", options: ["Oui, si le client a bien reçu le colis","Non, elle n'est pas valide","Non, sauf si le client est visible dessus","Oui, l'important est d'avoir pris une photo"], correct: 1 },
+    { theme:'📮', question: "Le colis ne rentre dans la BAL qu'en forçant. Que faire ?", options: ["Forcer doucement : l'essentiel est qu'il soit dedans","Renoncer à la BAL : ni colis abîmé, ni porte bloquée","Le laisser dépasser de la fente, étiquette visible","Le poser au-dessus des BAL, dans le hall"], correct: 1 },
+    { theme:'📮', question: "Livraison en BAL : que doit montrer la photo ?", options: ["Le colis seul, en gros plan sur son étiquette","Le colis avec étiquette + le nom du client sur la BAL","Le colis avec étiquette + le numéro de la rue","La BAL fermée + le nom du client, sans le colis"], correct: 1 },
+    { theme:'📮', question: "Livraison en boîte aux lettres : où doit se trouver le colis sur la photo ?", options: ["À l'intérieur de la boîte aux lettres","Devant la boîte aux lettres","Devant la porte de l'immeuble","À moitié glissé dans la fente"], correct: 1 },
+    { theme:'📮', question: "Livraison en BAL dans un hall sombre : votre photo sort toute noire. Est-elle valide ?", options: ["Oui, puisque la photo a été prise sur place","Non : elle ne prouve rien en cas de litige","Oui, c'est toléré pour une livraison de nuit","Non, sauf si vous prévenez le client par SMS"], correct: 1 },
+    { theme:'📮', question: "Le nom du client n'apparaît pas sur la BAL. Que faire ?", options: ["Livrer en BAL quand même, si le colis rentre sans forcer","Ne pas livrer en BAL : la livraison serait injustifiable","Livrer en BAL et photographier aussi le numéro de rue","Ne pas livrer en BAL, sauf s'il s'agit d'un colis Budget"], correct: 1 },
+    { theme:'📮', question: "Livraison en « Autres lieux » (jardin, voisin…) : que faut-il obligatoirement avant la dépose ?", options: ["L'accord oral du client par téléphone","L'accord écrit du client par SMS","Une photo du lieu de dépose, rien de plus","L'accord du gardien ou d'un voisin"], correct: 1 },
+    { theme:'📮', question: "Que faire de la capture d'écran de l'accord du client ?", options: ["La garder sur votre téléphone, sans l'envoyer","L'envoyer à votre responsable","La transférer au service client","La joindre à la photo de livraison"], correct: 1 },
+    { theme:'📮', question: "Avec l'accord du client, vous déposez son colis dans son jardin. Que devez-vous encore faire auprès de lui ?", options: ["Rien : il a donné son accord, il sait où est le colis","Le prévenir du lieu exact et lui envoyer une photo","Lui envoyer une photo, sans préciser le lieu","Le prévenir seulement s'il ne trouve pas le colis"], correct: 1 },
+    { theme:'📮', question: "Une commande compte 2 colis pour le même client. Que devez-vous faire à la livraison ?", options: ["Livrer les 2 colis, mais n'en photographier qu'un","Livrer les 2 colis et les prendre tous en photo","Livrer le 1er colis et garder le 2e pour demain","Livrer les 2 colis : la photo n'est pas obligatoire"], correct: 1 },
+    { theme:'⚠️', question: "Livraison impossible : que devez-vous faire dans l'application ?", options: ["Choisir le bon motif d'échec, sans photo","Choisir le bon motif d'échec et prendre une photo","Choisir « Client absent » par défaut, avec photo","Ne rien déclarer et rapporter le colis le soir"], correct: 1 },
+    { theme:'⚠️', question: "En cas d'échec, quelle photo devez-vous prendre ?", options: ["Le colis seul, en gros plan, avec l'étiquette lisible","Le lieu (numéro de rue, obstacle…), avec le colis visible","Le lieu (numéro de rue, obstacle…), sans le colis","Une capture d'écran du GPS montrant l'adresse"], correct: 1 },
+    { theme:'⚠️', question: "Motif « Client absent » : quelle photo devez-vous prendre ?", options: ["La devanture fermée, avec le colis visible","Le numéro de rue ou l'interphone, avec le colis visible","Le numéro de rue ou l'interphone, sans le colis dans le cadre","Le colis seul, posé devant la porte, étiquette visible"], correct: 1 },
+    { theme:'⚠️', question: "Motif « Entreprise/magasin fermé(e) » : quelle photo devez-vous prendre ?", options: ["Le numéro de rue ou l'interphone, avec le colis visible","La devanture fermée, avec le colis visible","La devanture fermée, sans le colis dans le cadre","Le colis seul, posé devant la porte du magasin"], correct: 1 },
+    { theme:'⚠️', question: "Que désigne le terme « POA » ?", options: ["La photo de preuve (proof of delivery)","La signature demandée par l'application","Le code OTP donné par le client","Le SMS de refus envoyé par le client"], correct: 0 },
+    { theme:'⚠️', question: "Que faire d'un colis après un échec de livraison ?", options: ["Le retenter plus tard, puis le retourner à l'entrepôt en fin de tournée","Le retenter plus tard, puis le garder dans le camion pour demain","Le retourner tout de suite à l'entrepôt, sans le retenter","Le déposer au point relais le plus proche, avec une photo"], correct: 0 },
+    { theme:'⚠️', question: "Quand pouvez-vous choisir le motif « Client absent » ?", options: ["Dès que personne n'ouvre au premier coup de sonnette, sans contacter le client","Après avoir sonné et contacté le client, sans réponse, et sans possibilité de livraison en boîte aux lettres","Après avoir sonné et contacté le client, sans réponse, même si la livraison en boîte aux lettres est possible","Quand l'adresse n'existe pas ou reste introuvable, même après avoir appelé le client"], correct: 1 },
+    { theme:'⚠️', question: "L'adresse est introuvable. Que devez-vous faire avant de valider l'échec « Adresse incorrecte » ?", options: ["Photographier la rue avec le colis visible, sans contacter le client","Photographier le colis seul, puis passer au suivant","Prévenir le responsable, puis valider l'échec sans photo","Contacter le client, puis photographier la rue avec le colis visible"], correct: 3 },
+    { theme:'⚠️', question: "L'adresse est incorrecte et le client vous donne une nouvelle adresse. Que devez-vous faire ?", options: ["Prévenir votre responsable","Livrer directement à la nouvelle adresse","Corriger vous-même l'adresse dans l'application","Garder le colis pour le livrer demain"], correct: 0 },
+    { theme:'⚠️', question: "Le client refuse le colis mais ne veut pas envoyer de SMS. Pouvez-vous choisir le motif « Refusée par le client » ?", options: ["Oui, son refus oral suffit","Non : pas de SMS, pas de refus","Non, sauf s'il signe le refus dans l'application","Oui, en prenant une photo du client"], correct: 1 },
+    { theme:'⚠️', question: "Dans quel cas pouvez-vous utiliser le motif « Exigence non remplie » ?", options: ["Quand le client est absent après vos appels","Quand le client n'a pas le code OTP","Quand l'adresse est introuvable","Quand le colis est ouvert ou écrasé"], correct: 1 },
+    { theme:'⚠️', question: "Il pleut toute la journée, mais les routes restent praticables. Pouvez-vous utiliser le motif « Météo / perturbation / grève » ?", options: ["Oui, car la pluie risque d'abîmer les colis","Oui, à condition que plus de 5 colis soient concernés","Non, une simple pluie ne justifie pas ce motif","Non, sauf si le client accepte d'être livré demain"], correct: 2 },
+    { theme:'⚠️', question: "Motif « Météo / perturbation / grève » : quand devez-vous prévenir votre responsable ?", options: ["Jamais : choisir le motif suffit","Si plus de 5 colis sont concernés","Dès le premier colis concerné","Si plus de 20 colis sont concernés"], correct: 1 },
+    { theme:'⚠️', question: "Lors d'un échec, l'application vous demande une signature. Que faire ?", options: ["Faire signer le client, c'est normal","Revenir en arrière : mauvais clic","Signer à la place du client","Valider sans signature et continuer"], correct: 1 },
+    { theme:'⚠️', question: "Vous avez déclaré un colis « Livré » par erreur. Que faire ?", options: ["Prévenir le responsable et le client en fin de tournée","Prévenir immédiatement le responsable et le client","Prévenir seulement le client pour lui expliquer l'erreur","Corriger le statut vous-même, sans prévenir personne"], correct: 1 },
 ];
 let currentQCMNum = null;
 let currentQuestions = [];
