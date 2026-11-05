@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'">
     <meta name="referrer" content="no-referrer">
     <title>Guide Livraison Paack - Formation Interactive</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
 /* ===== Jetons de couleur : une valeur, un role, un seul endroit ou la changer ===== */
 :root{
@@ -2140,6 +2140,19 @@ body{ background:#e9eef2 !important; }
         <button onclick="closeAdmin()" style="width:100%; margin-top:20px; padding:14px;">← Retour à la formation</button>
     </div>
 
+    <!-- Connexion admin : champ masqué, compatible avec les gestionnaires de mots de passe -->
+    <div id="admin-connexion" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(6,14,24,0.65); z-index:10000; align-items:center; justify-content:center; padding:16px;" onclick="if (event.target === this) fermerConnexionAdmin()">
+        <form onsubmit="event.preventDefault(); validerConnexionAdmin();" onkeydown="if (event.key === 'Escape') fermerConnexionAdmin()" style="background:var(--surface); border-radius:14px; padding:22px; width:100%; max-width:360px; box-shadow:0 12px 40px rgba(0,0,0,0.45);">
+            <label for="admin-mdp" style="display:block; font-weight:800; color:var(--c-12232e); margin-bottom:10px;">🔒 Mot de passe admin</label>
+            <input type="password" id="admin-mdp" name="password" autocomplete="current-password" style="width:100%; box-sizing:border-box; padding:12px 14px; border-radius:10px; border:2px solid var(--marque-clair); font-size:1em; color:var(--c-12232e);">
+            <p id="admin-connexion-message" style="font-size:0.85em; margin:8px 0 0; min-height:1.3em;"></p>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button type="button" onclick="fermerConnexionAdmin()" style="flex:1; margin:0; padding:10px;">Annuler</button>
+                <button type="submit" style="flex:1; margin:0; padding:10px;">Valider</button>
+            </div>
+        </form>
+    </div>
+
     <!-- ========== FOOTER ========== -->
     <footer class="site-footer">
         Formation <span>Paack</span> · v3.0 · &copy; 2026<br>
@@ -2580,42 +2593,51 @@ function pendingRemove(id) {
     pendingSet(pendingGet().filter(function (item) { return item.id !== id; }));
 }
 
-// Envoi unitaire. Renvoie true seulement si le serveur a confirme la reception.
+// Envoi unitaire : 'ok' = enregistre ; 'refus' = rejete pour de bon, inutile de renvoyer ;
+// 'echec' = a renvoyer plus tard (pas de reseau, serveur occupe, plafond atteint, reponse inconnue).
 async function envoyerAuServeur(payload) {
     try {
         const ctrl = new AbortController();
-        const timer = setTimeout(function () { ctrl.abort(); }, 15000);
+        const timer = setTimeout(function () { ctrl.abort(); }, 30000);
         const rep = await fetch(PAACK_ENDPOINT, {
             method: 'POST',
             body: JSON.stringify(payload),
             signal: ctrl.signal
         });
-        // Le script repond « Erreur: ... » avec un code 200 quand il n'a pas pu ecrire la ligne.
-        const corps = rep.ok ? await rep.text() : '';
+        const corps = rep.ok ? (await rep.text()).trim() : '';
         clearTimeout(timer);
         console.log('Envoi resultat : HTTP ' + rep.status);
-        return rep.ok && corps.indexOf('Erreur') !== 0;
+        if (corps === 'OK') return 'ok';
+        if (corps.indexOf('Refus') === 0) return 'refus';
+        return 'echec';
     } catch (e) {
         console.log('Envoi resultat echoue :', e);
-        return false;
+        return 'echec';
     }
 }
 
-// Envoie le resultat, le garde en file d'attente si l'envoi echoue.
+// Envoie le resultat, le garde en file d'attente si l'envoi doit etre retente.
 async function envoyerResultat(payload) {
-    const ok = await envoyerAuServeur(payload);
-    if (!ok) pendingAdd(payload);
-    return ok;
+    const etat = await envoyerAuServeur(payload);
+    if (etat === 'echec') pendingAdd(payload);
+    return etat;
 }
 
-// Rejoue les resultats en attente, au chargement de la page.
+// Rejoue les resultats en attente : au chargement, toutes les 2 minutes et au retour du reseau.
+let rejeuEnCours = false;
 async function viderFileAttente() {
+    if (rejeuEnCours) return;
     const list = pendingGet();
     if (!list.length) return;
-    console.log('Resultats en attente a renvoyer : ' + list.length);
-    for (const item of list) {
-        const ok = await envoyerAuServeur(item.payload);
-        if (ok) pendingRemove(item.id);
+    rejeuEnCours = true;
+    try {
+        console.log('Resultats en attente a renvoyer : ' + list.length);
+        for (const item of list) {
+            const etat = await envoyerAuServeur(item.payload);
+            if (etat !== 'echec') pendingRemove(item.id);
+        }
+    } finally {
+        rejeuEnCours = false;
     }
 }
 
@@ -2631,7 +2653,16 @@ function afficherStatutEnvoi(ok) {
     }
 }
 
+function afficherRefusEnvoi() {
+    const el = document.getElementById('statut-envoi');
+    if (!el) return;
+    el.textContent = '⚠️ Résultat refusé par le serveur : prévenez votre responsable.';
+    el.style.color = 'var(--c-ffe08a)';
+}
+
 window.addEventListener('load', function () { setTimeout(viderFileAttente, 2000); });
+setInterval(viderFileAttente, 120000);
+window.addEventListener('online', viderFileAttente);
 
 // Repropose l'entrepot deja choisi sur cet appareil
 window.addEventListener('load', function () {
@@ -2655,8 +2686,10 @@ function showResults() {
     const results = JSON.parse(localStorage.getItem('paack_results') || '[]');
     results.push({ nom: currentNom, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree });
     localStorage.setItem('paack_results', JSON.stringify(results));
-    envoyerResultat({ nom: currentNom, telephone: currentTelephone, entrepot: currentEntrepot, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
-        .then(function (ok) { afficherStatutEnvoi(ok); });
+    // L'identifiant evite qu'un renvoi apres une coupure cree un doublon dans le Sheet.
+    const idEnvoi = Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    envoyerResultat({ id: idEnvoi, nom: currentNom, telephone: currentTelephone, entrepot: currentEntrepot, date: dateStr, qcm: `QCM ${currentQCMNum}`, score, total: currentQuestions.length, pct, duree })
+        .then(function (etat) { if (etat === 'refus') afficherRefusEnvoi(); else afficherStatutEnvoi(etat === 'ok'); });
     let msg = pct===100 ? '🎉 Parfait !' : pct>=80 ? '👍 Très bon !' : pct>=60 ? '⚠️ À revoir.' : '📚 Relisez le guide.';
     // Confettis si 100% !
     if (pct === 100) launchConfetti();
@@ -3346,10 +3379,12 @@ function toggleMute() {
 
 // ========== 📊 ADMIN DASHBOARD ==========
 // Le mot de passe n'est verifie que par le script Google : la page ne contient pas son empreinte.
-// Il reste en memoire le temps de la session admin, pour le bouton Actualiser.
+// Il reste en memoire le temps de la session admin, 15 minutes sans actualisation au plus.
 let cleAdmin = '';
 // Change a chaque chargement et a la fermeture : une reponse du Sheet arrivee trop tard est ignoree.
 let generationAdmin = 0;
+let connexionAdminEnCours = false;
+let minuterieAdmin = null;
 
 // Lecture sur le meme deploiement que l'envoi : un seul deploiement a tenir a jour.
 const SHEET_API = PAACK_ENDPOINT;
@@ -3358,18 +3393,25 @@ const SHEET_API = PAACK_ENDPOINT;
 // non JSON : un ancien script le rejette sans rien ecrire dans le Sheet.
 async function lireResultatsAdmin(cle) {
     let texte;
+    const ctrl = new AbortController();
+    const timer = setTimeout(function () { ctrl.abort(); }, 20000);
     try {
-        const rep = await fetch(SHEET_API, { method: 'POST', body: new URLSearchParams({ action: 'admin', cle: cle }) });
+        const rep = await fetch(SHEET_API, { method: 'POST', body: new URLSearchParams({ action: 'admin', cle: cle }), signal: ctrl.signal });
         texte = await rep.text();
     } catch (e) {
-        return { erreur: '⚠️ Google Sheet injoignable : vérifiez la connexion et réessayez.' };
+        return { erreur: '⚠️ Google Sheet ne répond pas : vérifiez la connexion et réessayez.' };
+    } finally {
+        clearTimeout(timer);
     }
     let data;
     try { data = JSON.parse(texte); }
-    catch (e) { return { erreur: '⚠️ Le script Google n\'est pas à jour : il faut le redéployer.' }; }
+    catch (e) {
+        return { erreur: texte.indexOf('Erreur') === 0
+            ? '⚠️ Le script Google n\'est pas à jour : il faut le redéployer.'
+            : '⚠️ Réponse illisible du script Google : réessayez dans un instant.' };
+    }
     if (Array.isArray(data)) return { lignes: data };
     if (data && data.error === 'non autorise') return { erreur: '❌ Mot de passe incorrect' };
-    if (data && data.error === 'trop de tentatives') return { erreur: '⛔ Trop de tentatives : réessayez dans 10 minutes.' };
     return { erreur: '⚠️ Réponse inattendue du Google Sheet.' };
 }
 
@@ -3385,15 +3427,39 @@ function afficherAdmin(lignes) {
     }
 }
 
-async function openAdmin() {
-    const pwd = prompt('🔒 Mot de passe admin :');
-    if (!pwd) return;
+// Lien « admin » du pied de page, ou adresse avec ?admin : ouvre la fenetre de connexion.
+function openAdmin() {
+    document.getElementById('admin-connexion-message').textContent = '';
+    const champ = document.getElementById('admin-mdp');
+    champ.value = '';
+    document.getElementById('admin-connexion').style.display = 'flex';
+    setTimeout(function () { champ.focus(); }, 50);
+}
+
+function fermerConnexionAdmin() {
+    document.getElementById('admin-connexion').style.display = 'none';
+    document.getElementById('admin-mdp').value = '';
+}
+
+async function validerConnexionAdmin() {
+    const champ = document.getElementById('admin-mdp');
+    const message = document.getElementById('admin-connexion-message');
+    const pwd = champ.value;
+    if (!pwd || connexionAdminEnCours) return;
+    connexionAdminEnCours = true;
+    message.style.color = 'var(--texte-doux)';
+    message.textContent = '⏳ Vérification du mot de passe...';
     const generation = ++generationAdmin;
-    document.body.style.cursor = 'progress';
     const reponse = await lireResultatsAdmin(pwd);
-    document.body.style.cursor = '';
+    connexionAdminEnCours = false;
     if (generation !== generationAdmin) return;
-    if (reponse.erreur) { alert(reponse.erreur); return; }
+    if (reponse.erreur) {
+        message.style.color = 'var(--ko)';
+        message.textContent = reponse.erreur;
+        champ.select();
+        return;
+    }
+    fermerConnexionAdmin();
     cleAdmin = pwd;
     // Masquer tout, afficher admin
     document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
@@ -3403,16 +3469,31 @@ async function openAdmin() {
     adminPage.style.display = 'block';
     adminPage.classList.add('active');
     afficherAdmin(reponse.lignes);
+    armerExpirationAdmin();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Poste partage : le dashboard se referme apres 15 minutes sans actualisation, ou quand on quitte la page.
+function armerExpirationAdmin() {
+    clearTimeout(minuterieAdmin);
+    minuterieAdmin = setTimeout(closeAdmin, 15 * 60 * 1000);
+}
+window.addEventListener('pagehide', function () { if (cleAdmin) closeAdmin(); });
+
 function closeAdmin() {
-    // Rien ne reste en memoire ni dans la page cachee (poste partage).
+    // Rien ne reste en memoire ni dans la page cachee.
     generationAdmin++;
+    clearTimeout(minuterieAdmin);
     cleAdmin = '';
     window._adminTous = null;
     window._adminResults = null;
+    window._adminPage = 0;
     ['admin-stats', 'admin-table-wrap', 'admin-evolution'].forEach(id => { document.getElementById(id).innerHTML = ''; });
+    document.getElementById('admin-recherche-nom').value = '';
+    document.getElementById('admin-filtre-entrepot').innerHTML = '<option value="">Tous les entrepôts</option>';
+    const note = document.getElementById('admin-filtre-note');
+    note.textContent = '';
+    note.style.display = 'none';
     document.getElementById('admin-page').style.display = 'none';
     document.getElementById('admin-page').classList.remove('active');
     if (freeMode) {
@@ -3439,6 +3520,7 @@ async function renderAdmin() {
         return;
     }
     afficherAdmin(reponse.lignes);
+    armerExpirationAdmin();
 }
 
 function renderAdminData(results) {
@@ -3593,7 +3675,7 @@ function renderAdminFiltre() {
     renderAdminPage(tableEl, reversed, 0, PAGE_SIZE);
 
     // Évolution par livreur
-    const byName = {};
+    const byName = Object.create(null); // un nom comme « constructor » ne doit pas tomber sur Object.prototype
     results.forEach(r => {
         if (!byName[r.nom]) byName[r.nom] = [];
         byName[r.nom].push(r);
