@@ -3265,7 +3265,7 @@ window.addEventListener('load', function() {
     fetch('https://script.google.com/macros/s/AKfycbxD55xgU7e-wZbinsn0LJ2LWZ5rxc5r9k7--UdySiywwxQrBkhRsSUye7QfSRcCuKoWPQ/exec', {
         method: 'POST', mode: 'no-cors',
         body: JSON.stringify({ type: 'vue', date: new Date().toLocaleString('fr-FR'), page: document.title, appareil: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop' })
-    });
+    }).catch(function () {}); // hors reseau : une vue perdue n'a pas d'importance
 });
 
 // ========== SCROLL TO TOP BUTTON ==========
@@ -3388,6 +3388,8 @@ let minuterieAdmin = null;
 
 // Lecture sur le meme deploiement que l'envoi : un seul deploiement a tenir a jour.
 const SHEET_API = PAACK_ENDPOINT;
+// Dashboard : en dessous de 18/20 (90 %), le QCM compte comme un echec.
+const SEUIL_REUSSITE_ADMIN = 90;
 
 // Le mot de passe voyage dans le corps de la requete, jamais dans l'adresse. Format formulaire et
 // non JSON : un ancien script le rejette sans rien ecrire dans le Sheet.
@@ -3412,6 +3414,8 @@ async function lireResultatsAdmin(cle) {
     }
     if (Array.isArray(data)) return { lignes: data };
     if (data && data.error === 'non autorise') return { erreur: '❌ Mot de passe incorrect' };
+    if (data && data.error === 'trop essais') return { erreur: '⏳ Trop d\'essais de mot de passe : réessayez dans 10 minutes.' };
+    if (data && data.error === 'indisponible') return { erreur: '⚠️ Google Sheet indisponible pour le moment : réessayez dans quelques minutes.' };
     return { erreur: '⚠️ Réponse inattendue du Google Sheet.' };
 }
 
@@ -3429,6 +3433,8 @@ function afficherAdmin(lignes) {
 
 // Lien « admin » du pied de page, ou adresse avec ?admin : ouvre la fenetre de connexion.
 function openAdmin() {
+    generationAdmin++; // une verification encore en cours n'ouvrira plus rien
+    connexionAdminEnCours = false;
     document.getElementById('admin-connexion-message').textContent = '';
     const champ = document.getElementById('admin-mdp');
     champ.value = '';
@@ -3437,6 +3443,8 @@ function openAdmin() {
 }
 
 function fermerConnexionAdmin() {
+    generationAdmin++; // Annuler pendant la verification : la reponse n'ouvrira pas le dashboard
+    connexionAdminEnCours = false;
     document.getElementById('admin-connexion').style.display = 'none';
     document.getElementById('admin-mdp').value = '';
 }
@@ -3451,8 +3459,8 @@ async function validerConnexionAdmin() {
     message.textContent = '⏳ Vérification du mot de passe...';
     const generation = ++generationAdmin;
     const reponse = await lireResultatsAdmin(pwd);
+    if (generation !== generationAdmin) return; // annulee entre-temps : le verrou a deja ete libere
     connexionAdminEnCours = false;
-    if (generation !== generationAdmin) return;
     if (reponse.erreur) {
         message.style.color = 'var(--ko)';
         message.textContent = reponse.erreur;
@@ -3478,11 +3486,12 @@ function armerExpirationAdmin() {
     clearTimeout(minuterieAdmin);
     minuterieAdmin = setTimeout(closeAdmin, 15 * 60 * 1000);
 }
-window.addEventListener('pagehide', function () { if (cleAdmin) closeAdmin(); });
+window.addEventListener('pagehide', function () { fermerConnexionAdmin(); if (cleAdmin) closeAdmin(); });
 
 function closeAdmin() {
     // Rien ne reste en memoire ni dans la page cachee.
     generationAdmin++;
+    connexionAdminEnCours = false;
     clearTimeout(minuterieAdmin);
     cleAdmin = '';
     window._adminTous = null;
@@ -3642,7 +3651,7 @@ function renderAdminFiltre() {
     const avgScore = Math.round(results.reduce((a, r) => a + r.pct, 0) / results.length);
     const perfect = results.filter(r => r.pct === 100).length;
     const uniqueNames = [...new Set(results.map(r => r.nom))].length;
-    const below60 = results.filter(r => r.pct < 60).length;
+    const echecs = results.filter(r => r.pct < SEUIL_REUSSITE_ADMIN).length;
 
     statsEl.innerHTML = `
         <div class="admin-stat-card">
@@ -3654,7 +3663,7 @@ function renderAdminFiltre() {
             <div class="admin-stat-label">Livreurs</div>
         </div>
         <div class="admin-stat-card">
-            <div class="admin-stat-value" style="color:${avgScore >= 80 ? 'var(--paack-accent)' : avgScore >= 60 ? 'var(--or)' : 'var(--ko)'};">${avgScore}%</div>
+            <div class="admin-stat-value" style="color:${avgScore >= SEUIL_REUSSITE_ADMIN ? 'var(--paack-accent)' : 'var(--ko)'};">${avgScore}%</div>
             <div class="admin-stat-label">Score moyen</div>
         </div>
         <div class="admin-stat-card">
@@ -3662,8 +3671,8 @@ function renderAdminFiltre() {
             <div class="admin-stat-label">Score parfait</div>
         </div>
         <div class="admin-stat-card">
-            <div class="admin-stat-value" style="color:var(--ko);">${below60}</div>
-            <div class="admin-stat-label">Échecs (<60%)</div>
+            <div class="admin-stat-value" style="color:var(--ko);">${echecs}</div>
+            <div class="admin-stat-label">Échecs (moins de 18/20)</div>
         </div>
     `;
 
@@ -3689,7 +3698,7 @@ function renderAdminFiltre() {
             <div style="display:flex; align-items:flex-end; gap:8px; height:80px; padding:0 10px;">`;
         attempts.forEach(a => {
             const h = Math.max(10, (a.pct / 100) * 70);
-            const color = a.pct >= 80 ? 'var(--paack-accent)' : a.pct >= 60 ? 'var(--or)' : 'var(--ko)';
+            const color = a.pct >= SEUIL_REUSSITE_ADMIN ? 'var(--paack-accent)' : 'var(--ko)';
             evoHtml += `<div style="flex:1; text-align:center;">
                 <div style="background:${color}; height:${h}px; border-radius:6px 6px 0 0; margin:0 auto; max-width:40px;"></div>
                 <div style="font-size:0.7em; font-weight:700; color:${color}; margin-top:2px;">${a.pct}%</div>
@@ -3707,8 +3716,9 @@ function renderAdminPage(container, data, page, pageSize) {
 
     let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Téléphone</th><th>Entrepôt</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
     pageData.forEach(r => {
-        const color = r.pct >= 80 ? 'var(--ok-texte)' : r.pct >= 60 ? 'var(--c-7a5c00)' : 'var(--ko-texte)';
-        const emoji = r.pct >= 80 ? '✅' : r.pct >= 60 ? '⚠️' : '❌';
+        const reussi = r.pct >= SEUIL_REUSSITE_ADMIN;
+        const color = reussi ? 'var(--ok-texte)' : 'var(--ko-texte)';
+        const emoji = reussi ? '✅' : '❌';
         html += `<tr>
             <td style="font-weight:600; color:var(--paack-blue);">${echapperHtml(r.nom)}</td>
             <td style="color:var(--texte-doux); font-size:0.85em; white-space:nowrap;">${r.telephone ? r.telephone.replace(/(\d{2})(?=\d)/g, '$1 ') : '—'}</td>
