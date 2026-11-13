@@ -3351,8 +3351,15 @@ let minuterieAdmin = null;
 
 // Lecture sur le meme deploiement que l'envoi : un seul deploiement a tenir a jour.
 const SHEET_API = PAACK_ENDPOINT;
-// Dashboard : en dessous de 18/20 (90 %), le QCM compte comme un echec.
-const SEUIL_REUSSITE_ADMIN = 90;
+// Dashboard, regle de validation du QCM (sur 20) : 15 et plus = valide ;
+// de 11 a 14 = le livreur peut repasser le test ; 10 et moins = non valide.
+const SEUIL_VALIDE_ADMIN = 75;     // 15/20
+const SEUIL_NON_VALIDE_ADMIN = 50; // 10/20 et moins
+function statutQcmAdmin(pct) {
+    if (pct >= SEUIL_VALIDE_ADMIN) return { cle: 'valide', libelle: 'Validé', emoji: '✅', texte: 'var(--ok-texte)', barre: 'var(--paack-accent)' };
+    if (pct > SEUIL_NON_VALIDE_ADMIN) return { cle: 'repasser', libelle: 'À repasser', emoji: '🔁', texte: 'var(--c-7a5c00)', barre: 'var(--or)' };
+    return { cle: 'non-valide', libelle: 'Non validé', emoji: '❌', texte: 'var(--ko-texte)', barre: 'var(--ko)' };
+}
 
 // Le mot de passe voyage dans le corps de la requete, jamais dans l'adresse. Format formulaire et
 // non JSON : un ancien script le rejette sans rien ecrire dans le Sheet.
@@ -3614,9 +3621,13 @@ function renderAdminFiltre() {
     const avgScore = Math.round(results.reduce((a, r) => a + r.pct, 0) / results.length);
     const perfect = results.filter(r => r.pct === 100).length;
     const uniqueNames = [...new Set(results.map(r => r.nom))].length;
-    const echecs = results.filter(r => r.pct < SEUIL_REUSSITE_ADMIN).length;
+    const parStatut = { 'valide': 0, 'repasser': 0, 'non-valide': 0 };
+    results.forEach(r => { parStatut[statutQcmAdmin(r.pct).cle]++; });
 
+    // Deux lignes : les chiffres generaux, puis les trois resultats de la regle de validation.
+    statsEl.style.display = 'block';
     statsEl.innerHTML = `
+        <div class="admin-stats" style="margin:0 0 12px;">
         <div class="admin-stat-card">
             <div class="admin-stat-value" style="color:var(--paack-blue);">${totalFormations}</div>
             <div class="admin-stat-label">QCM passés</div>
@@ -3626,16 +3637,27 @@ function renderAdminFiltre() {
             <div class="admin-stat-label">Livreurs</div>
         </div>
         <div class="admin-stat-card">
-            <div class="admin-stat-value" style="color:${avgScore >= SEUIL_REUSSITE_ADMIN ? 'var(--paack-accent)' : 'var(--ko)'};">${avgScore}%</div>
+            <div class="admin-stat-value" style="color:${statutQcmAdmin(avgScore).barre};">${avgScore}%</div>
             <div class="admin-stat-label">Score moyen</div>
         </div>
         <div class="admin-stat-card">
             <div class="admin-stat-value" style="color:var(--or);">${perfect}</div>
             <div class="admin-stat-label">Score parfait</div>
         </div>
+        </div>
+        <div class="admin-stats" style="margin:0; grid-template-columns:repeat(3, minmax(0, 1fr));">
         <div class="admin-stat-card">
-            <div class="admin-stat-value" style="color:var(--ko);">${echecs}</div>
-            <div class="admin-stat-label">Échecs (moins de 18/20)</div>
+            <div class="admin-stat-value" style="color:var(--paack-accent);">${parStatut['valide']}</div>
+            <div class="admin-stat-label">✅ Validés (15/20 et plus)</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-value" style="color:var(--or);">${parStatut['repasser']}</div>
+            <div class="admin-stat-label">🔁 À repasser (11 à 14/20)</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="admin-stat-value" style="color:var(--ko);">${parStatut['non-valide']}</div>
+            <div class="admin-stat-label">❌ Non validés (10/20 et moins)</div>
+        </div>
         </div>
     `;
 
@@ -3661,7 +3683,7 @@ function renderAdminFiltre() {
             <div style="display:flex; align-items:flex-end; gap:8px; height:80px; padding:0 10px;">`;
         attempts.forEach(a => {
             const h = Math.max(10, (a.pct / 100) * 70);
-            const color = a.pct >= SEUIL_REUSSITE_ADMIN ? 'var(--paack-accent)' : 'var(--ko)';
+            const color = statutQcmAdmin(a.pct).barre;
             evoHtml += `<div style="flex:1; text-align:center;">
                 <div style="background:${color}; height:${h}px; border-radius:6px 6px 0 0; margin:0 auto; max-width:40px;"></div>
                 <div style="font-size:0.7em; font-weight:700; color:${color}; margin-top:2px;">${a.pct}%</div>
@@ -3677,11 +3699,10 @@ function renderAdminPage(container, data, page, pageSize) {
     const start = page * pageSize;
     const pageData = data.slice(start, start + pageSize);
 
-    let html = '<table class="admin-table"><thead><tr><th>Nom</th><th>Téléphone</th><th>Entrepôt</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th></tr></thead><tbody>';
+    let html = '<p style="font-size:0.85em; color:var(--texte-doux); margin:0 0 10px;">Règle de validation : ✅ <strong>Validé</strong> à partir de 15/20 · 🔁 <strong>À repasser</strong> de 11 à 14/20 · ❌ <strong>Non validé</strong> à 10/20 et moins</p>';
+    html += '<table class="admin-table"><thead><tr><th>Nom</th><th>Téléphone</th><th>Entrepôt</th><th>Date</th><th>Durée</th><th>Score</th><th>%</th><th>Résultat</th></tr></thead><tbody>';
     pageData.forEach(r => {
-        const reussi = r.pct >= SEUIL_REUSSITE_ADMIN;
-        const color = reussi ? 'var(--ok-texte)' : 'var(--ko-texte)';
-        const emoji = reussi ? '✅' : '❌';
+        const statut = statutQcmAdmin(r.pct);
         html += `<tr>
             <td style="font-weight:600; color:var(--paack-blue);">${echapperHtml(r.nom)}</td>
             <td style="color:var(--texte-doux); font-size:0.85em; white-space:nowrap;">${r.telephone ? r.telephone.replace(/(\d{2})(?=\d)/g, '$1 ') : '—'}</td>
@@ -3689,7 +3710,8 @@ function renderAdminPage(container, data, page, pageSize) {
             <td style="color:var(--texte-doux); font-size:0.85em;">${echapperHtml(r.date)}</td>
             <td style="color:var(--texte-doux); font-size:0.85em;">${echapperHtml(r.duree || '—')}</td>
             <td style="font-weight:700;">${r.score}/${r.total}</td>
-            <td style="font-weight:700; color:${color};">${emoji} ${r.pct}%</td>
+            <td style="font-weight:700;">${r.pct}%</td>
+            <td style="font-weight:700; color:${statut.texte}; white-space:nowrap;">${statut.emoji} ${statut.libelle}</td>
         </tr>`;
     });
     html += '</tbody></table>';
